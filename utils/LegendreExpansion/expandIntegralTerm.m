@@ -104,7 +104,7 @@ for i = 1:ntot
         BETA =  DERORD(dvar(2))-dvarpart(dvar(2))+j;
         
         % Compute relaxation of term \int p(x)*d^ALPHA(u)*d^BETA(v) dx
-        Qi = addPterm(Qi,Nleg,Mleg,pcoef,nnzIdx,dvar,ALPHA,BETA,DERORD);
+        Qi = addPterm(Qi,Nleg,Mleg,pcoef,nnzIdx,dvar,ALPHA,BETA,DERORD,opts.rigorous);
         if opts.rigorous
             % the terms Q and R only appear if series is not truncated
             [Qi,S,MatrixInequalities,AuxVars] = addQterm(Qi,S,MatrixInequalities,AuxVars,Nleg,Mleg,pdeg,pcoef,nnzIdx,dvar,ALPHA,BETA,DERORD);

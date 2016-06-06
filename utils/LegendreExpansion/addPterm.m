@@ -1,16 +1,28 @@
-function T = addPterm(T,Nleg,Mleg,pcoef,nnzIdx,dvar,ALPHA,BETA,DERORD)
+function T = addPterm(T,Nleg,Mleg,pcoef,nnzIdx,dvar,ALPHA,BETA,DERORD,rigorous)
 
 %% addPterm.m
 %
-% [T,S,slk] = addPterm(T,S,slk,Nleg,Mleg,P,dvar,ALPHA,BETA,DERORD) computes
-%   the relaxation of the R term of the Legendre expansion.
+% [T,S,slk] = addPterm(T,S,slk,Nleg,Mleg,P,dvar,ALPHA,BETA,DERORD,rigorous) 
+%   computes the relaxation of the P term of the Legendre expansion. If
+%
+%       rigorous = 0
+%
+%   then also set entries of the bottom-right corner of T to zero, to model the
+%   fact that the expansion of u with N coefficients only is finite dimensional 
+%   and the Legendre coefficients of the k-th order derivative from N-k+1 to
+%   N+Mleg+k should be set to zero. That is, keep only the following N+1
+%   variables for each dependent variable:
+%
+%   - k boundary values
+%   - N-k+1 Legendre coefficients (with indices from 0 to N-k)
+
 
 % ----------------------------------------------------------------------- %
 %        Author:    Giovanni Fantuzzi
 %                   Department of Aeronautics
 %                   Imperial College London
 %       Created:    08/10/2015
-% Last Modified:    08/10/2015
+% Last Modified:    03/06/2016
 % ----------------------------------------------------------------------- %
 
 %% CODE
@@ -74,7 +86,14 @@ for j = 2:length(pcoef)
     Pmat = Pmat + pcoef(j).*([Ba';Da']*X{j}*[Bb, Db]);
 end
 
-% Set output
+% Set entries to zero if not rigorous
+% ADDED 
+if ~rigorous
+    Pmat(Nleg+2:end,:) = 0;     % set last rows to zero
+    Pmat(:,Nleg+2:end) = 0;     % set last columns to zero
+end
+
+% Assign output
 T(row,col) = T(row,col) + Pmat;
 
 end

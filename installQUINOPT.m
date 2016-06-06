@@ -21,7 +21,7 @@ currDir = pwd;
 % CHECK MATLAB VERSION
 % ----------------------------------------------------------------------- %
 if verLessThan('matlab','R2008a')
-    warning('QuIntOpt has only been tested for compatibility for Matlab versions from 7.6 onwards.  Use at your own risk.');
+    warning('QUINTOPT has only been tested for compatibility for Matlab versions from 7.6 onwards.  Use at your own risk.');
 end
 
 % ----------------------------------------------------------------------- %
@@ -54,8 +54,8 @@ if isa(detected,'cell') && ~isempty(detected)
     s = exist('csdp','file');   s = (s~=0) & (s~=7); isavailable = isavailable | s;
     if ~isavailable
         warn = sprintf(['\n(1) WARNING: none of the general purpose SDP solvers recommended for YALMIP could be found.\n',...
-            '    You need an SDP solver to use QuIntOpt, so please install one.\n'...
-            '    QuIntOpt has been tested using SeDuMi, SDPT3, Mosek and SDPA; click <a href="http://users.isy.liu.se/johanl/yalmip/pmwiki.php?n=Solvers.Solvers">here</a>\n'...
+            '    You need an SDP solver to use QUINTOPT, so please install one.\n'...
+            '    QUINTOPT has been tested using SeDuMi, SDPT3, Mosek and SDPA; click <a href="http://users.isy.liu.se/johanl/yalmip/pmwiki.php?n=Solvers.Solvers">here</a>\n'...
             '    for a complete list of SDP solvers for YALMIP. If you have already\n',...
             '    installed a YALMIP-compatible SDP solver, please ignore this warning.\n']);
     else
@@ -103,11 +103,11 @@ if isavailable
         demotime(k) = toc(time);
     end
     evalin('caller','close(gcf); clear;')
-    disp('All tests completed. QuIntOpt has been successfully installed.')
+    disp('All tests completed. QUINTOPT has been successfully installed.')
 else 
-    disp('QuIntOpt has been installed, but the following warning was generated:')
+    disp('QUINTOPT has been installed, but the following warning was generated:')
     disp(warn);
-    disp('Please try to resolve this issue, then test QuIntOpt by running the demos in the folder "demos."')
+    disp('Please try to resolve this issue, then test QUINTOPT by running the demos in the folder "demos."')
 end
 cd(currDir)
 
