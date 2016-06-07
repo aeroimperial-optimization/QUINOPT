@@ -7,7 +7,7 @@ function [Q,S,slacks,MatrixInequalities,AuxVars,BCproj] = expandIntegrand(INEQ,N
 %       input structure INEQ using the Legendre expansions with parameters
 %       Nleg and Mleg. The outputs are:
 %
-%       - Q: the finite-dimensional matrix relaxation involving the first N
+%       - Q: the finite-dimensional matrix relaxation involving the first
 %            Nleg+Mleg+INEQ.DERORD Legendre coefficients
 %       - S: the matrix representing the tail term
 %       - slacks: list of slack variables used in the relaxation
@@ -48,10 +48,10 @@ elseif ~isnumeric(N) || ~isscalar(N) || N<1 || rem(N,1)~=0
     % N was provided by the user, but is not a number or empty
     error('Input N must be an positive integer.')
 else
-    Nleg = max([N-1,Lp+k-1,Lm]);        % Consider N=(Nleg+1) Legendre coefficients, from 0 to Nleg
-    if Nleg>N-1
+    Nleg = max([N,Lp+k-1,Lm]);        % Consider N=(Nleg+1) Legendre coefficients, from 0 to Nleg
+    if Nleg>N
         fprintf(['WARNING: You requested N = %i, but it is too small. '....
-            'Using the minimum value N = %i instead.\n'],N,Nleg+1);
+            'Using the minimum value N = %i instead.\n'],N,Nleg);
     end
 end
 
