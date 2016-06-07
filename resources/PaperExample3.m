@@ -77,7 +77,7 @@ x = indvar(0,1);
 parameters gamma
 U = [u(x); v(x)];                         % the state vector
 Ut = [gamma*u(x,2) + a*u(x) + b*v(x);...
-      gamma*v(x,2) + c*u(x) + d*v(x)];    % the right-hand side of the PDE
+    gamma*v(x,2) + c*u(x) + d*v(x)];    % the right-hand side of the PDE
 
 % Set and solve inequality with N=10 (gives converged answer). To run in
 % silent mode, we set YALMIP's option 'verbose' to 0. Also, we speed up
@@ -86,64 +86,87 @@ P = eye(2);                         % P = identity matrix
 expr = -U'*P*Ut;                    % time derivative of V is negative
 bc = [u(0); u(1); v(0); v(1)];      % boundary conditions
 opts.YALMIP = sdpsettings('verbose',0,'cachesolvers',1);
+
+% Inner approximation
 time = tic;
 quinopt(expr,bc,gamma,[],[],10,opts);       % require positivity of -V_t(u)!
 time = toc(time);
 
 % Display
 gamma_en = value(gamma);
-fprintf('| 0(P=I) |   %8.6f   |  %8.4f  |    ------    |\n',gamma_en,time)
+fprintf('| 0(P=I) |   %8.6f   |  %8.4f  |    ------    | (inner approx.)\n',gamma_en,time)
+
+% Outer approximation
+opts.rigorous = 0;
+time = tic;
+quinopt(expr,bc,gamma,[],[],10,opts);       % require positivity of -V_t(u)!
+time = toc(time);
+
+% Display
+gamma_en = value(gamma);
+fprintf('| 0(P=I) |   %8.6f   |  %8.4f  |    ------    | (outer approx.)\n',gamma_en,time)
 
 %% Weighted energy stability
 % Do line search with bisection method to avoid nonconvexity. Try to locate
 % the value of gamma_cr at which the problem becomes infeasible.
 for degp = 0:2:8;
     
-    gamma1 = 0.4;                   % surely feasible (larger than gamma_en)
-    gamma2 = 0.34;                  % surely infeasible (smaller than gamma_lin)
-    gamma_cr = gamma_lin;           % start from gamma_lin!
-    
-    time = tic;
-    itAverageTime = 0;
-    while gamma1-gamma2 > 1e-6
-        % Clear internal variables of QUINOPT and YALMIP to avoid buildup of
-        % unused variables that slows down the execution of the next iteration.
-        clearModel;     % clear QUINOPT's internal variables
-        yalmip clear;    % clear YALMIP's internal variables
+    % ------------------------------------------------------------------------ %
+    for rig = [1,0]
+        % 1 = inner approx.
+        % 0 = outer approx.
+        opts.rigorous = rig;
         
-        % Problem variables
-        x = indvar(0,1);
-        [u,v] = depvar(x);
-        parameters gamma
+        gamma1 = 0.4;                   % surely feasible (larger than gamma_en)
+        gamma2 = 0.34;                  % surely infeasible (smaller than gamma_lin)
+        gamma_cr = gamma_lin;           % start from gamma_lin!
         
-        % Define P as symmetric polynomial matrix
-        P = polyMat(x,degp,[2 2],'symm');
-        
-        % Setup feasibility problem
-        U = [u(x);v(x)];                               % the state vector
-        Ut = [gamma_cr*u(x,2) + a*u(x) + b*v(x);...
-              gamma_cr*v(x,2) + c*u(x) + d*v(x)];         % the right-hand side of the PDE
-        expr = [ U'*(P-eye(2))*U; ...                  % positivity of V(u)
-            -U'*P*Ut];                             % positivity of -V_t(u)
-        bc = [u(0); u(1); v(0); v(1)];                 % boundary conditions
-        
-        % Solve the feasibility problem with N=10
-        chron = tic;
-        sol = quinopt(expr,bc,[],[],[],10,opts);
-        itAverageTime = (itAverageTime + toc(chron))/2;
-        
-        % Check if problem was successfully solved and update gamma_cr
-        if sol.FeasCode==0 || sol.FeasCode==-2
-            gamma1 = gamma_cr;
-        else
-            gamma2 = gamma_cr;
+        time = tic;
+        itAverageTime = 0;
+        while gamma1-gamma2 > 1e-6
+            % Clear internal variables of QUINOPT and YALMIP to avoid buildup of
+            % unused variables that slows down the execution of the next iteration.
+            clearModel;     % clear QUINOPT's internal variables
+            yalmip clear;    % clear YALMIP's internal variables
+            
+            % Problem variables
+            x = indvar(0,1);
+            [u,v] = depvar(x);
+            parameters gamma
+            
+            % Define P as symmetric polynomial matrix
+            P = polyMat(x,degp,[2 2],'symm');
+            
+            % Setup feasibility problem
+            U = [u(x);v(x)];                               % the state vector
+            Ut = [gamma_cr*u(x,2) + a*u(x) + b*v(x);...
+                gamma_cr*v(x,2) + c*u(x) + d*v(x)];         % the right-hand side of the PDE
+            expr = [ U'*(P-eye(2))*U; ...                  % positivity of V(u)
+                -U'*P*Ut];                             % positivity of -V_t(u)
+            bc = [u(0); u(1); v(0); v(1)];                 % boundary conditions
+            
+            % Solve the feasibility problem with N=10
+            chron = tic;
+            sol = quinopt(expr,bc,[],[],[],10,opts);
+            itAverageTime = (itAverageTime + toc(chron))/2;
+            
+            % Check if problem was successfully solved and update gamma_cr
+            if sol.FeasCode==0 || sol.FeasCode==-2
+                gamma1 = gamma_cr;
+            else
+                gamma2 = gamma_cr;
+            end
+            gamma_cr = 0.5*(gamma2+gamma1);
         end
-        gamma_cr = 0.5*(gamma2+gamma1);
+        time = toc(time);
+        
+        % Display
+        if rig == 1
+            fprintf('|   %i    |   %8.6f   |  %8.4f  |    %6.4f    | (inner approx.)\n',degp,gamma1,time,itAverageTime)
+        else
+            fprintf('|   %i    |   %8.6f   |  %8.4f  |    %6.4f    | (outer approx.)\n',degp,gamma1,time,itAverageTime) 
+        end
+        
     end
-    time = toc(time);
-    
-    % Display
-    fprintf('|   %i    |   %8.6f   |  %8.4f  |    %6.4f    |\n',degp,gamma1,time,itAverageTime)
-    
 end
 fprintf('|===================================================|\n')
