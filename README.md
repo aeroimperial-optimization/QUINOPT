@@ -1,4 +1,4 @@
-# QUINOA (QUadratic INtegral Optimisation Algorithm)
+# QUINOPT (QUadratic INtegral Optimisation Algorithm)
 A free add-on for YALMIP to solve optimisation problems with polynomial quadratic integral inequality constraints.
 
 ## Release
