@@ -1,4 +1,4 @@
-# QUINOA (QUadratic INtegral Optimisation Algorithm)
+# QUINOPT (QUadratic INtegral OPTimisation)
 A free add-on for YALMIP to solve optimisation problems with polynomial quadratic integral inequality constraints.
 
 ## Release
@@ -13,31 +13,31 @@ Version 1.0
 
 ## System requirements
 
-In order to use QUINOA, you will need:
+In order to use QUINOPT, you will need:
 
 1. A working version of [YALMIP](http://users.isy.liu.se/johanl/yalmip/pmwiki.php?n=Main.WhatIsYALMIP), the MATLAB optimization modelling software by J. L&ouml;fberg
 2. A suitable SDP solver. Choices include [SeDuMi](https://github.com/sqlp/sedumi), [SDPT3](http://www.math.nus.edu.sg/~mattohkc/sdpt3.html), [SDPA](http://sdpa.sourceforge.net/), [Mosek](https://www.mosek.com/) (free for
     users in academia).
 
-QUINOA has been succesfully tested on MATLAB 7.6  (R2008a) and higher. If you have a different version of MATLAB, use at your own risk!
+QUINOPT has been succesfully tested on MATLAB 7.6  (R2008a) and higher. If you have a different version of MATLAB, use at your own risk!
 
 ## Installation
 
-A typical installation of QUINOA requires the following steps:
+A typical installation of QUINOPT requires the following steps:
 
 1. Install YALMIP (download from [here](http://users.isy.liu.se/johanl/yalmip/pmwiki.php?n=Main.Download) 
    and follow the [installation instructions](http://users.isy.liu.se/johanl/yalmip/pmwiki.php?n=Tutorials.Installation))
 2. Install a semidefinite programming (SDP) solver compatible with YALMIP. A complete list of YALMIP-compatible SDP solvers can be found [here](http://users.isy.liu.se/johanl/yalmip/pmwiki.php?n=Solvers.Solvers).  
-3. Install QUINOA by running the MATLAB installer:
+3. Install QUINOPT by running the MATLAB installer:
 
 ```Matlab
->> installQUINOA
+>> installQUINOPT
 ```
 
 The installer should add the required folders to the MATLAB path and run some test problems to make sure everything is working.
 Please report any installation problems to Giovanni Fantuzzi (gf910[at]ic.ac.uk).
 
-_**NOTE:** QUINOA has been tested with [SeDuMi](https://github.com/sqlp/sedumi), 
+_**NOTE:** QUINOPT has been tested with [SeDuMi](https://github.com/sqlp/sedumi), 
   [SDPT3](http://www.math.nus.edu.sg/~mattohkc/sdpt3.html), 
   [SDPA](http://sdpa.sourceforge.net/) and 
   [Mosek](https://www.mosek.com/) (free for users in academia). 
