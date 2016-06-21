@@ -1,4 +1,4 @@
-function G = expandBoundaryTerm(Nleg,Mleg,DERORD)
+function G = expandBoundaryTerm(Nleg,Mleg,DERORD,rigorous)
 
 % EXPANDBOUNDARYTERM.m Expand boundary terms with Legendre expansions.
 %
@@ -19,7 +19,7 @@ function G = expandBoundaryTerm(Nleg,Mleg,DERORD)
 ndvars = length(DERORD);    % number of dependent variables
 G = [];                     % initialise empty matrix
 for i = 1:ndvars
-    Gblk = findG(Nleg,Mleg,DERORD(i));     % matrix G as in Lemma 2 (boundary conditions)
+    Gblk = findG(Nleg,Mleg,DERORD(i),rigorous);     % matrix G as in Lemma 2 (boundary conditions)
     G = spblkdiag(G,Gblk);
 end
 
@@ -29,7 +29,7 @@ end
 % FIND MATRIX G TO REPRESENT BOUNDARY VALUES OF A SINGLE FUNCTION
 % ----------------------------------------------------------------------- %
 
-    function Gblk = findG(Nleg,Mleg,k)
+    function Gblk = findG(Nleg,Mleg,k,rigorous)
         
         % Initialise vectors for nonzero entries of G and their indices
         I = zeros(k^2+2*k,1);
@@ -59,8 +59,17 @@ end
         J(count+1:end) = Jtmp;
         S(count+1:end) = Stmp;
         
+        % If not rigorous, eliminate entries with columns > Nleg+1
+        if ~rigorous
+           ind = J <=Nleg+1;
+           I = I(ind);
+           J = J(ind);
+           S = S(ind);
+        end
+        
         % Assemble G
         Gblk = sparse(I,J,S,2*k,Nleg+Mleg+2*k+1);
+        
         
     end
 

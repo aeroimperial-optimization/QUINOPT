@@ -99,7 +99,7 @@ opts.YALMIP = sdpsettings('verbose',0,'cachesolvers',1);
 % end
 
 %% PART 2: check convergence with N for xi=pi
-N = 3:3:12;
+N = 3:3:40;
 xi = [3 6 9];
 
 % Display a nice header
@@ -109,7 +109,7 @@ fprintf('|    |            xi = %5.2f              |             xi = %5.2f     
 fprintf('|===================================================================================================================|\n')
 fprintf('|  N |   Inner    Time     Outer    Time  |   Inner    Time     Outer    Time  |   Inner    Time     Outer    Time  |\n')
 fprintf('|===================================================================================================================|\n')
-results = zeros(4,12);
+results = zeros(length(N),12);
 for i=1:length(N)
     for j=1:length(xi)
 

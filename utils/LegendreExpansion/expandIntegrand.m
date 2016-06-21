@@ -68,33 +68,50 @@ isFm = ~isempty(INEQ.F.Fm) & ~isZero(INEQ.F.Fm);
 isFb = ~isempty(INEQ.F.Fb) & ~isZero(INEQ.F.Fb);
 isBC = ~isempty(INEQ.BC) & ~isZero(INEQ.BC);
 
+
 % Expand boundary variables with Legendre series if needed for Fb, Fm or BC
 if isFb || isFm || isBC
     INEQ = permuteData(INEQ);
-    G = expandBoundaryTerm(Nleg,Mleg,INEQ.DERORD);
-    P = spblkdiag(G,speye(dimbnd));
+    G = expandBoundaryTerm(Nleg,Mleg,INEQ.DERORD,opts.rigorous);
+    if opts.rigorous
+        H = speye(dimbnd);
+        P = spblkdiag(G,H);
+    else
+        % Expand setting coefficients to 0!
+        H = expandHighOrdBndVals(Nleg,Mleg,INEQ.DERORD,INEQ.MAXDER);
+        P = [G;H];
+    end
 end
 
-% Expand integral term
+
+% Expand integral term - distinction between rigorous and non-rigorous expansion 
+% taken into account when building Q by setting entries to 0.
 Q(dimint,dimint) = INEQ.IVAR;  % initialize, fake dependence on IVAR
 if isFi
     [Q,S,slacks,MatrixInequalities,AuxVars] = ...
         expandIntegralTerm(Q,Nleg,Mleg,INEQ.F.Fi,INEQ.IVAR,INEQ.DERORD,opts);
 end
-Q = [Q, sparse(dimint,dimbnd); sparse(dimbnd,dimint), sparse(dimbnd,dimbnd)];
 Q = replace(Q,INEQ.IVAR,0); % remove fake dependence on IVAR
+if opts.rigorous
+    Q = [Q, sparse(dimint,dimbnd); sparse(dimbnd,dimint), sparse(dimbnd,dimbnd)];
+end
 
-% Expand boundary term (need to make symmetric)
+
+% Expand boundary term (need to make symmetric) - distinction between rigorous
+% and non-rigorous expansion already taken into account by matrix P.
 if isFb
     Qbnd = P'*( (INEQ.F.Fb + INEQ.F.Fb')./2 )*P;
     Q = Q + Qbnd;
 end
 
-% Expand mixed term
+% Expand mixed term - distinction between rigorous and non-rigorous expansion 
+% taken into account by matrix P and when building Qmix by setting entries to 0.
 if isFm
-    Qmix = expandMixedTerm(Nleg,Mleg,INEQ.F.Fm,INEQ.IVAR,INEQ.DERORD);
+    Qmix = expandMixedTerm(Nleg,Mleg,INEQ.F.Fm,INEQ.IVAR,INEQ.DERORD,opts.rigorous);
     Qmix = P'*Qmix;
-    Qmix = [Qmix, sparse(dimint+dimbnd,dimbnd)];
+    if opts.rigorous
+        Qmix = [Qmix, sparse(dimint+dimbnd,dimbnd)];
+    end
     Q = Q + 0.5*(Qmix+Qmix');
 end
 
@@ -103,7 +120,7 @@ end
 % Project onto boundary conditions
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
 if isBC
-    BCproj = bcProjectionMatrix(INEQ.BC,G,opts);
+    BCproj = bcProjectionMatrix(INEQ.BC,G,H,opts);
     Q = BCproj'*Q*BCproj;
 else
     BCproj=[];

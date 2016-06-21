@@ -1,4 +1,4 @@
-function M = bcProjectionMatrix(BC,G,opts)
+function M = bcProjectionMatrix(BC,G,H,opts)
 
 %% BCPROJECTIONMATRIX.m
 %
@@ -22,7 +22,7 @@ function M = bcProjectionMatrix(BC,G,opts)
 
 % Extract data
 A = BC{1}*G;
-B = BC{2};
+B = BC{2}*H;
 
 nA = size(A,2);
 nB = size(B,2);
@@ -35,46 +35,57 @@ else
 end
 
 % Compute projector
-if isZero(B) && ~isZero(A)
-    P1 = null(full(A),projtype);
-    M = spblkdiag(P1,speye(nB));
-    
-elseif isZero(A) && ~isZero(B)
-    P2 = null(full(B),projtype);
-    M = spblkdiag(speye(nA),P2);
-    
-elseif ~isZero(A) && ~isZero(B)
-    z = ~any(A,2);      % logical indices of zero rows in A
-    Abar = A(~z,:);
-    B0 = B(z,:);
-    Bbar = B(~z,:);
-    
-    % First null space projection
-    if ~isempty(z)
-        P2 = null(full(B0),projtype);
+if opts.rigorous
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Use projection for rigorous case
+    if isZero(B) && ~isZero(A)
+        P1 = null(full(A),projtype);
+        M = spblkdiag(P1,speye(nB));
+        
+    elseif isZero(A) && ~isZero(B)
+        P2 = null(full(B),projtype);
+        M = spblkdiag(speye(nA),P2);
+        
+    elseif ~isZero(A) && ~isZero(B)
+        z = ~any(A,2);      % logical indices of zero rows in A
+        Abar = A(~z,:);
+        B0 = B(z,:);
+        Bbar = B(~z,:);
+        
+        % First null space projection
+        if ~isempty(z)
+            P2 = null(full(B0),projtype);
+        else
+            P2 = speye(nB);
+        end
+        
+        % Second projection
+        if ~isempty(P2) && ~isZero(Bbar)
+            % First projection had non-trivial null space
+            P1 = null( null(full(Bbar*P2),projtype)'*Abar, projtype);
+        elseif ~isempty(P2)
+            P1 = null(full(Abar), projtype);
+        else
+            % BC is simply Abar*variables = 0, and set P2=0
+            P1 = null(full(Abar), projtype);
+            P2 = zeros(nB);
+        end
+        
+        % Set output
+        M = spblkdiag(sparse(P1),sparse(P2));
+        
     else
-        P2 = speye(nB);
+        M=1;
+        
     end
     
-    % Second projection
-    if ~isempty(P2) && ~isZero(Bbar)
-        % First projection had non-trivial null space
-        P1 = null( null(full(Bbar*P2),projtype)'*Abar, projtype);
-    elseif ~isempty(P2)
-        P1 = null(full(Abar), projtype);
-    else
-         % BC is simply Abar*variables = 0, and set P2=0
-         P1 = null(full(Abar), projtype);
-         P2 = zeros(nB);
-    end
-    
-     % Set output
-     M = spblkdiag(sparse(P1),sparse(P2));
-     
 else
-    M=1;
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Simpler projection if not rigorous!
+    % Does not care about zero columns...
+    M = A + B;
+    M = null(full(M), projtype);
     
 end
-
 
 % END FUNCTION

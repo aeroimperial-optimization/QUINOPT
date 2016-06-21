@@ -1,4 +1,4 @@
-function Qm = expandMixedTerm(Nleg,Mleg,Fm,IVAR,DERORD)
+function Qm = expandMixedTerm(Nleg,Mleg,Fm,IVAR,DERORD,rigorous)
 
 % EXPANDMIXEDTERM.m
 %
@@ -84,6 +84,10 @@ for i = 1:col
         end
         
         % Set Qm
+        if ~rigorous; 
+            % Set entries of unused coefficients to 0.
+            Da(:,Nleg+2:end) = 0;   
+        end
         Qm(ri,L(dvar):U(dvar)) = Qm(ri,L(dvar):U(dvar)) + Fhat*[Ba, Da];
         
     end    
