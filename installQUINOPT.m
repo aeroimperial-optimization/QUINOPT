@@ -94,7 +94,7 @@ end
 % RUN ALL DEMOS
 % ----------------------------------------------------------------------- %
 if isavailable
-    cd('resources')
+    cd('examples/AdditionalExamples')
     d=dir('Additional*.m');
     demotime = zeros(length(d),1);
     for k=1:length(d)
