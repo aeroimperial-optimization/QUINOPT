@@ -3,22 +3,6 @@
 %
 % Motivating example: stability of a flow driven by a shear stress.
 % See:  Motivating example, Section 3 of the paper.
-%       Example in Section 8.1 of the paper.
-%
-% NOTE: For N<4, the outer approximation displays errors - this is due to the
-%       fact that for N<4 there are no polynomial satisfying the boundary
-%       conditions except for the zero polynomial, and therefore the outer
-%       SDP relaxation becomes an unconstrained minimization. The error messages
-%       should be interpreted as an indication that the problem is unbounded
-%       from below. The exact error message depends on the solver used. Examples
-%       are:
-%
-%       MOSEK:
-%         *** Error(1201): prob.blc has invalid dimension
-%
-%       SeDuMi:
-%           SeDuMi had unexplained problems, maybe due to linear dependence?
-%           YALMIP tweaks the problem (adds 1e6 magnitude bounds on all variables) and restarts...
 
 % ----------------------------------------------------------------------- %
 %        Author:    Giovanni Fantuzzi
@@ -39,7 +23,7 @@ savefigs = 0;   % 1 to save plots, 0 otherwise
 %speed up the iteration by settin YALMIP's 'cachesolvers' option to 1.
 opts.YALMIP = sdpsettings('verbose',0,'cachesolvers',1);
 
-for N = [4 8 12];  % Legendre truncation parameter
+for N = [3 6 9];  % Legendre truncation parameter
     
     % Loop over values of xi to plot figure
     gamma_cr_inn = zeros(length(xi),1);
@@ -55,7 +39,7 @@ for N = [4 8 12];  % Legendre truncation parameter
         parameters gamma    % define the optimization variable
         
         % Setup inequality
-        expr = 16/xi(i)^2*( u(x,2)^2+v(x,2)^2 ) + 8*( u(x,1)^2+v(x,1)^2 ) + ...
+        expr = 16/(xi(i)^2)*( u(x,2)^2+v(x,2)^2 ) + 8*( u(x,1)^2+v(x,1)^2 ) + ...
             xi(i)^2*( u(x)^2+v(x)^2 )  - 2*gamma/xi(i)*( u(x)*v(x,1) - u(x,1)*v(x) );
         BC = [u(-1); u(1); u(-1,1); u(1,2)];        % BC on u
         BC = [BC; v(-1); v(1); v(-1,1); v(1,2)];    % BC on v
@@ -64,15 +48,31 @@ for N = [4 8 12];  % Legendre truncation parameter
         % QUINOPT minimizes the objective function by default).
         % The Legendre series truncation parameter is fixed to N=12.
         
-        % Inner approximation (upper bound)
+        % Inner approximation (maximum lower bound on optimal gamma)
         opts.rigorous = 1;
-        quinopt(expr,BC,-gamma,[],[],N,opts);
-        gamma_cr_inn(i) = value(gamma);
+        sol = quinopt(expr,BC,-gamma,[],[],N,opts);
+        if sol.FeasCode==1
+            % Infeasible for gamma~=0
+            gamma_cr_inn(i) = 0;
+        elseif sol.FeasCode==2
+            % Unbounded
+            gamma_cr_inn(i) = +Inf;
+        else
+            gamma_cr_inn(i) = value(gamma);
+        end
         
-        % Inner approximation (lower bound)
+        % Outer approximation (minimum upper bound on optimal gamma)
         opts.rigorous = 0;
-        quinopt(expr,BC,-gamma,[],[],N,opts);
-        gamma_cr_out(i) = value(gamma);
+        sol = quinopt(expr,BC,-gamma,[],[],N,opts);
+        if sol.FeasCode==1
+            % Infeasible for gamma~=0
+            gamma_cr_out(i) = 0;
+        elseif sol.FeasCode==2
+            % Unbounded
+            gamma_cr_out(i) = +Inf;
+        else
+            gamma_cr_out(i) = value(gamma);
+        end
         
         % Clear internal variables of QUINOPT and YALMIP to avoid buildup of
         % unused variables that slows down the execution of the next iteration.
@@ -103,16 +103,16 @@ for N = [4 8 12];  % Legendre truncation parameter
 end
 
 %% PART 2: check convergence with N for xi=pi
-N = 4:4:40;
+N = 3:3:12;
 xi = [3 6 9];
 
 % Display a nice header
 fprintf('PART 2: Increasing N for xi=pi\n')
-fprintf('|===================================================================================================================|\n')
-fprintf('|    |            xi = %5.2f              |             xi = %5.2f             |             xi = %5.2f             |\n',xi)
-fprintf('|===================================================================================================================|\n')
-fprintf('|  N |   Inner    Time     Outer    Time  |   Inner    Time     Outer    Time  |   Inner    Time     Outer    Time  |\n')
-fprintf('|===================================================================================================================|\n')
+fprintf('|================================================================================================================|\n')
+fprintf('|    |            xi = %5.2f             |             xi = %5.2f            |             xi = %5.2f            |\n',xi)
+fprintf('|================================================================================================================|\n')
+fprintf('|  N |   Inner    Time    Outer    Time  |   Inner    Time    Outer    Time  |   Inner    Time    Outer    Time  |\n')
+fprintf('|================================================================================================================|\n')
 results = zeros(length(N),12);
 for i=1:length(N)
     for j=1:length(xi)
@@ -136,23 +136,39 @@ for i=1:length(N)
         chrono = tic;
         sol = quinopt(expr,BC,-gamma,[],[],N(i),opts);
         results(i,4*j-2) = toc(chrono);
-        results(i,4*j-3) = value(gamma);
+        if sol.FeasCode==1
+            % Infeasible for gamma~=0
+            results(i,4*j-3) = 0;
+        elseif sol.FeasCode==2
+            % Unbounded
+            results(i,4*j-3) = Inf;
+        else
+            results(i,4*j-3) = value(gamma);
+        end
         
         % Outer approximation
         opts.rigorous = 0;
         chrono = tic;
         sol = quinopt(expr,BC,-gamma,[],[],N(i),opts);
         results(i,4*j) = toc(chrono);
-        results(i,4*j-1) = value(gamma);
+        if sol.FeasCode==1
+            % Infeasible for gamma~=0
+            results(i,4*j-1) = 0;
+        elseif sol.FeasCode==2
+            % Unbounded
+            results(i,4*j-1) = Inf;
+        else
+            results(i,4*j-1) = value(gamma);
+        end
+        
         
         % Clear internal variables of QUINOPT and YALMIP to avoid buildup of
         % unused variables that slows down the execution of the next iteration.
-        clearModel;     % clear QUINOPT's internal variables
+        clearModel;      % clear QUINOPT's internal variables
         yalmip clear;    % clear YALMIP's internal variables
         
     end
 end
 
-% fprintf('| %2.i | %8.4f %6.2f %10.4f %6.2f | %8.4f %6.2f %10.4f %6.2f | %8.4f %6.2f %10.4f %6.2f  |\n',[N',results]')
-fprintf(' %2.i & %8.4f & %6.2f & %10.4f & %6.2f & %8.4f & %6.2f & %10.4f & %6.2f & %8.4f & %6.2f & %10.4f & %6.2f  \\\\\n',[N',results]')
-fprintf('|===================================================================================================================|\n')
+fprintf('| %2.i | %8.4f %6.2f %10.4f %6.2f | %8.4f %6.2f %10.4f %6.2f | %8.4f %6.2f %10.4f %6.2f |\n',[N',results]')
+fprintf('|================================================================================================================|\n')

@@ -51,12 +51,28 @@ end
 % Linear matrix inequalities
 % ----------------------------------------------------------------------- %
 if isa(Q,'sdpvar');
-    % Add Q to LMIs if variable
+    % Add Q to LMIs if variable, then set LMIs
+    LMIs{end+1,1} = Q;
+    for i=1:length(LMIs)
+        CNSTR = [CNSTR; LMIs{i}>=0];
+    end
+    
+elseif isnumeric(Q)
+    % Test if it is positive definite
+    E = eig((Q+Q')./2);
+    if any(E<0)
+        error('Infeasible problem (numeric LMI relaxation, not positive semidefinite).')
+    end
+    
+    % Then set LMIs
+    for i=1:length(LMIs)
+        CNSTR = [CNSTR; LMIs{i}>=0];
+    end
+    
+    % Then add numeric Q to list of LMIs
     LMIs{end+1,1} = Q;
 end
-for i=1:length(LMIs)
-    CNSTR = [CNSTR; LMIs{i}>=0];
-end
+
 
 % ----------------------------------------------------------------------- %
 % Linear inequalities for slack variables

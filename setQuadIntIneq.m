@@ -84,7 +84,7 @@ elseif nargin > 4
 end
 
 % Set user options
-opts = setQuadIntIneqOptions(OPTIONS);
+opts = setQUINOPTOptions(OPTIONS);
 
 % ----------------------------------------------------------------------- %
 % Construct inequality problem

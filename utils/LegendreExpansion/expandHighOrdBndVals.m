@@ -38,18 +38,18 @@ end
         D = speye(Nleg-k+1);
         
         % Derivative of order k
-        Hblk(1,:) = 1;
-        Hblk(2,:) = (-1).^(0:Nleg-k);
+        Hblk(1,:) = (-1).^(0:Nleg-k);
+        Hblk(2,:) = 1;
         
         % Loop over derivatives of order k-1,...,l
         for j = 1:l-k
-            N = Nleg-k-j+1;             % degree of derivative of order k+j-1
-            v = 1:2:2*N-1;
-            M = spdiags(ones(N,ceil(N/2)),0:2:N-1,N,N);
-            M = spdiags(v(:),0,N,N)*[sparse(N,1), M];
+            Np1 = (Nleg-k-j) +1;     % degree of derivative of order k-j, plus 1
+            v = 1:2:2*Np1-1;
+            M = spdiags(ones(Np1,ceil(Np1/2)),0:2:Np1-1,Np1,Np1);
+            M = spdiags(v(:),0,Np1,Np1)*[sparse(Np1,1), M];
             D = M*D;
-            E = [ones(1,N);-1.^(0:N-1)];
-            Hblk(2*j+1:2*j+2,:) = E*D;  
+            E = [(-1).^(0:Np1-1); ones(1,Np1)];
+            Hblk([2*j+1,2*j+2],:) = E*D;  
         end
         
         % Pad with zeros

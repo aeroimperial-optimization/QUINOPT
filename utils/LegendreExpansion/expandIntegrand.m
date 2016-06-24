@@ -29,6 +29,11 @@ function [Q,S,slacks,MatrixInequalities,AuxVars,BCproj] = expandIntegrand(INEQ,N
 %% CODE
 
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
+% Some useful parameters
+% ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
+cleanTol = 0;   % tolerance to remove terms with small coefficients from Q (0=keep all)
+
+% ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
 % Compute relaxation parameters
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
 k = max(INEQ.DERORD);                % maximum order of derivative
@@ -121,7 +126,8 @@ end
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
 if isBC
     BCproj = bcProjectionMatrix(INEQ.BC,G,H,opts);
-    Q = BCproj'*Q*BCproj;
+    Q = BCproj'*(Q*BCproj);
+    Q = clean(Q,cleanTol);
 else
     BCproj=[];
 end

@@ -107,7 +107,7 @@ elseif ~isempty(OBJ) && numel(OBJ)>1
 end
     
 %Set options
-OPTIONS = setQuadIntIneqOptions(OPTIONS);
+OPTIONS = setQUINOPTOptions(OPTIONS);
 
 % Setup integral inequality constraints
 time = tic;
@@ -131,33 +131,48 @@ for i = length(EXPR):-1:1
 
 end
 
-% Find if have a SOS problem
-try 
-    issos = any(is(CNSTR,'sos'));
-catch
-    issos = 0;
-end
 
-% Solve if no problem during setup
-if FLAG==0 && issos
-    time = tic;
-    [yalmipsol,m,Q,res,everything] = solvesos(CNSTR,OBJ,OPTIONS.YALMIP,PARAMETERS);
-    SOL.solutionTime = toc(time);
-    SOL.FeasCode = yalmipsol.problem;
-    SOL.YALMIP = yalmipsol;
-    SOL.YALMIP.monomials = m;
-    SOL.YALMIP.sosDecompositionMatrices = Q;
-    SOL.YALMIP.residuals = res;
-    SOL.YALMIP.everything = everything;
+% Check if any constraints, and solve
+
+if~isempty(CNSTR)
+    
+    % Do we have a SOS problem
+    try
+        issos = any(is(CNSTR,'sos'));
+    catch
+        issos = 0;
+    end
+    
+    % Solve if no problem during setup
+    if FLAG==0 && issos
+        time = tic;
+        [yalmipsol,m,Q,res,everything] = solvesos(CNSTR,OBJ,OPTIONS.YALMIP,PARAMETERS);
+        SOL.solutionTime = toc(time);
+        SOL.FeasCode = yalmipsol.problem;
+        SOL.YALMIP = yalmipsol;
+        SOL.YALMIP.monomials = m;
+        SOL.YALMIP.sosDecompositionMatrices = Q;
+        SOL.YALMIP.residuals = res;
+        SOL.YALMIP.everything = everything;
+        
+    else
+        time = tic;
+        yalmipsol = optimize(CNSTR,OBJ,OPTIONS.YALMIP);
+        SOL.solutionTime = toc(time);
+        SOL.FeasCode = yalmipsol.problem;
+        SOL.YALMIP = yalmipsol;
+        
+    end
     
 else
-    time = tic;
-    yalmipsol = optimize(CNSTR,OBJ,OPTIONS.YALMIP);
-    SOL.solutionTime = toc(time);
-    SOL.FeasCode = yalmipsol.problem;
-    SOL.YALMIP = yalmipsol;
+    
+    % Unbounded problem (linear objective, no constraints)
+    SOL.solutionTime = 0;
+    SOL.FeasCode = 2;           % YALMIP code for "unbounded objective function"
+    SOL.YALMIP = [];
     
 end
+
 
 % Set outputs
 if nargout > 0; varargout{1} = SOL; end;
