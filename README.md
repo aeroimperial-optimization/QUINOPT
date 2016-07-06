@@ -1,5 +1,5 @@
 # QUINOPT (QUadratic INtegral OPTimisation)
-A free add-on for YALMIP to solve optimisation problems with polynomial quadratic integral inequality constraints.
+An open-source add-on for YALMIP to solve optimisation problems with polynomial quadratic integral inequality constraints.
 
 ## Release
 Version 1.0  
