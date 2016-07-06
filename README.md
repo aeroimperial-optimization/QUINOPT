@@ -43,6 +43,6 @@ _**NOTE:** QUINOPT has been tested with [SeDuMi](https://github.com/sqlp/sedumi)
   [Mosek](https://www.mosek.com/) (free for users in academia). 
   Any other YALMIP-compatible SDP solver should work, but use at your own risk!_
   
-  ## How to cite
+## How to cite
   
-  _Draft paper coming soon!_
+_Draft paper coming soon!_
