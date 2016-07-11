@@ -1,9 +1,9 @@
 # QUINOPT (QUadratic INtegral OPTimisation)
-A free add-on for YALMIP to solve optimisation problems with polynomial quadratic integral inequality constraints.
+An open-source add-on for YALMIP to solve optimisation problems with polynomial quadratic integral inequality constraints.
 
 ## Release
 Version 1.0  
-16 May 2016  
+27 June 2016  
 
 ## Copyright
 - Giovanni Fantuzzi (Department of Aeronautics, Imperial College London, UK. Email: gf910[at]ic.ac.uk)  
@@ -42,3 +42,7 @@ _**NOTE:** QUINOPT has been tested with [SeDuMi](https://github.com/sqlp/sedumi)
   [SDPA](http://sdpa.sourceforge.net/) and 
   [Mosek](https://www.mosek.com/) (free for users in academia). 
   Any other YALMIP-compatible SDP solver should work, but use at your own risk!_
+  
+## How to cite
+  
+_Draft paper coming soon!_
