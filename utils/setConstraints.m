@@ -60,7 +60,7 @@ if isa(Q,'sdpvar');
 elseif isnumeric(Q)
     % Test if it is positive definite
     E = eig((Q+Q')./2);
-    if any(E<0)
+    if any(E<-1e-8)
         error('Infeasible problem (numeric LMI relaxation, not positive semidefinite).')
     end
     

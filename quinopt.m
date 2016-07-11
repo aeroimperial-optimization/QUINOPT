@@ -2,7 +2,7 @@ function varargout = quinopt(EXPR,BC,OBJ,CNSTR,PARAMETERS,N,OPTIONS)
 
 %% QUINOPT.m Solve optimization problem with quadratic integral inequalities
 %
-% SOL = QUINOPT(EXPR) tests whether the q homogeneous quadratic integral 
+% SOL = QUINOPT(EXPR) tests whether the q homogeneous quadratic integral
 %     inequalities
 %
 %     \int_{a}^{b} EXPR(i) dx >=0, i = 1, ..., q
@@ -11,7 +11,7 @@ function varargout = quinopt(EXPR,BC,OBJ,CNSTR,PARAMETERS,N,OPTIONS)
 %     programming. As shown in the expression above, EXPR is a vector whose
 %     i-th entry specifies the integrand of the i-th integral inequality.
 %     Each entry of EXPR must be a quadratic homogeneous polynomial of the
-%     variables returned by the commands <a href="matlab:help('indvar')">indvar</a> and <a href="matlab:help('depvar')">depvar</a> variables. 
+%     variables returned by the commands <a href="matlab:help('indvar')">indvar</a> and <a href="matlab:help('depvar')">depvar</a> variables.
 %     Examples can be found in the folder "QUINOA_vX.Y/resources", where X.Y
 %     is your version number. The output SOL is a structure with the
 %     following fields:
@@ -21,8 +21,8 @@ function varargout = quinopt(EXPR,BC,OBJ,CNSTR,PARAMETERS,N,OPTIONS)
 %     - problem: code of problem encountered during setup. Values are:
 %                * 0: no problem
 %                * 1: ill-posed inequality
-%                * 2: infeasible relaxation 
-%     - FeasCode: code for the feasibility of the solution returned by YALMIP. 
+%                * 2: infeasible relaxation
+%     - FeasCode: code for the feasibility of the solution returned by YALMIP.
 %                 See <a href="matlab:help('quinoptFeasCode')">quinoptFeasCode</a> for a complete list.
 %     - YALMIP: the solution structure returned by YALMIP. See <a href="matlab:help('optimize')">optimize</a>
 %               and <a href="matlab:help('yalmip/modules/sos/solvesos')">solvesos</a> for more details.
@@ -31,7 +31,7 @@ function varargout = quinopt(EXPR,BC,OBJ,CNSTR,PARAMETERS,N,OPTIONS)
 %     specified by EXPR are feasible over the set defined by the homogeneous
 %     boundary conditions specified by the vector BC. Specifically, BC is
 %     interpreted as the list of boundary conditions BC(1)=0, ..., BC(end)=0.
-%     Like EXPR, BC must be created using the variables returned  by the 
+%     Like EXPR, BC must be created using the variables returned  by the
 %     commands <a href="matlab:help('indvar')">indvar</a> and <a href="matlab:help('depvar')">depvar</a>.
 %
 % SOL = QUINOPT(EXPR,BC,OBJ) optimizes the objective function OBJ
@@ -42,7 +42,7 @@ function varargout = quinopt(EXPR,BC,OBJ,CNSTR,PARAMETERS,N,OPTIONS)
 %     inequalities specified by EXPR and BC, and the additional constraints
 %     given by CNSTR. If CNSTR contains sum-of-square constraints, then
 %     the parameters in the polynomial expressions MUST be specified in
-%     the input vector PARAMETERS. See <a href="matlab:help('@sdpvar/sos')">sos</a>  and  <a href="matlab:help('yalmip/modules/sos/solvesos')">solvesos</a> for more details 
+%     the input vector PARAMETERS. See <a href="matlab:help('@sdpvar/sos')">sos</a>  and  <a href="matlab:help('yalmip/modules/sos/solvesos')">solvesos</a> for more details
 %     on specifying sum-of-squares constraints with YALMIP syntax.
 %
 % SOL = QUINOPT(EXPR,BC,OBJ,CNSTR,PARAMETERS,N) also specifies the number of
@@ -56,12 +56,12 @@ function varargout = quinopt(EXPR,BC,OBJ,CNSTR,PARAMETERS,N,OPTIONS)
 %     - YALMIP: a substructure containing the options for YALMIP, set
 %               with YALMIP's command <a href="matlab:help('sdpsettings')">sdpsettings</a>.
 %     - rigorous: if set to 'true', the semidefinite relaxation estimates
-%               the contribution of the infinitly many Legendre modes of the 
-%               dependent variables of degree larger than N. If set to 
+%               the contribution of the infinitly many Legendre modes of the
+%               dependent variables of degree larger than N. If set to
 %               'false', the Legendre series expansions are simply truncated.
-%     - BCprojectorBasis: string specifying which basis to use for the 
-%               projection on the boundary conditions. If set to 'rref', 
-%               use a "rational" basis. If set to 'orth', use an 
+%     - BCprojectorBasis: string specifying which basis to use for the
+%               projection on the boundary conditions. If set to 'rref',
+%               use a "rational" basis. If set to 'orth', use an
 %               orthonormal basis. The orthonormal basis may be preferable
 %               numerically, but it may destroy sparsity of the data.
 %     - sosdeg: the degree of the sum-of-squares polynomials used in the
@@ -77,7 +77,7 @@ function varargout = quinopt(EXPR,BC,OBJ,CNSTR,PARAMETERS,N,OPTIONS)
 % determines whether the integral inequality and the constraints in CNSTR
 % are feasible without optimizing an objective function.
 %
-% See also INDVAR, DEPVAR, SETQUADINTINEQ, OPTIMIZE, @SDPVAR/VALUE, SDPSETTINGS, 
+% See also INDVAR, DEPVAR, SETQUADINTINEQ, OPTIMIZE, @SDPVAR/VALUE, SDPSETTINGS,
 %          CLEARMODEL, QUINOPTFEASCODE
 
 % ----------------------------------------------------------------------- %
@@ -105,19 +105,19 @@ elseif ~isempty(BC) && ~isa(BC,'dvarpoly')
 elseif ~isempty(OBJ) && numel(OBJ)>1
     error('Objective function should be a scalar expression.')
 end
-    
-%Set options
+
+% Set options
 OPTIONS = setQUINOPTOptions(OPTIONS);
 
 % Setup integral inequality constraints
 time = tic;
 for i = length(EXPR):-1:1
-
+    
     [QIICNSTR,DATA(i),FLAG] = setQuadIntIneq(EXPR(i),BC,N,OPTIONS);
     SOL.setupTime = toc(time);
     SOL.solutionTime = [];
     SOL.problem = FLAG;
-
+    
     if FLAG==0
         % No problem, add constraints to list
         CNSTR = [QIICNSTR; CNSTR];
@@ -128,51 +128,60 @@ for i = length(EXPR):-1:1
         SOL.YALMIP = [];
         return
     end
-
+    
 end
 
 
-% Check if any constraints, and solve
-
-if~isempty(CNSTR)
+% Solve
+if OPTIONS.solve
     
-    % Do we have a SOS problem
-    try
-        issos = any(is(CNSTR,'sos'));
-    catch
-        issos = 0;
-    end
-    
-    % Solve if no problem during setup
-    if FLAG==0 && issos
-        time = tic;
-        [yalmipsol,m,Q,res,everything] = solvesos(CNSTR,OBJ,OPTIONS.YALMIP,PARAMETERS);
-        SOL.solutionTime = toc(time);
-        SOL.FeasCode = yalmipsol.problem;
-        SOL.YALMIP = yalmipsol;
-        SOL.YALMIP.monomials = m;
-        SOL.YALMIP.sosDecompositionMatrices = Q;
-        SOL.YALMIP.residuals = res;
-        SOL.YALMIP.everything = everything;
+    % Check if any constraints, and solve
+    if~isempty(CNSTR)
+        
+        % Do we have a SOS problem
+        try
+            issos = any(is(CNSTR,'sos'));
+        catch
+            issos = 0;
+        end
+        
+        % Solve if no problem during setup
+        if FLAG==0 && issos
+            time = tic;
+            [yalmipsol,m,Q,res,everything] = solvesos(CNSTR,OBJ,OPTIONS.YALMIP,PARAMETERS);
+            SOL.solutionTime = toc(time);
+            SOL.FeasCode = yalmipsol.problem;
+            SOL.YALMIP = yalmipsol;
+            SOL.YALMIP.monomials = m;
+            SOL.YALMIP.sosDecompositionMatrices = Q;
+            SOL.YALMIP.residuals = res;
+            SOL.YALMIP.everything = everything;
+            
+        else
+            time = tic;
+            yalmipsol = optimize(CNSTR,OBJ,OPTIONS.YALMIP);
+            SOL.solutionTime = toc(time);
+            SOL.FeasCode = yalmipsol.problem;
+            SOL.YALMIP = yalmipsol;
+            
+        end
         
     else
-        time = tic;
-        yalmipsol = optimize(CNSTR,OBJ,OPTIONS.YALMIP);
-        SOL.solutionTime = toc(time);
-        SOL.FeasCode = yalmipsol.problem;
-        SOL.YALMIP = yalmipsol;
+        
+        % Unbounded problem (linear objective, no constraints)
+        SOL.solutionTime = 0;
+        SOL.FeasCode = 2;           % YALMIP code for "unbounded objective function"
+        SOL.YALMIP = [];
         
     end
     
 else
-    
-    % Unbounded problem (linear objective, no constraints)
-    SOL.solutionTime = 0;
-    SOL.FeasCode = 2;           % YALMIP code for "unbounded objective function"
+    % Do not solve
+    SOL.solutionTime = [];
+    SOL.FeasCode = [];
     SOL.YALMIP = [];
     
 end
-
 
 % Set outputs
 if nargout > 0; varargout{1} = SOL; end;

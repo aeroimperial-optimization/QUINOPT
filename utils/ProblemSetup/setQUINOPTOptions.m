@@ -14,10 +14,11 @@ function options = setQUINOPTOptions(userOpts)
 % ----------------------------------------------------------------------- %
 
 % Default options
-options.YALMIP = [];                   % YALMIP options
-options.rigorous = true;               % Rigorous relaxation (with tail term) or simple approximation
-options.BCprojectorBasis = 'rref';     % set to 'orth' for orthonormal, 'rref' for rational
-options.sosdeg = 6;                    % degree of polynomials for S procedure
+options.YALMIP           = [];        % YALMIP options
+options.solve            = true;      % Solve the optimization problem?
+options.rigorous         = true;      % Rigorous relaxation (with tail term) or simple approximation
+options.BCprojectorBasis = 'rref';    % set to 'orth' for orthonormal, 'rref' for rational
+options.sosdeg           = 6;         % degree of polynomials for S procedure
 
 % Assign user
 if isempty(userOpts)
@@ -26,7 +27,11 @@ elseif ~isstruct(userOpts)
     error('Input OPTIONS must be a structure.');
 else
     fnames = fieldnames(userOpts);
-    allowedNames = {'YALMIP';'rigorous';'BCprojectorBasis';'sosdeg'};
+    allowedNames = {'YALMIP'; ...
+                    'rigorous'; ...
+                    'BCprojectorBasis'; ...
+                    'sosdeg'; ...
+                    'solve'};
     for n=1:length(fnames)
         if any(strcmpi(fnames{n},allowedNames))
             options.(fnames{n}) = userOpts.(fnames{n});
