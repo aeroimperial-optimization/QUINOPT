@@ -48,6 +48,6 @@ _**NOTE:** QUINOPT has been tested with [SeDuMi](https://github.com/sqlp/sedumi)
 If you find QUINOPT useful, or have used it in your own work, please reference
 if by citing the following paper:
 
-[G. Fantuzzi, A. Wynn, P. Goulart, A. Papachristodoulou, _Optimization 
+G. Fantuzzi, A. Wynn, P. Goulart, A. Papachristodoulou, _Optimization 
 with affine homogeneous quadratic integral inequality constraints_,
-arXiv:1607.04210v1 [math.OC]]{http://arxiv.org/abs/1607.04210v1}. Submitted to Mathematical Programming.
+[arXiv:1607.04210v1 [math.OC]](http://arxiv.org/abs/1607.04210v1). Submitted to Mathematical Programming.
