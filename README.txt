@@ -11,8 +11,8 @@ polynomial quadratic integral inequality constraints.
                            RELEASE DETAILS
 % ======================================================================= % 
 
-QUINOPT Version 1.0
-Release date: 14/07/2016
+Version 1.1  
+15 July 2016  
 
 Copyright:    
 - Giovanni Fantuzzi (Department of Aeronautics, Imperial College London)  
@@ -146,7 +146,8 @@ if by citing the following paper:
 
     G. Fantuzzi, A. Wynn, P. Goulart, A. Papachristodoulou, "Optimization 
     with affine homogeneous quadratic integral inequality constraints",
-    arXiv:YYMM.NNNNv# [math.OC]. Submitted to Mathematical Programming.
+    arXiv:1607.04210v1 [math.OC], http://arxiv.org/abs/1607.04210v1
+    (Submitted to Mathematical Programming).
 
 
 
