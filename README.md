@@ -1,17 +1,24 @@
 # QUINOPT (QUadratic INtegral OPTimisation)
 An open-source add-on for YALMIP to solve optimisation problems with polynomial quadratic integral inequality constraints.
 
-## Latest Release
+- [Latest release](#LatestRelease)
+- [Copyright](#Copyright)
+- [System requirements](#Requirements)
+- [Installation](#Install)
+- [Getting started](#GettingStarted)
+- [How to cite](#Cite)
+
+## Latest release<a name="LatestRelease"></a>
 Version 1.1  
 15 July 2016  
 
-## Copyright
+## Copyright<a name="Copyright"></a>
 - Giovanni Fantuzzi (Department of Aeronautics, Imperial College London, UK. Email: gf910[at]ic.ac.uk)  
 - Andrew Wynn (Department of Aeronautics, Imperial College London, UK. Email: a.wynn[at]imperial.ac.uk)
 - Paul Goulart (Department of Engineering Science, University of Oxford, UK. Email: paul.goulart[at]eng.ox.ac.uk)
 - Antonis Papachristodoulou (Department of Engineering Science, University of Oxford, UK. Email: antonis[at]eng.ox.ac.uk)
 
-## System requirements
+## System requirements<a name="Requirements"></a>
 
 In order to use QUINOPT, you will need:
 
@@ -21,7 +28,7 @@ In order to use QUINOPT, you will need:
 
 QUINOPT has been succesfully tested on MATLAB 7.10  (R2010a) and higher. If you have a different version of MATLAB, use at your own risk!
 
-## Installation
+## Installation<a name="Install"></a>
 
 To install QUINOPT:
 
@@ -43,7 +50,7 @@ _**NOTE:** QUINOPT has been tested with [SeDuMi](https://github.com/sqlp/sedumi)
   [Mosek](https://www.mosek.com/) (free for users in academia). 
   Any other YALMIP-compatible SDP solver should work, but use at your own risk!_
   
-## Getting started
+## Getting started<a name="GettingStarted"></a>
 
 To get started with QUINOPT, please look at the sample scripts provided the folder "examples/". A description of the problems being solved can be found in the document "examples.pdf".
 
@@ -59,7 +66,7 @@ For more information on the main functions in QUINOPT, type
 at the MATLAB command prompt.
 
 
-## How to cite
+## How to cite<a name="Cite"></a>
   
 If you find QUINOPT useful, or have used it in your own work, please reference
 if by citing the following paper:
