@@ -23,7 +23,7 @@ QUINOPT has been succesfully tested on MATLAB 7.10  (R2010a) and higher. If you 
 
 ## Installation
 
-A typical installation of QUINOPT requires the following steps:
+To install QUINOPT:
 
 1. Install YALMIP (download from [here](http://users.isy.liu.se/johanl/yalmip/pmwiki.php?n=Main.Download) 
    and follow the [installation instructions](http://users.isy.liu.se/johanl/yalmip/pmwiki.php?n=Tutorials.Installation))
@@ -43,6 +43,22 @@ _**NOTE:** QUINOPT has been tested with [SeDuMi](https://github.com/sqlp/sedumi)
   [Mosek](https://www.mosek.com/) (free for users in academia). 
   Any other YALMIP-compatible SDP solver should work, but use at your own risk!_
   
+## Getting started
+
+To get started with QUINOPT, please look at the sample scripts provided the folder "examples/". A description of the problems being solved can be found in the document "examples.pdf".
+
+For more information on the main functions in QUINOPT, type
+
+```Matlab
+>> help quinopt
+>> help indvar
+>> help depvar
+>> help parameters
+```
+
+at the MATLAB command prompt.
+
+
 ## How to cite
   
 If you find QUINOPT useful, or have used it in your own work, please reference

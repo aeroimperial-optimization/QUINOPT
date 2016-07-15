@@ -2,24 +2,17 @@
                           WELCOME TO QUINOPT!
 % ======================================================================= % 
 
-An open-source add-on for YALMIP to solve optimisation problems with 
-polynomial quadratic integral inequality constraints.
-
-
-
-% ======================================================================= %
-                           RELEASE DETAILS
-% ======================================================================= % 
 
 Version 1.1  
 15 July 2016  
 
 Copyright:    
+
 - Giovanni Fantuzzi (Department of Aeronautics, Imperial College London)  
 - Andrew Wynn (Department of Aeronautics, Imperial College London)
 - Paul Goulart (Department of Engineering Science, University of Oxford)
 - Antonis Papachristodoulou (Department of Engineering Science, University 
-of Oxford)
+  of Oxford)
 
 
 
@@ -42,8 +35,8 @@ of Oxford)
                          (1) INTRODUCTION
 % ======================================================================= %
 
-Welcome to QUINOPT, an open-source add-on for YALMIP to solve optimisation
-problems with polynomial quadratic integral inequality constraints.
+QUINOPT is an open-source add-on for YALMIP to solve optimisation problems 
+with polynomial quadratic integral inequality constraints.
 
 
 
@@ -70,24 +63,27 @@ If you have a different version of MATLAB or a different SDP solver, use at
 your own risk!
 
 
+
 % ======================================================================= %
                             (3) LICENCE
 % ======================================================================= %
+
 QUINOPT is distrubuted under the terms of the GNU Lesser General Public 
 Licence (LGPL) v3.0. You should have received a file named "LICENCE.txt." 
 containing the licence terms; if not, you can find the licence at
 
-http://www.gnu.org/licenses/lgpl-3.0.en.html
+    http://www.gnu.org/licenses/lgpl-3.0.en.html
 
 or
 
-https://opensource.org/licenses/LGPL-3.0
+    https://opensource.org/licenses/LGPL-3.0
 
 
 
 % ======================================================================= %
                          (4) INSTALLATION
 % ======================================================================= %
+
 To install QUINOPT:
 
 1. Install YALMIP. You can download YALMIP from 
@@ -124,7 +120,8 @@ installation problems to Giovanni Fantuzzi (gf910[at]ic.ac.uk).
 % ======================================================================= %
 
 To get started with QUINOPT, please look at the sample scripts provided
-the folder "examples".
+the folder "examples". A description of the problems being solved can be
+found in the document "examples.pdf".
 
 For more information on the main functions in QUINOPT, type
 
@@ -148,12 +145,13 @@ if by citing the following paper:
     with affine homogeneous quadratic integral inequality constraints",
     arXiv:1607.04210v1 [math.OC], http://arxiv.org/abs/1607.04210v1
     (Submitted to Mathematical Programming).
-
-
+    
+    
 
 % ======================================================================= %
                            (7) REFERENCES
 % ======================================================================= %
+
 Since QUINOPT is an add-on for YALMIP, we also recommend that you consult 
 the following additional references:
 
