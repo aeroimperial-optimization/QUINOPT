@@ -73,4 +73,4 @@ if by citing the following paper:
 
 G. Fantuzzi, A. Wynn, P. Goulart, A. Papachristodoulou, _Optimization 
 with affine homogeneous quadratic integral inequality constraints_,
-[arXiv:1607.04210v1 [math.OC]](http://arxiv.org/abs/1607.04210v1). Submitted to Mathematical Programming.
+[arXiv:1607.04210v1 [math.OC]](http://arxiv.org/abs/1607.04210v1).
