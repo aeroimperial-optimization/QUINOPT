@@ -9,8 +9,8 @@ An open-source add-on for YALMIP to solve optimisation problems with polynomial 
 - [How to cite](#Cite)
 
 ## Latest release<a name="LatestRelease"></a>
-Version 1.1  
-15 July 2016  
+Version 1.0  
+19 July 2016  
 
 ## Copyright<a name="Copyright"></a>
 - Giovanni Fantuzzi (Department of Aeronautics, Imperial College London, UK. Email: gf910[at]ic.ac.uk)  
