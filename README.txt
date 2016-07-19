@@ -3,8 +3,8 @@
 % ======================================================================= % 
 
 
-Version 1.1  
-15 July 2016  
+Version 1.0  
+19 July 2016  
 
 Copyright:    
 
@@ -47,7 +47,7 @@ with polynomial quadratic integral inequality constraints.
 In order to use QUINOPT, you will need:
 
 1. A working version of YALMIP, the MATLAB optimization software by J. 
-   Löfberg (http://users.isy.liu.se/johanl/yalmip/)
+   LÃ¶fberg (http://users.isy.liu.se/johanl/yalmip/)
 
 2. A YALMIP-compatible SDP solver.
 
@@ -155,10 +155,10 @@ if by citing the following paper:
 Since QUINOPT is an add-on for YALMIP, we also recommend that you consult 
 the following additional references:
 
-[2] J. Löfberg., "YALMIP: A Toolbox for Modeling and Optimization in MATLAB",
+[2] J. LÃ¶fberg., "YALMIP: A Toolbox for Modeling and Optimization in MATLAB",
     Proceedings of the CACSD Conference, Taipei, Taiwan, 2004.
 
-[3] J. Löfberg, "Pre- and post-processing sum-of-squares programs in practice",
+[3] J. LÃ¶fberg, "Pre- and post-processing sum-of-squares programs in practice",
     IEEE Transactions on Automatic Control, 54(5):1007-1011, 2009.
 
 
