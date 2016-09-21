@@ -119,8 +119,8 @@ switch nargin
                 error('Input structure does not have the required fields.')
             end
             
-        elseif isnumeric(x) && nargout<=1
-            % Convert double to legpoly of degree 0
+        elseif (isnumeric(x)||isa(x,'sdpvar')) && nargout<=1
+            % Convert vector of double/sdpvar to vector of legpolys of degree 0
             [m,n] = size(x);
             
             % Set coefficients

@@ -145,6 +145,7 @@ elseif isa(X,'legpoly') && isa(Y,'sdpvar')
         X = coefficients(X);
     end
     s = X+Y;
+	s = legpoly(s);
     return
     
 elseif isa(X,'sdpvar') && isa(Y,'legpoly')
