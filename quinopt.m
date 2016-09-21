@@ -55,18 +55,23 @@ function varargout = quinopt(EXPR,BC,OBJ,CNSTR,PARAMETERS,N,OPTIONS)
 %
 %     - YALMIP: a substructure containing the options for YALMIP, set
 %               with YALMIP's command <a href="matlab:help('sdpsettings')">sdpsettings</a>.
-%     - rigorous: if set to 'true', the semidefinite relaxation estimates
-%               the contribution of the infinitly many Legendre modes of the
-%               dependent variables of degree larger than N. If set to
+%     - rigorous: if set to 'true' (default), the semidefinite relaxation 
+%               estimates the contribution of the infinitly many Legendre modes 
+%               of the dependent variables of degree larger than N. If set to
 %               'false', the Legendre series expansions are simply truncated.
 %     - BCprojectorBasis: string specifying which basis to use for the
-%               projection on the boundary conditions. If set to 'rref',
-%               use a "rational" basis. If set to 'orth', use an
+%               projection on the boundary conditions. If set to 'rref' 
+%               (default), use a "rational" basis. If set to 'orth', use an
 %               orthonormal basis. The orthonormal basis may be preferable
 %               numerically, but it may destroy sparsity of the data.
 %     - sosdeg: the degree of the sum-of-squares polynomials used in the
 %               S-procedure to localize SOS constraints from the integral
-%               inequality to the integration domain.
+%               inequality to the integration domain. Default value: 6.
+%     - solve: if set to 'true' (default), QUINOPT calls the solver specified by
+%              the YALMIP options (or YALMIP's default solver). If set to 
+%              'false', QUINOPT does not call the solver, but simply sets up the
+%              YALMIP problem structure. In this case, additional outputs to
+%              QUINOPT are required (see below).
 %
 % [SOL,CNSTR,DATA] = QUINOPT(...) also returns the YALMIP constraint object
 %      CNSTR used to solve the optimization problem, and a structure DATA
