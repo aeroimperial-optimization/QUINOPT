@@ -85,9 +85,8 @@ elseif isa(x,'dvarpoly')
                 s(i,j).monom = x(i,j).monom;
                 
             elseif isZero(x.monom(1,:))
-                % add to the coefficient
-                s(i,j).coeff = x(i,j).coeff;
-                s(i,j).coeff(1) = s(i,j).coeff(1)+y(i,j);
+                % add to the coefficient of degree 0    
+                s(i,j).coeff = [x(i,j).coeff(1)+y(i,j); x(i,j).coeff(2:end)];
                 s(i,j).ivars = x(i,j).ivars;
                 s(i,j).monom = x(i,j).monom;
                 

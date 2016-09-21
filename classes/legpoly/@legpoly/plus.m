@@ -141,11 +141,11 @@ elseif isa(X,'legpoly') && isa(Y,'sdpvar')
         ivarX = X(idx).ivar;
         Y = legpoly(domn,ivarX,Y);
     else
-    	% X is constant polynomial - better to transform X!
+    	% X is constant polynomial - better to transform X and return an sdpvar
         X = coefficients(X);
     end
     s = X+Y;
-	s = legpoly(s);
+%	s = legpoly(s);     % uncomment to always return a legpoly
     return
     
 elseif isa(X,'sdpvar') && isa(Y,'legpoly')
