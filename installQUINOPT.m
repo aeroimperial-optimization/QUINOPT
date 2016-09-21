@@ -1,6 +1,5 @@
 function installQUINOPT
 
-
 %% INSTALLQUINOPT.m Install QUINOPT
 %
 % Install QUINOPT and removes previous versions from the MATLAB path.
@@ -95,15 +94,7 @@ end
 % ----------------------------------------------------------------------- %
 if isavailable
     cd('examples/')
-    d=dir('example*.m');
-    demotime = zeros(length(d),1);
-    for k=1:length(d)
-        time = tic;
-        evalin('caller',['run(''',d(k).name(1:end-2),''')']);
-        demotime(k) = toc(time);
-    end
-    evalin('caller','close(gcf); clear;')
-    disp('All tests completed. QUINTOPT has been successfully installed.')
+    runall
 else 
     disp('QUINTOPT has been installed, but the following warning was generated:')
     disp(warn);
