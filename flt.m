@@ -32,7 +32,7 @@ elseif ~isnumeric(DOMAIN)||~isvector(DOMAIN)||numel(DOMAIN)~=2|| ...
 end
 
 % Parameters from Iserles 2010
-M = 50; 
+M = 100; 
 N = 2^(ceil( log(n+3+2*M)/log(2) ));
 
 % tolerance to clean coefficients from roundoff noise
