@@ -94,8 +94,21 @@ end
 % ----------------------------------------------------------------------- %
 if isavailable
     cd('examples/')
-    runall
-else 
+    % Get example names
+    d=dir('example*.m');
+    demotime = zeros(length(d),1);
+    
+    % Loop over all examples
+    for k=1:length(d)
+        time = tic;
+        evalin('caller',['run(''',d(k).name(1:end-2),''')']);
+        demotime(k) = toc(time);
+    end
+    
+    % End
+    evalin('caller','close(gcf); clear;')
+    disp('All tests completed. QUINTOPT has been successfully installed.')
+else
     disp('QUINTOPT has been installed, but the following warning was generated:')
     disp(warn);
     disp('Please try to resolve this issue, then test QUINTOPT by running the demos in the folder "demos."')
