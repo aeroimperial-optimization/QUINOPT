@@ -21,6 +21,14 @@ options.BCprojectorBasis = 'rref';      % set to 'orth' for orthonormal, 'rref' 
 options.sosdeg           = 6;           % degree of polynomials for S procedure
 options.psdtol           = -1e-8;       % tolerance for small negative eigenvalues
 
+% Class of each option
+opcls.YALMIP           = 'struct';
+opcls.solve            = {'double';'logical'};
+opcls.rigorous         = {'double';'logical'};
+opcls.BCprojectorBasis = 'char';
+opcls.sosdeg           = 'double';
+opcls.psdtol           = 'double';
+
 % Assign user
 if isempty(userOpts)
     return
@@ -28,17 +36,13 @@ elseif ~isstruct(userOpts)
     error('Input OPTIONS must be a structure.');
 else
     fnames = fieldnames(userOpts);
-    allowedNames = {'YALMIP'; ...
-                    'rigorous'; ...
-                    'BCprojectorBasis'; ...
-                    'sosdeg'; ...
-                    'solve';...
-                    'psdtol'};
+    allowedNames = fieldnames(options);
     for n=1:length(fnames)
         if any(strcmpi(fnames{n},allowedNames))
+            % Get user option
             boo = userOpts.(fnames{n});
-            mustbe = class(options.(fnames{n}));
-            if isa(boo,mustbe)
+            boocls = class(boo);
+            if any(strcmpi( boocls,opcls.(fnames{n}) ))
                 options.(fnames{n}) = boo;
             else
                 error('Wrong class for field %s in OPTIONS.',fnames{n})
