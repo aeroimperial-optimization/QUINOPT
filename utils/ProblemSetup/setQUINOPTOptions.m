@@ -14,7 +14,7 @@ function options = setQUINOPTOptions(userOpts)
 % ----------------------------------------------------------------------- %
 
 % Default options
-options.YALMIP           = sdpsettings; % YALMIP options
+options.YALMIP           = struct([]);  % YALMIP options
 options.solve            = true;        % Solve the optimization problem?
 options.rigorous         = true;        % Rigorous relaxation (with tail term) or simple approximation
 options.BCprojectorBasis = 'rref';      % set to 'orth' for orthonormal, 'rref' for rational
