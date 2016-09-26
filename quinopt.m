@@ -34,8 +34,8 @@ function varargout = quinopt(EXPR,BC,OBJ,CNSTR,PARAMETERS,N,OPTIONS)
 %     Like EXPR, BC must be created using the variables returned  by the
 %     commands <a href="matlab:help('indvar')">indvar</a> and <a href="matlab:help('depvar')">depvar</a>.
 %
-% SOL = QUINOPT(EXPR,BC,OBJ) optimizes the objective function OBJ
-%     constrained by the integral inequalities specified by EXPR.
+% SOL = QUINOPT(EXPR,BC,OBJ) optimizes the objective function OBJ constrained by
+%     the integral inequalities specified by EXPR.
 %
 % SOL = QUINOPT(EXPR,BC,OBJ,CNSTR) and SOL = QUINOPT(EXPR,BC,OBJ,CNSTR,PARAMETERS)
 %     optimize the objective function OBJ subjet to the integral
@@ -75,15 +75,15 @@ function varargout = quinopt(EXPR,BC,OBJ,CNSTR,PARAMETERS,N,OPTIONS)
 %
 % [SOL,CNSTR,DATA] = QUINOPT(...) also returns the YALMIP constraint object
 %      CNSTR used to solve the optimization problem, and a structure DATA
-%      containing all raw variables used to set up the constraints in
-%      CNSTR.
+%      containing all raw variables used to set up the constraints in CNSTR.
 %
 % Unused inputs can be left empty; for example, QUINOPT(EXPR,BC,[],CNSTR)
 % determines whether the integral inequality and the constraints in CNSTR
 % are feasible without optimizing an objective function.
 %
-% See also INDVAR, DEPVAR, SETQUADINTINEQ, OPTIMIZE, @SDPVAR/VALUE, SDPSETTINGS,
-%          CLEARMODEL, QUINOPTFEASCODE
+% See also INDVAR, DEPVAR, QUINOPTFEASCODE, CLEARMODEL, OPTIMIZE, @SDPVAR/VALUE,
+%          SDPSETTINGS
+%          
 
 % ----------------------------------------------------------------------- %
 %        Author:    Giovanni Fantuzzi
@@ -100,7 +100,15 @@ if nargin < 6; N = []; end
 if nargin < 5; PARAMETERS = []; end
 if nargin < 4; CNSTR = []; end
 if nargin < 3; OBJ = []; end
-if nargin < 2; error('Not enough inputs.'); end
+if nargin < 2; BC = []; end
+if nargin < 1; help('quinopt'); end
+
+% Initialize empty SOL structure with required fields
+SOL.setupTime    = [];
+SOL.solutionTime = [];
+SOL.problem      = [];
+SOL.FeasCode     = [];
+SOL.YALMIP       = [];
 
 % Check on inputs
 if ~isempty(EXPR) && ~isa(EXPR,'dvarpoly')
@@ -119,29 +127,28 @@ time = tic;
 for i = length(EXPR):-1:1
     
     [QIICNSTR,DATA(i),FLAG] = setQuadIntIneq(EXPR(i),BC,N,OPTIONS);
-    SOL.setupTime = toc(time);
-    SOL.solutionTime = [];
-    SOL.problem = FLAG;
-    
     if FLAG==0
         % No problem, add constraints to list
         CNSTR = [QIICNSTR; CNSTR];
         PARAMETERS = [PARAMETERS; DATA(i).SumOfSquaresParameters];
     else
         % Problem infeasible (see warning message displayed for reason)
+        CNSTR = [];
         SOL.FeasCode = 1;
-        SOL.YALMIP = [];
-        return
+        break
     end
     
 end
+SOL.setupTime = toc(time);
+SOL.problem   = FLAG;
 
+% Solve if requested and no problem
+if OPTIONS.solve && FLAG==0
 
-% Solve
-if OPTIONS.solve
-    
-    % Check if any constraints, and solve
-    if~isempty(CNSTR)
+% This check is not needed: removed to allow OBJ to be quadratic, and let YALMIP
+% take care of it. 
+%     % Check if any constraints, and solve
+%     if~isempty(CNSTR)
         
         % Do we have a SOS problem
         try
@@ -151,7 +158,7 @@ if OPTIONS.solve
         end
         
         % Solve if no problem during setup
-        if FLAG==0 && issos
+        if issos
             time = tic;
             [yalmipsol,m,Q,res,everything] = solvesos(CNSTR,OBJ,OPTIONS.YALMIP,PARAMETERS);
             SOL.solutionTime = toc(time);
@@ -170,29 +177,33 @@ if OPTIONS.solve
             SOL.YALMIP = yalmipsol;
             
         end
-        
-    else
-        
-        % Unbounded problem (linear objective, no constraints)
-        SOL.solutionTime = 0;
-        SOL.FeasCode = 2;           % YALMIP code for "unbounded objective function"
-        SOL.YALMIP = [];
-        
-    end
+
+% This is not needed: removed to allow OBJ to be quadratic, and let YALMIP take
+% care of it. 
+%     else
+%         
+%         % Unbounded problem (linear objective, no constraints)
+%         SOL.solutionTime = 0;
+%         SOL.FeasCode = 2;           % YALMIP code for "unbounded objective function"
+%         SOL.YALMIP = [];
+%         
+%     end
     
 else
-    % Do not solve
+    % Do not solve - no solution information
+    % Do not set sol.FeasCode - already either empty or 1 (if the relaxation was
+    % detected to be infeasible by QUINOPT)
     SOL.solutionTime = [];
-    SOL.FeasCode = [];
     SOL.YALMIP = [];
     
 end
 
 % Set outputs
+varargout = cell(nargout,1);
 if nargout > 0; varargout{1} = SOL; end;
 if nargout > 1; varargout{2} = CNSTR; end;
 if nargout > 2; varargout{3} = DATA; end;
-if nargout > 3; error('You have requested too many outputs.'); end;
+if nargout > 3; error('Too many output arguments.'); end;
 
 % END CODE
 end
