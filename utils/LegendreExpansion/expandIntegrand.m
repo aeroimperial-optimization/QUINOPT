@@ -60,9 +60,9 @@ end
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
 % Expand terms
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
-ndvars = length(INEQ.DERORD);
-dimint = ndvars*(Nleg+Mleg+1)+2*sum(INEQ.DERORD);   % size of terms that are expanded
-dimbnd = ndvars*2+2*sum(INEQ.MAXDER-INEQ.DERORD);   % size of boundary variables not expanded
+INEQ.ndvars = length(INEQ.DERORD);
+INEQ.dimint = INEQ.ndvars*(Nleg+Mleg+1)+2*sum(INEQ.DERORD);   % size of terms that are expanded
+INEQ.dimbnd = INEQ.ndvars*2+2*sum(INEQ.MAXDER-INEQ.DERORD);   % size of boundary variables not expanded
 
 isFi = ~isempty(INEQ.F.Fi) & ~isZero(INEQ.F.Fi);
 isFm = ~isempty(INEQ.F.Fm) & ~isZero(INEQ.F.Fm);
@@ -70,16 +70,17 @@ isFb = ~isempty(INEQ.F.Fb) & ~isZero(INEQ.F.Fb);
 isBC = ~isempty(INEQ.BC) & ~isZero(INEQ.BC);
 
 
+% Permute inequality data
+INEQ = permuteData(INEQ);
+
 % Expand boundary variables with Legendre series if needed for Fb, Fm or BC
 if isFb || isFm || isBC
-    INEQ = permuteData(INEQ);
-    G = expandBoundaryTerm(Nleg,Mleg,INEQ.DERORD,opts.rigorous);
     if opts.rigorous
-        H = speye(dimbnd);
+        [G,H] = expandBoundaryVals1(Nleg,Mleg,INEQ);
         P = spblkdiag(G,H);
     else
         % Fix expansion and set coefficients to 0
-        H = fixBoundaryTerm(Nleg,Mleg,INEQ.DERORD,INEQ.MAXDER);
+        [G,H] = expandBoundaryVals2(Nleg,Mleg,INEQ);
         P = [G;H];
     end
 end
@@ -87,7 +88,7 @@ end
 
 % Expand quadratic part
 [Q,S,slacks,MatrixInequalities,AuxVars] = ...
-    expandQuadratic(INEQ,Nleg,Mleg,dimint,dimbnd,isFi,isFm,isFb,P,opts);
+    expandQuadratic(INEQ,Nleg,Mleg,isFi,isFm,isFb,P,opts);
 
 
 

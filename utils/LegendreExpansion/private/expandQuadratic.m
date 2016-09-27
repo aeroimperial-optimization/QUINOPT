@@ -1,10 +1,13 @@
 function [Q,S,slacks,MatrixInequalities,AuxVars] = ...
-    expandQuadratic(INEQ,Nleg,Mleg,dimint,dimbnd,isFi,isFm,isFb,P,opts)
+    expandQuadratic(INEQ,Nleg,Mleg,isFi,isFm,isFb,P,opts)
 
 % EXPANDQUADRATIC
 %
 % Expand the quadtic part of the integrand in the integral inequality.
 
+% Extract useful variables
+dimint = INEQ.dimint;
+dimbnd = INEQ.dimbnd;
 
 % Expand integral term - distinction between rigorous and non-rigorous expansion 
 % taken into account when building Q by setting entries to 0.
@@ -16,6 +19,8 @@ end
 Q = replace(Q,INEQ.IVAR,0); % remove fake dependence on IVAR
 if opts.rigorous
     Q = [Q, sparse(dimint,dimbnd); sparse(dimbnd,dimint), sparse(dimbnd,dimbnd)];
+else
+    [Q,Fix] = fixOuterApproxQ(Q,INEQ,Nleg,Mleg);
 end
 
 
@@ -34,6 +39,8 @@ if isFm
     Qmix = P'*Qmix;
     if opts.rigorous
         Qmix = [Qmix, sparse(dimint+dimbnd,dimbnd)];
+    else
+        Qmix = Qmix*Fix;
     end
     Q = Q + 0.5.*(Qmix+Qmix.');
 end

@@ -32,12 +32,11 @@ function M = bcProjMat(BC,G,H,opts)
 % of the entries of BC is nonzero. Use full matrices with the "null"
 % command to avoid errors when orthogonal basis is required.
 
+
+            
     % Extract data
     A = BC{1}*G;
     B = BC{2}*H;
-
-    nA = size(A,2);
-    nB = size(B,2);
 
     % Set type of null space projection
     if strcmpi(opts.BCprojectorBasis,'orth')
@@ -50,6 +49,10 @@ function M = bcProjMat(BC,G,H,opts)
     if opts.rigorous
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Use projection for rigorous case
+
+        nA = size(A,2);
+        nB = size(B,2);
+        
         if isZero(B) && ~isZero(A)
             P1 = null(full(A),projtype);
             M = spblkdiag(P1,speye(nB));
