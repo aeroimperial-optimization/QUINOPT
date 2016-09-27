@@ -1,7 +1,9 @@
 function x = vec(X)
 
 %% VEC.m Vectorize matrix
-
+%
+% This file is part of QUINOPT
+%
 % x = VEC(X) returns a vector obained from satcking the columns of X on top
 % of each other. VEC(X) is equivalent to x=X(:).
 

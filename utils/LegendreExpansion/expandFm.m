@@ -1,8 +1,8 @@
-function Qm = expandMixedTerm(Nleg,Mleg,Fm,IVAR,DERORD,rigorous)
+function Qm = expandFm(Nleg,Mleg,Fm,IVAR,DERORD,rigorous)
 
-% EXPANDMIXEDTERM.m
+% EXPANDFM.m
 %
-% Qm = EXPANDMIXEDTERM(Nleg,Mleg,Fm,IVAR,DERORD)
+% Qm = EXPANDFM(Nleg,Mleg,Fm,IVAR,DERORD)
 %
 % Construct representation of mixed boundary-integral term for SDP 
 % relaxation of integral inequality using Legendre expansions.
