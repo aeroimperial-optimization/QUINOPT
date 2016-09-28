@@ -71,7 +71,7 @@ for i = 1:col
                 pcoef = coefficients(Fcol(k));      % an SDPVAR or numeric vector
             elseif isa(Fcol(k),'sdpvar')
                 pdeg = degree(Fcol(k),IVAR);
-                pcoef = legbasiscoef(Fcol(k),IVAR); % an SDPVAR or numeric vector
+                pcoef = legBasisCoef(Fcol(k),IVAR); % an SDPVAR or numeric vector
             elseif isnumeric(Fcol(k))
                 pdeg = 0;
                 pcoef = Fcol(k);                    % a scalar number

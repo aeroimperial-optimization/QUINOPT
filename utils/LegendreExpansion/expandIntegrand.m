@@ -32,7 +32,8 @@ function [Q,S,slacks,MatrixInequalities,AuxVars,BCproj] = expandIntegrand(INEQ,N
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
 % Compute relaxation parameters
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
-k = max(INEQ.DERORD);                % maximum order of derivative
+k = max(INEQ.DERORD);                % maximum order of derivative of function
+l = max(INEQ.MAXDER);                % maximum order of derivative in boundary values
 Lp = degree(INEQ.F.Fi,INEQ.IVAR);    % maximum degree of polynomials in Fi
 Lm = degree(INEQ.F.Fm,INEQ.IVAR);    % max degree in Fm
 if opts.rigorous;
@@ -44,12 +45,12 @@ end
 if isempty(N)
     % Compute default value
     % Consider N=(Nleg+1) Legendre coefficients, from 0 to Nleg
-    Nleg = max(Lp+k-1,Lm);
+    Nleg = max([Lp+k-1,Lm,l]);
 elseif ~isnumeric(N) || ~isscalar(N) || N<1 || rem(N,1)~=0
     % N was provided by the user, but is not a number or empty
     error('Input N must be an positive integer.')
 else
-    Nleg = max([N,Lp+k-1,Lm]);        % Consider N=(Nleg+1) Legendre coefficients, from 0 to Nleg
+    Nleg = max([N,Lp+k-1,Lm,l]);        % Consider N=(Nleg+1) Legendre coefficients, from 0 to Nleg
     if Nleg>N
         fprintf(['WARNING: You requested N = %i, but it is too small. '....
             'Using the minimum value N = %i instead.\n'],N,Nleg);
