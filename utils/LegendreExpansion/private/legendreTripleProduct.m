@@ -19,13 +19,18 @@ function X = legendreTripleProduct(lVals,nMin,nMax,mMin,mMax)
 % Last Modified:    05/05/2016
 % ----------------------------------------------------------------------- %
 
-mVals = mMin:mMax;              % range of valuesm
+% Some parameters
+mVals = mMin:mMax;              % range of values m
 nVals = nMin:nMax;              % range of values n
 numlVals = length(lVals);       % number of values l
 X = cell(numlVals,1);           % initialise output
 rows = length(nVals);           % rows in each matrix X{l}
 cols = length(mVals);           % cols in each matrix X{l}
 
+% Rescaling matrix (use outer product to build)
+S =  ( sqrt(2*nVals(:)+1)*sqrt(2*mVals+1) ) ./2;
+
+% Loop
 for k = 1:numlVals
     
     l = lVals(k);
@@ -82,8 +87,12 @@ for k = 1:numlVals
         end
     end
     
+    % Rescale --- ugly code, in principle set rescaled products 
+    % to start with!
+    Xtemp = (sparse(Xtemp)).*S;
+    
     % Assign sparse output
-    X{k} = sparse(Xtemp);
+    X{k} = Xtemp;
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

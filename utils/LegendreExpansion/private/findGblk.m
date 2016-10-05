@@ -31,13 +31,14 @@ z = sparse(1,N+M+k+1);
 
 % Build entries of G
 count = 0;
-for ALPHAp1 = alpha+1:k-1;
-    % Derivatives from alpha to beta
-    e = II(ALPHAp1,:);
-    [D,B] = legendreDiff(N,M,ALPHAp1,k);                        % integration matrices
-    [Itmp,Jtmp,Stmp] = find([e, z; e+2.*B(1,:), 2.*D(1,:)]);    % find nonzero entries and their indices
+rt2 = sqrt(2);
+
+for der = alpha:min(beta,k-2)
+    e = II(der+1,:);
+    [D,B] = legendreDiff(N,M,der+1,k);
+    [Itmp,Jtmp,Stmp] = find([e, z; e+rt2.*B(1,:), rt2.*D(1,:)]);
     nInd = length(Itmp);                                        % how many nonzeros
-    I(count+1:count+nInd) = Itmp + 2*(ALPHAp1-1-alpha);         % shift row indices
+    I(count+1:count+nInd) = Itmp + 2*(der-alpha);         % shift row indices
     J(count+1:count+nInd) = Jtmp;
     S(count+1:count+nInd) = Stmp;
     count = count+nInd;
@@ -45,7 +46,7 @@ end
 
 if beta==k-1
     % Derivative k-1
-    [Itmp,Jtmp,Stmp] = find([II(k,:), z; II(k,:), 2, z(2:end)]);
+    [Itmp,Jtmp,Stmp] = find([II(k,:), z; II(k,:), rt2, z(2:end)]);
     I(count+1:end) = Itmp + 2*(k-alpha) - 2;                 % shift row indices by 2*ALPHA-2
     J(count+1:end) = Jtmp;
     S(count+1:end) = Stmp;

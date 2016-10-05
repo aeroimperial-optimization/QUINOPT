@@ -48,6 +48,7 @@ if isempty(LIMITS);
         % Build differentiation recursively, use sparse matrices
         D = speye(Nleg+ALPHA+1);
         B = spalloc(Nleg+ALPHA+1,K,2^(K-ALPHA)-1);
+        S = sqrt( 2*(0:Nleg+ALPHA).'+1 )./sqrt(2);
         
         for i = 0:K-ALPHA-1
             
@@ -57,14 +58,34 @@ if isempty(LIMITS);
             % matrix E_eta
             %             E = sparse(1,eta+1,1,n,K+2);
             %             B = B+D*E;
-            B = B + [spalloc(Nleg+ALPHA+1,eta,0),D(:,1),spalloc(Nleg+ALPHA+1,K-1-eta,0)];
+            T = [sparse(Nleg+ALPHA+1,eta), ...
+                 D(:,1)./S, ...
+                 sparse(Nleg+ALPHA+1,K-1-eta)];
+            B = B + T;
             
-            % matrix C_eta
-            v = 1./(2*(0:Nleg+eta)'+3);
             if n>=2
-                C = [sparse([1 2],1,1,n,1), spdiags([v,-v],[-2 0],n,n)];
+                % <-------
+                % Old code - no scaling
+                %C = [sparse([1 2],1,1,n,1), spdiags([v,-v],[-2 0],n,n)];
+                % ------->
+                
+                % New code
+                % Build rescaled matrix
+                I = [1, 1:n, 2:n].';
+                J = [1:n+1, 1:n-1].';
+                v = [1, -1./(2*(1:n)+1), 1./(2*(0:n-2)+1)].';
+                v = v.*( sqrt(2*(J-1)+1)./sqrt(2*(I-1)+1) );
+                C = sparse(I,J,v,n,n+1);
+                
             else
-                C = [1, -1/3];
+                % <-------
+                % Old code - no scaling
+                % C = [1, -1/3];
+                % ------>
+                
+                % New code
+                C = [1, -1/sqrt(3)];
+                
             end
             
             D = D*C;
@@ -90,8 +111,19 @@ elseif (LIMITS(1)>=K-ALPHA)&&(LIMITS(2)<=Nleg+Mleg+ALPHA)
     for i = 0:K-ALPHA-1
         
         % matrix C^[r,s]
-        v = [1./(2*(r:s)'-1),  -1./(2*(r:s)'+3) ];
-        C = spdiags(v,[0 2],s-r+1,s-r+3);
+        
+        % <-------
+        % Old code - no scaling
+        %         v = [1./(2*(r:s)'-1),  -1./(2*(r:s)'+3) ];
+        %         C = spdiags(v,[0 2],s-r+1,s-r+3);
+        % ------->
+        
+        % New code for rescaled matrix
+        I = [1:s-r+1, 1:s-r+1].';
+        J = [3:s-r+3, 1:s-r+1].';
+        v = [-1./(2*(r:s)+3), 1./(2*(r:s)-1)].';
+        v = v.*( sqrt(2*(J+r-2)+1)./sqrt(2*(I+r-1)+1) );
+        C = sparse(I,J,v,s-r+1,s-r+3);
         
         D = D*C;
         r = r-1;    % update indices
