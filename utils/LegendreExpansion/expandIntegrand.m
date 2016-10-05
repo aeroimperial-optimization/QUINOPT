@@ -75,7 +75,7 @@ isBC = ~isempty(INEQ.BC) & ~isZero(INEQ.BC);
 INEQ = permuteData(INEQ);
 
 % Expand boundary variables with Legendre series if needed for Fb, Fm or BC
-if isFb || isFm || isBC
+%if isFb || isFm || isBC
     if opts.rigorous
         [G,H] = expandBoundaryVals1(Nleg,Mleg,INEQ);
         P = spblkdiag(G,H);
@@ -84,7 +84,7 @@ if isFb || isFm || isBC
         [G,H] = expandBoundaryVals2(Nleg,Mleg,INEQ);
         P = [G;H];
     end
-end
+%end
 
 
 % Expand quadratic part
