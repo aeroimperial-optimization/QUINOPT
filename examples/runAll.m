@@ -25,6 +25,6 @@ end
 
 % End
 evalin('caller','close(gcf); clear;')
-disp('All tests completed. QUINTOPT has been successfully installed.')
+fprintf('All tests completed succesfully in %2.2f seconds\n\n',sum(demotime))
 
 end

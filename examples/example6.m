@@ -57,7 +57,7 @@ expr = u(x)*u_t;                          % the integrand
 options.YALMIP = sdpsettings('verbose',0);
 quinopt(-expr,bc,-k,[],[],5,options);   % require positivity of -V_t(u)!
 disp('+++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-disp('AdditionalEx5')
+disp('QUINOPT example 6')
 fprintf('Optimal k from energy stability: k = %4.4f\n',value(k))
 
 %% Weighted energy stability

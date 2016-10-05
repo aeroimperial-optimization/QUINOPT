@@ -63,7 +63,7 @@ time = toc(time);
 
 % display & plot
 disp('+++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-fprintf('AdditionalEx4: Solved %i wave numbers in %4.2f seconds.\n',length(kval),time);
+fprintf('QUINOPT example 5: Solved %i wave numbers in %4.2f seconds.\n',length(kval),time);
 disp('+++++++++++++++++++++++++++++++++++++++++++++++++++++++'); disp(' ')
 clf; plot(kval,Ma_cr,'.-','linewidth',1,'markersize',12); 
 xlabel('k','fontsize',12); ylabel('Ma','fontsize',12)

@@ -28,9 +28,9 @@ clearModel;     % clear QUINOPT's internal variables
 
 % Then we initialize the independent variable of integration, the dependent
 % variable u and the optimization variable gamma with the commands
-x = indvar(-1,1);  % define independent variable with domain [-1,1]
-u = depvar(x);     % define u, which depends on x
-parameters gamma   % define the optimsation variable gamma
+x = indvar(-1,1);       % define independent variable with domain [-1,1]
+u = depvar(x);          % define u, which depends on x
+parameters gamma        % define the optimsation variable gamma
 
 %% Construct the problem
 % The integrand of the integral inequality is constructed with the commands
@@ -53,11 +53,11 @@ obj = -gamma;
 % We solve the problem for a number of values of theLegendre series 
 % truncation parameter N. 
 
-%To run in silent mode, we set YALMIP's option 'verbose' to 0. Also, we
-%speed up the iteration by settin YALMIP's 'cachesolvers' option to 1.
+% To run in silent mode, we set YALMIP's option 'verbose' to 0. Also, we
+% speed up the iteration by settin YALMIP's 'cachesolvers' option to 1.
 opts.YALMIP = sdpsettings('verbose',0,'cachesolvers',1);
 
-% Display a nice header
+% Let us display a nice header...
 fprintf('|============================================================|\n')
 fprintf('|   N   |   gamma_opt   |   0.25*pi^2-gamma_opt   |   time   |\n')
 fprintf('|============================================================|\n')
