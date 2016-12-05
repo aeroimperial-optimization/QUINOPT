@@ -54,7 +54,7 @@ for i = 1:numel(p)
     
     % If have more than 1 coefficient
     for n = 0:N-2
-        Pnp1 = ((2*n+1)*x.*Pn - n*Pnm1)/(n+1);  % 3 term recurrence
+        Pnp1 = ( ((2*n+1)/(n+1)).*x ).*Pn - (n/(n+1)).*Pnm1;  % 3 term recurrence
         pval = pval + Pnp1*C(n+2,:);                  % Add to function evaluation
         Pnm1= Pn;
         Pn = Pnp1;

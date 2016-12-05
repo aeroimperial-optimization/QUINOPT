@@ -223,7 +223,11 @@ else
         else
             % Nothing to do - term vanishes thanks to orthogonality of
             % Legendre polyomials
-            Q{i} = sparse(length(row),length(col));
+            if i==1
+                 Q{i} = sparse(length(row),length(col));
+            elseif i==2
+                 Q{i} = sparse(length(col),length(row));
+            end
         end
         
     end
