@@ -4,7 +4,7 @@
 %
 % /1
 % |
-% |  u_xx^2 - nu*u_x^2 dx  >= 0
+% |  nu*u_xx^2 - u_x^2 dx  >= 0
 % |
 % /-1
 %
@@ -37,7 +37,7 @@ BC = [u(-1); u(1); u(-1,1)-u(1,1)];
 quinopt(expr,BC,nu);
 nuval = value(nu);
 disp('++++++++++++++++++++++++++++++++++++++++++++++++++++')
-disp('AdditionalEx1: DEFAULT SOLUTION INFO');
+disp('QUINOPT example 2: DEFAULT SOLUTION INFO');
 disp(['Numerical Solution       :        nu = ',num2str(nuval)])
 disp(['Error with analytical ans: nu-1/pi^2 = ',num2str(nuval-1/pi^2)])
 disp('++++++++++++++++++++++++++++++++++++++++++++++++++++'); disp(' ')
@@ -46,7 +46,7 @@ disp('++++++++++++++++++++++++++++++++++++++++++++++++++++'); disp(' ')
 quinopt(expr,BC,nu,[],[],5);
 nuval = value(nu);
 disp('++++++++++++++++++++++++++++++++++++++++++++++++++++')
-disp('AdditionalEx1: REFINED SOLUTION INFO');
+disp('QUINOPT example 2: REFINED SOLUTION INFO');
 disp(['Numerical Solution       :        nu = ',num2str(nuval)])
 disp(['Error with analytical ans: nu-1/pi^2 = ',num2str(nuval-1/pi^2)])
 disp('++++++++++++++++++++++++++++++++++++++++++++++++++++'); disp(' ')

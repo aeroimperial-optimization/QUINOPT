@@ -40,23 +40,7 @@ if ALPHA==Ka && BETA==Kb
     
     % Assign
     S(dvar(1),dvar(2)) = S(dvar(1),dvar(2)) + pcoef(:)'*mons;
-        
-%     % OLD CASE        
-%     if degp~=0;
-%         % THIS CASE SHOULD HAVE ALREADY BEEN HANDLED BY addQterm.m
-%         % Rigorous relaxation not yet supported (need SOS formulation) - tell the user!
-%         error(['Variable coefficients for the highest order derivatives are not supported yet. '...
-%             'This problem will need a sum-of-squares relaxation. '...
-%             'If you wish to compute an approximate solution, set the "rigorous" option to 0 '...
-%             'and increase the input N until the optimal solution converges.'])
-%     else
-%         % Add the coefficient (which is a scalar) to S in appropriate place,
-%         % no slacks are required, T is unchanged
-%         %T = T;
-%         S(dvar(1),dvar(2)) = S(dvar(1),dvar(2)) + pcoef;
-%         %slk = slk;
-%         return
-%     end    
+    
     
 else
     %^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^%
@@ -180,9 +164,13 @@ end
 % Find H
 function  H = computeHmatrix(Nleg,Mleg,ALPHA,K)
     D = legendreDiff(Nleg,Mleg,ALPHA,K,[Nleg+ALPHA+1,Nleg+Mleg+ALPHA]);
-    v = 1./( 2*( Nleg+ALPHA+1:Nleg+Mleg+ALPHA )' + 1 );
-    dim = length(v);
-    H = D'*spdiags(v,0,dim,dim)*D;
+    % Old code - no rescaling
+    % <-----
+    % v = 1./( 2*( Nleg+ALPHA+1:Nleg+Mleg+ALPHA )' + 1 );
+    % dim = length(v);
+    % H = D'*spdiags(v,0,dim,dim)*D;
+    % ---->
+    H = (D.'*D)./2;
 end
 
 % Find T
@@ -190,8 +178,13 @@ function  T = computeTmatrix(Nleg,Mleg,eta,K)
     if eta < K+1
         % Interesting case
         D = legendreDiff(Nleg,Mleg,eta,K,[Nleg+Mleg+eta-1,Nleg+Mleg+eta]);
-        N = [2/( 2*(Nleg+Mleg+eta)-1 )^2/(2*(Nleg+Mleg+eta)+1); ...
-            2/( 2*(Nleg+Mleg+eta)+1 )^2/(2*(Nleg+Mleg+eta)+3)];
+        % Old code - no rescaling
+        % <-----
+        % N = [2/( 2*(Nleg+Mleg+eta)-1 )^2/(2*(Nleg+Mleg+eta)+1); ...
+        %      2/( 2*(Nleg+Mleg+eta)+1 )^2/(2*(Nleg+Mleg+eta)+3)];
+        % ---->
+        N = [1/( 2*(Nleg+Mleg+eta)-1 )/(2*(Nleg+Mleg+eta)+1); ...
+             1/( 2*(Nleg+Mleg+eta)+1 )/(2*(Nleg+Mleg+eta)+3)];
         T = D'*spdiags(N,0,2,2)*D;
     else
         % a zero matrix - can set to scalar, will be taken as element-wise

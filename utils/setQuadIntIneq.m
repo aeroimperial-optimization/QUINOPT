@@ -1,4 +1,4 @@
-function [CNSTR,DATA,FLAG] = setQuadIntIneq(EXPR,BC,N,OPTIONS)
+function varargout = setQuadIntIneq(EXPR,BC,N,OPTIONS)
 
 %% SETQUADINTINEQ.m Create constraint for quadratic integral inequality
 %
@@ -40,6 +40,9 @@ function [CNSTR,DATA,FLAG] = setQuadIntIneq(EXPR,BC,N,OPTIONS)
 %                   in the S-procedure to localize SOS constraints arising
 %                   from the relaxation of the integral inequality to the 
 %                   domain of integration.
+%               - psdtol: (default -1e-8) a tolerance to establish if a negative
+%                   eigenvalue of a matrix should be considered negative, or if
+%                   can be considered as a numerical zero with roundoff error.
 %
 % [CNSTR,DATA,FLAG] = SETQUADINTINEQ(EXPR,BC) also returns the raw data used to
 %       set up the constraint object CNSTR and a FLAG to determine if and
@@ -60,15 +63,16 @@ function [CNSTR,DATA,FLAG] = setQuadIntIneq(EXPR,BC,N,OPTIONS)
 
 %% CODE
 
+% Initialize output
+varargout = cell(nargout,1);
+
 % ----------------------------------------------------------------------- %
 % Set default inputs
 % ----------------------------------------------------------------------- %
 if nargin == 0
         error('Not enough input arguments.')
-elseif nargin == 1 && isempty(EXPR)
-       CNSTR = [];
-       DATA = [];
-       FLAG = 0;
+elseif nargin >= 1 && isempty(EXPR)
+       if nargout > 2; varargout{3} = 0; end       % FLAG
        return
 elseif nargin == 1
         BC = [];
@@ -92,9 +96,9 @@ opts = setQUINOPTOptions(OPTIONS);
 INEQ = setInequalityModel(EXPR,BC);
 [INEQ,Equalities,FLAG] = integrateByParts(INEQ);
 if FLAG==1
-    fprintf('\nWARNING: Integration by parts produced an infeasible constraint. Your problem is infeasible!\n\n')
-    CNSTR = [];
-    DATA = [];
+    fprintf(['\nWARNING: Integration by parts produced an infeasible constraint.',...
+            'Your problem is infeasible!\n\n']);
+    varargout{3} = FLAG;
     return
 end
 
@@ -121,41 +125,28 @@ else
 end
 
 % ----------------------------------------------------------------------- %
-% REMOVE ZERO ROWS/COLS AND TRY TO DETECT BLOCK DIAGONAL STRUCTURE
+% Remove zero rows/cols and try to detect block-diagonal structure
 % ----------------------------------------------------------------------- %
 Q = makeBlkDiag(Q);
 S = makeBlkDiag(S);
 
 % ----------------------------------------------------------------------- %
-% SET OUTPUTS
+% Set constraints 
 % ----------------------------------------------------------------------- %
+[CNSTR,DATA,FLAG] = setConstraints(INEQ.IVAR,Q,S,MatrixInequalities,slacks,...
+                                  AuxVars,Equalities,FLAG,opts);
 
-% Test for infeasibility or set constraints
-if (isnumeric(S)&&any(eig(S)<0)) || (isnumeric(Q)&&any(eig(Q)<-1e-8));
-        fprintf(['\nWARNING: The current relaxation is infeasible. Try increasing the\n',...
-                   'number of Legendre coefficients used in the expansion using the  \n',...
-                   'input N. If the problem persists, your problem might be infeasible\n',...
-                   'although a certificate of infeasibility is not available.\n\n'])
-        FLAG = 2;
-        CNSTR = [];
-        DATA = [];
-        return
-else
-    [CNSTR,SumOfSquares,MatrixInequalities,LinearInequalities,Equalities,AuxVars,SoSParams] = ...
-        setConstraints(INEQ.IVAR,Q,S,MatrixInequalities,slacks,AuxVars,Equalities,opts);
-end
+% ----------------------------------------------------------------------- %
+% Set outputs 
+% ----------------------------------------------------------------------- %
+if nargout > 0; varargout{1} = CNSTR; end
+if nargout > 1; varargout{2} = DATA; end 
+if nargout > 2; varargout{3} = FLAG; end
 
 
-% Output data used to set constraints
-if nargout>=2
-    DATA.SumOfSquares = SumOfSquares;
-    DATA.SumOfSquaresParameters = SoSParams;
-    DATA.MatrixInequalities = MatrixInequalities;
-    DATA.LinearInequalities = LinearInequalities;
-    DATA.Equalities = Equalities;
-    DATA.slacks = slacks;
-    DATA.auxiliaryVariables = AuxVars;
-end
+% ----------------------------------------------------------------------- %
+% Set undocumented outputs (not for general users)
+% ----------------------------------------------------------------------- %
 
 
 %% END CODE

@@ -110,7 +110,7 @@ fprintf('| 0(P=I) |   %8.6f   |  %8.4f  |    ------    | (outer approx.)\n',gamm
 %% Weighted energy stability
 % Do line search with bisection method to avoid nonconvexity. Try to locate
 % the value of gamma_cr at which the problem becomes infeasible.
-for degp = 0:2:8;
+for degp = 0:2:6;
     
     % ------------------------------------------------------------------------ %
     for rig = [1,0]

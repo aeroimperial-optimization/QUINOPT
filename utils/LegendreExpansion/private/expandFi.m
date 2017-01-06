@@ -1,8 +1,8 @@
-function [Qi,S,slk,MatrixInequalities,AuxVars] = expandIntegralTerm(Qi,Nleg,Mleg,Fi,IVAR,DERORD,opts)
+function [Qi,S,slk,MatrixInequalities,AuxVars] = expandFi(Qi,Nleg,Mleg,Fi,IVAR,DERORD,opts)
 
-% EXPANDITEGRALTERM.m
+% EXPANDFIM.m
 %
-% [Qi,Si,s,MatrixInequalities] = RelaxIntegralTerm(Nleg,Mleg,Fi,IVAR,DERORD,opts);
+% [Qi,S,slk,MatrixInequalities,AuxVars] = EXPANDFIM(Qi,Nleg,Mleg,Fi,IVAR,DERORD,opts);
 %
 % Compute SDP relaxation of integral-integral terms specified by the matrix
 % Fi. The entries of Fi are either scalars (class double), Legendre 

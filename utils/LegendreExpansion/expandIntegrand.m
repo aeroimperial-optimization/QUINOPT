@@ -28,15 +28,12 @@ function [Q,S,slacks,MatrixInequalities,AuxVars,BCproj] = expandIntegrand(INEQ,N
 
 %% CODE
 
-% ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
-% Some useful parameters
-% ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
-cleanTol = 0;   % tolerance to remove terms with small coefficients from Q (0=keep all)
 
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
 % Compute relaxation parameters
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
-k = max(INEQ.DERORD);                % maximum order of derivative
+k = max(INEQ.DERORD);                % maximum order of derivative of function
+l = max(INEQ.MAXDER);                % maximum order of derivative in boundary values
 Lp = degree(INEQ.F.Fi,INEQ.IVAR);    % maximum degree of polynomials in Fi
 Lm = degree(INEQ.F.Fm,INEQ.IVAR);    % max degree in Fm
 if opts.rigorous;
@@ -48,12 +45,12 @@ end
 if isempty(N)
     % Compute default value
     % Consider N=(Nleg+1) Legendre coefficients, from 0 to Nleg
-    Nleg = max(Lp+k-1,Lm);
+    Nleg = max([Lp+k-1,Lm,l]);
 elseif ~isnumeric(N) || ~isscalar(N) || N<1 || rem(N,1)~=0
     % N was provided by the user, but is not a number or empty
     error('Input N must be an positive integer.')
 else
-    Nleg = max([N,Lp+k-1,Lm]);        % Consider N=(Nleg+1) Legendre coefficients, from 0 to Nleg
+    Nleg = max([N,Lp+k-1,Lm,l]);        % Consider N=(Nleg+1) Legendre coefficients, from 0 to Nleg
     if Nleg>N
         fprintf(['WARNING: You requested N = %i, but it is too small. '....
             'Using the minimum value N = %i instead.\n'],N,Nleg);
@@ -64,9 +61,9 @@ end
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
 % Expand terms
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
-ndvars = length(INEQ.DERORD);
-dimint = ndvars*(Nleg+Mleg+1)+2*sum(INEQ.DERORD);   % size of terms that are expanded
-dimbnd = ndvars*2+2*sum(INEQ.MAXDER-INEQ.DERORD);   % size of boundary variables not expanded
+INEQ.ndvars = length(INEQ.DERORD);
+INEQ.dimint = INEQ.ndvars*(Nleg+Mleg+1)+2*sum(INEQ.DERORD);   % size of terms that are expanded
+INEQ.dimbnd = INEQ.ndvars*2+2*sum(INEQ.MAXDER-INEQ.DERORD);   % size of boundary variables not expanded
 
 isFi = ~isempty(INEQ.F.Fi) & ~isZero(INEQ.F.Fi);
 isFm = ~isempty(INEQ.F.Fm) & ~isZero(INEQ.F.Fm);
@@ -74,60 +71,33 @@ isFb = ~isempty(INEQ.F.Fb) & ~isZero(INEQ.F.Fb);
 isBC = ~isempty(INEQ.BC) & ~isZero(INEQ.BC);
 
 
+% Permute inequality data
+INEQ = permuteData(INEQ);
+
 % Expand boundary variables with Legendre series if needed for Fb, Fm or BC
-if isFb || isFm || isBC
-    INEQ = permuteData(INEQ);
-    G = expandBoundaryTerm(Nleg,Mleg,INEQ.DERORD,opts.rigorous);
+%if isFb || isFm || isBC
     if opts.rigorous
-        H = speye(dimbnd);
+        [G,H] = expandBoundaryVals1(Nleg,Mleg,INEQ);
         P = spblkdiag(G,H);
     else
-        % Expand setting coefficients to 0!
-        H = expandHighOrdBndVals(Nleg,Mleg,INEQ.DERORD,INEQ.MAXDER);
+        % Fix expansion and set coefficients to 0
+        [G,H] = expandBoundaryVals2(Nleg,Mleg,INEQ);
         P = [G;H];
     end
-end
+%end
 
 
-% Expand integral term - distinction between rigorous and non-rigorous expansion 
-% taken into account when building Q by setting entries to 0.
-Q(dimint,dimint) = INEQ.IVAR;  % initialize, fake dependence on IVAR
-if isFi
-    [Q,S,slacks,MatrixInequalities,AuxVars] = ...
-        expandIntegralTerm(Q,Nleg,Mleg,INEQ.F.Fi,INEQ.IVAR,INEQ.DERORD,opts);
-end
-Q = replace(Q,INEQ.IVAR,0); % remove fake dependence on IVAR
-if opts.rigorous
-    Q = [Q, sparse(dimint,dimbnd); sparse(dimbnd,dimint), sparse(dimbnd,dimbnd)];
-end
+% Expand quadratic part
+[Q,S,slacks,MatrixInequalities,AuxVars] = ...
+    expandQuadratic(INEQ,Nleg,Mleg,isFi,isFm,isFb,P,opts);
 
-
-% Expand boundary term (need to make symmetric) - distinction between rigorous
-% and non-rigorous expansion already taken into account by matrix P.
-if isFb
-    Qbnd = P'*( (INEQ.F.Fb + INEQ.F.Fb')./2 )*P;
-    Q = Q + Qbnd;
-end
-
-% Expand mixed term - distinction between rigorous and non-rigorous expansion 
-% taken into account by matrix P and when building Qmix by setting entries to 0.
-if isFm
-    Qmix = expandMixedTerm(Nleg,Mleg,INEQ.F.Fm,INEQ.IVAR,INEQ.DERORD,opts.rigorous);
-    Qmix = P'*Qmix;
-    if opts.rigorous
-        Qmix = [Qmix, sparse(dimint+dimbnd,dimbnd)];
-    end
-    Q = Q + 0.5*(Qmix+Qmix');
-end
 
 
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
 % Project onto boundary conditions
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
 if isBC
-    BCproj = bcProjectionMatrix(INEQ.BC,G,H,opts);
-    Q = BCproj'*(Q*BCproj);
-    Q = clean(Q,cleanTol);
+    [Q,BCproj] = projectBC(Q,INEQ.BC,G,H,opts);
 else
     BCproj=[];
 end

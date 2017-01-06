@@ -12,18 +12,21 @@ function [C,IA,IC] = getVariables(A,flag)
 %                   Department of Aeronautics
 %                   Imperial College London
 %       Created:    16/04/2015
-% Last Modified:    05/04/2016
+% Last Modified:    06/01/2017
 % ----------------------------------------------------------------------- %
 
 % Compatible version with old MATLAB versions
 if nargin < 2
     % flag = 'sorted';
-    [C,IA,IC] = unique([A.ivars],'first');
+    %[C,IA,IC] = unique([A.ivars],'first');
+    [C,IA,IC] = unique(vertcat(A.ivars).','first');
     
 elseif strcmpi(flag,'stable')
-    x = [A.ivars];
+%     x = [A.ivars];
+%     [C,IA,IC] = unique(x,'first');
+    x = vertcat(A.ivars);
     [C,IA,IC] = unique(x,'first');
-    C = x(sort(IA));
+    C = x(sort(IA)).';
     
 elseif strcmpi(flag,'rows')
      error('Flag "rows" not allowed.')

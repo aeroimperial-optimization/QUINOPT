@@ -1,8 +1,8 @@
-function Qm = expandMixedTerm(Nleg,Mleg,Fm,IVAR,DERORD,rigorous)
+function Qm = expandFm(Nleg,Mleg,Fm,IVAR,DERORD,rigorous)
 
-% EXPANDMIXEDTERM.m
+% EXPANDFM.m
 %
-% Qm = EXPANDMIXEDTERM(Nleg,Mleg,Fm,IVAR,DERORD)
+% Qm = EXPANDFM(Nleg,Mleg,Fm,IVAR,DERORD)
 %
 % Construct representation of mixed boundary-integral term for SDP 
 % relaxation of integral inequality using Legendre expansions.
@@ -71,7 +71,7 @@ for i = 1:col
                 pcoef = coefficients(Fcol(k));      % an SDPVAR or numeric vector
             elseif isa(Fcol(k),'sdpvar')
                 pdeg = degree(Fcol(k),IVAR);
-                pcoef = legbasiscoef(Fcol(k),IVAR); % an SDPVAR or numeric vector
+                pcoef = legBasisCoef(Fcol(k),IVAR); % an SDPVAR or numeric vector
             elseif isnumeric(Fcol(k))
                 pdeg = 0;
                 pcoef = Fcol(k);                    % a scalar number
@@ -80,7 +80,7 @@ for i = 1:col
             end
             
             % Add to Fhat
-            Fhat = [Fhat; pcoef'.*2./( 2.*(0:pdeg)+1 ), spalloc(1,Ntot-pdeg,0)];               
+            Fhat = [Fhat; pcoef'.*sqrt(2)./sqrt( 2.*(0:pdeg)+1 ), sparse(1,Ntot-pdeg)];               
         end
         
         % Set Qm

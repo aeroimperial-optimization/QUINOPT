@@ -31,12 +31,6 @@ if ALPHA==Ka && BETA==Kb && degp > 0
     %^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^%
     % Need to add auxiliary variables
     
-%     error(['Variable coefficients for the highest order derivatives are not supported yet. '...
-%         'This problem will need a sum-of-squares relaxation. '...
-%         'If you wish to compute an approximate solution, set the "rigorous" option to 0 '...
-%         'and increase the input N until the optimal solution converges.'])
-%         
-    
     if dvar(1)==dvar(2)
         
         Nk = Nleg+Mleg+Ka;
@@ -53,8 +47,12 @@ if ALPHA==Ka && BETA==Kb && degp > 0
         end
         
         % Auxiliary LMI
-        LMI{end+1,1} = [R, H; H', Sigma.*spdiags(2./(2*(Nk+1:Nk+degp)'+1),0,degp,degp)];
-        auxVars = [auxVars;{R;Sigma}];
+        % <------
+        % Old code - not rescaled
+        % LMI{end+1,1} = [R, H; H', Sigma.*spdiags(2./(2*(Nk+1:Nk+degp)'+1),0,degp,degp)];
+        % ------>
+        LMI{end+1,1} = [R, H; H', Sigma.*speye(degp)];
+        auxVars = [auxVars; {R; Sigma}];
         
         % Set
         S(dvar(1),dvar(2)) = S(dvar(1),dvar(2)) - Sigma;
@@ -76,15 +74,19 @@ if ALPHA==Ka && BETA==Kb && degp > 0
         Sigma = sdpvar(1);
         
         % Set integral of Leg polys
-        Y = 0.5.*legendreTripleProduct(nnzIdx-1,nMin,nMax,mMin,mMax);
-        H = pcoef(1).*Y{1};
+        Y = legendreTripleProduct(nnzIdx-1,nMin,nMax,mMin,mMax);
+        H = pcoef(1).*(0.5.*Y{1});
         for j = 2:length(pcoef)
-            H = H + pcoef(j).*Y{j};
+            H = H + pcoef(j).*(0.5.*Y{j});
         end
         
         % Auxiliary LMI
-        LMI{end+1,1} = [R, H; H', Sigma.*spdiags(2./(2*(mMin:mMax)'+1),0,degp,degp)];
-        auxVars = [auxVars;{R;Sigma}];
+        % <------
+        % Old code - not rescaled
+        % LMI{end+1,1} = [R, H; H', Sigma.*spdiags(2./(2*(mMin:mMax)'+1),0,Kb-Ka+degp,Kb-Ka+degp)];
+        % ------>
+        LMI{end+1,1} = [R, H; H', Sigma.*speye(Kb-Ka+degp)];
+        auxVars = [auxVars; {R; Sigma}];
         
         % Set (use indices of dvar(2) for T)
         S(dvar(1),dvar(1)) = S(dvar(1),dvar(1)) - Sigma;
@@ -107,15 +109,20 @@ if ALPHA==Ka && BETA==Kb && degp > 0
         Sigma = sdpvar(1);
         
         % Set integral of Leg polys
-        Y = 0.5.*legendreTripleProduct(nnzIdx-1,nMin,nMax,mMin,mMax);
-        H = pcoef(1).*Y{1};
+        Y = legendreTripleProduct(nnzIdx-1,nMin,nMax,mMin,mMax);
+        H = pcoef(1).*(0.5.*Y{1});
         for j = 2:length(pcoef)
-            H = H + pcoef(j).*Y{j};
+            H = H + pcoef(j).*(0.5.*Y{j});
         end
         
         % Auxiliary LMI
-        LMI{end+1,1} = [R, H; H', Sigma.*spdiags(2./(2*(mMin:mMax)'+1),0,degp,degp)];
-        auxVars = [auxVars;{R;Sigma}];
+        % <------
+        % Old code - not rescaled
+        % LMI{end+1,1} = [R, H; H', Sigma.*spdiags(2./(2*(mMin:mMax)'+1),0,Kb-Ka+degp,Kb-Ka+degp)];
+        % ------>
+        LMI{end+1,1} = [R, H; H', Sigma.*speye(Kb-Ka+degp)];
+        auxVars = [auxVars; {R; Sigma}];
+        
         
         % Set (use indices of dvar(1) for T)
         S(dvar(2),dvar(2)) = S(dvar(2),dvar(2)) - Sigma;
@@ -153,12 +160,14 @@ if ALPHA==Ka && BETA==Kb && degp > 0
         Y = [sparse(dimvv,dimuu), Q{1}; Q{2}, sparse(dimuu,dimvv)];
         
         % Auxiliary LMI
-        P = [Sigma(1,1).*spdiags(2./(2*(NKa+1:NKa+degp)'+1),0,dimuu,dimuu), ...
-             sparse(dimuu,dimvv); ...
-             sparse(dimvv,dimuu), ...
-             Sigma(2,2).*spdiags(2./(2*(NKb+1:NKb+degp)'+1),0,dimvv,dimvv)];
+        % <------
+        % Old code - not rescaled
+        % P = blkdiag(Sigma(1,1).*spdiags(2./(2*(NKa+1:NKa+degp)'+1),0,dimuu,dimuu), ...
+        %             Sigma(2,2).*spdiags(2./(2*(NKb+1:NKb+degp)'+1),0,dimvv,dimvv) );
+        % ------>
+        P = blkdiag(Sigma(1,1).*speye(dimuu), Sigma(2,2).*speye(dimvv));
         LMI{end+1,1} = [R, Y; Y', P];
-        auxVars = [auxVars;{R;Sigma}];
+        auxVars = [auxVars; {R; Sigma}];
         
         % Set outputs
         S(dvar,dvar) = S(dvar,dvar) - Sigma;
@@ -214,7 +223,11 @@ else
         else
             % Nothing to do - term vanishes thanks to orthogonality of
             % Legendre polyomials
-            Q{i} = sparse(length(row),length(col));
+            if i==1
+                 Q{i} = sparse(length(row),length(col));
+            elseif i==2
+                 Q{i} = sparse(length(col),length(row));
+            end
         end
         
     end

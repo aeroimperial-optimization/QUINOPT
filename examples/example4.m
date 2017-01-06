@@ -68,7 +68,7 @@ xlabel('\phi(z)/\phi(1)'); ylabel('z'); title('Example 5');
 
 %% Display results
 disp('++++++++++++++++++++++++++++++++++++++++++++++++++++')
-disp('AdditionalEx3: SOLUTION INFO');
+disp('QUINOPT example 4: SOLUTION INFO');
 disp(['Solution time:  ',num2str(time),' seconds'])
 disp(['Optimal objective value = ',num2str(value(obj))])
 disp('++++++++++++++++++++++++++++++++++++++++++++++++++++'); disp(' ')
