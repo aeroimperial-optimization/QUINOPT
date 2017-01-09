@@ -63,7 +63,7 @@ switch nargin
             try
                 [m,n] = size(varargin{1});
                 [dvar(1:m,1:n).coeff] = deal(varargin{1}.coeff);
-                [dvar(1:m,1:n).ivars]= deal(varargin{1}.ivars);
+                [dvar(1:m,1:n).ivars]= deal(varargin{1}.ivars(:));
                 [dvar(1:m,1:n).monom] = deal(varargin{1}.monom);
                 dvar = class(dvar,'dvarpoly');
                 return
