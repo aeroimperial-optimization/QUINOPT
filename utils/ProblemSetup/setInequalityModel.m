@@ -27,7 +27,7 @@ elseif ~isempty(BC) && (~isa(BC,'dvarpoly') || ~isvector(BC))
 end
 
 % Get ID of dependent variables in expression and in internal model
-ivars = getVariables([EXPR;BC],'stable');
+ivars = getVariables([EXPR;BC(:)],'stable');
 mod = qiimodel('query');
 if isempty(mod.DEPVARMODEL)
     error('Internal model is empty. Please setup your problem using the commands "indvar" and "depvar".')
