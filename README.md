@@ -11,6 +11,8 @@ An open-source add-on for YALMIP to solve optimisation problems with polynomial 
 ## Latest release<a name="LatestRelease"></a>
 Version 1.3  
 06 January 2017  
+**Known bugs in version 1.3:**
+- A bug in `setInequalityModel.m` throws an error if the boundary condition vector BC is a row vector. Please use column vectors until the bug is fixed in the next release.
 
 ## Copyright<a name="Copyright"></a>
 - Giovanni Fantuzzi (Department of Aeronautics, Imperial College London, UK. Email: gf910[at]ic.ac.uk)  
