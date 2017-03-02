@@ -9,10 +9,10 @@ An open-source add-on for YALMIP to solve optimisation problems with polynomial 
 - [How to cite](#Cite)
 
 ## Latest release<a name="LatestRelease"></a>
-**Version:** 1.3  
-**Release date:** 06 January 2017  
-**Known bugs in version 1.3:**
-- A bug in `setInequalityModel.m` throws an error if the boundary condition vector is not a column vector. Please use column vectors as in the examples until the bug is fixed in the next release.
+**Version:** 1.4  
+**Release date:** 02 March 2017  
+**Known bugs in version 1.4:**
+- No known bugs (yet!).
 
 ## Copyright<a name="Copyright"></a>
 - Giovanni Fantuzzi (Department of Aeronautics, Imperial College London, UK. Email: gf910[at]ic.ac.uk)  
@@ -70,8 +70,50 @@ at the MATLAB command prompt.
 ## How to cite<a name="Cite"></a>
   
 If you find QUINOPT useful, or have used it in your own work, please reference
-if by citing the following paper:
+it by citing the following papers:
 
-G. Fantuzzi, A. Wynn, P. Goulart, A. Papachristodoulou, _Optimization 
+* G. Fantuzzi, A. Wynn, _Semidefinite relaxation of a class of quadratic
+ integral inequalities_, [55th IEEE Conference on Decision and Control, 2016]
+ (http://dx.doi.org/10.1109/CDC.2016.7799221).
+ 
+ ```
+@inproceedings{FW2016CDC,
+    address = {Las Vegas, USA},
+    author = {Fantuzzi, G. and Wynn, A.},
+    booktitle = {Proc. 55th IEEE Conf. Decis. Control},
+    doi = {10.1109/CDC.2016.7799221},
+    pages = {6192--6197},
+    publisher = {IEEE},
+    title = {{Semidefinite relaxation of a class of quadratic integral inequalities}},
+    url = {http://dx.doi.org/10.1109/CDC.2016.7799221},
+    volume = {2},
+    year = {2016}
+	}
+ ```
+ 
+* G. Fantuzzi, A. Wynn, P. Goulart, A. Papachristodoulou, _Optimization 
 with affine homogeneous quadratic integral inequality constraints_,
-[arXiv:1607.04210v1 [math.OC]](http://arxiv.org/abs/1607.04210v1).
+[arXiv:1607.04210 [math.OC]](https://arxiv.org/abs/1607.04210#).
+
+ ```
+ @article{FWGP2016,
+	archivePrefix = {arXiv},
+	eprint = {1607.04210},
+	primaryClass = "math-OC",
+	author = {Fantuzzi, Giovanni and Wynn, Andrew and Goulart, Paul and Papachristodoulou, Antonis},
+	title = {{Optimization with affine homogeneous quadratic integral inequality constraints}}
+	}
+ ```
+
+A selection of BibTex styles that support arXiv preprints can be found [here](http://arxiv.org/hypertex/bibstyles/).
+Should you wish to cite the code directly, please use the following BibTeX entry:
+
+```
+@misc{CDCS,
+    author       = {Fantuzzi, Giovanni and Wynn, Andrew and Goulart, Paul and Papachristodoulou, Antonis},
+    title        = {{QUINOPT}, version 1.4},
+    howpublished = {\url{https://github.com/aeroimperial-optimization/QUINOPT}},
+    month        = Mar,
+    year         = 2017
+    }
+```
