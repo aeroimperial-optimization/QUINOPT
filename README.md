@@ -95,15 +95,15 @@ it by citing the following papers:
 with affine homogeneous quadratic integral inequality constraints_,
 [arXiv:1607.04210 [math.OC]](https://arxiv.org/abs/1607.04210#).
 
-```
-@article{FWGP2016,
+ ```
+ @article{FWGP2016,
 	archivePrefix = {arXiv},
 	eprint = {1607.04210},
 	primaryClass = "math-OC",
 	author = {Fantuzzi, Giovanni and Wynn, Andrew and Goulart, Paul and Papachristodoulou, Antonis},
 	title = {{Optimization with affine homogeneous quadratic integral inequality constraints}}
 	}
-```
+ ```
 
 A selection of BibTex styles that support arXiv preprints can be found [here](http://arxiv.org/hypertex/bibstyles/).
 Should you wish to cite the code directly, please use the following BibTeX entry:
