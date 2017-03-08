@@ -109,7 +109,7 @@ A selection of BibTex styles that support arXiv preprints can be found [here](ht
 Should you wish to cite the code directly, please use the following BibTeX entry:
 
 ```
-@misc{CDCS,
+@misc{QUINOPTv1.4,
     author       = {Fantuzzi, Giovanni and Wynn, Andrew and Goulart, Paul and Papachristodoulou, Antonis},
     title        = {{QUINOPT}, version 1.4},
     howpublished = {\url{https://github.com/aeroimperial-optimization/QUINOPT}},
