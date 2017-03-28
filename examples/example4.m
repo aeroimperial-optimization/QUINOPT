@@ -40,7 +40,7 @@ expr = [];
 for n=1:3
     k = 2*pi*n/Gamma;   % the wave number
     expr = [expr; 16/k^2*v(x,2)^2 + 8*v(x,1)^2 + 4*u(x,1)^2 + k^2*( u(x)^2+v(x)^2 ) ...
-            + 4*Phi_x/k*u(x)*v(x)];
+            + 4*Phi_x*u(x)*v(x)];
 end
 BC = [u(-1); u(1,1)];                       % BC on u
 BC = [BC; v(-1); v(1); v(-1,1); v(1,2)];    % BC on v  
