@@ -31,7 +31,7 @@ end
 DOM = getDomain(p);
 if ~any(DOM)
     % constant polynomial!
-    F = coefficients(p);
+    F(1:mx,1:nx) = coefficients(p);
     return
 end
 
