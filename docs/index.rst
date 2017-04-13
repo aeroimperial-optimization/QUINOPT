@@ -17,6 +17,7 @@ QUINOPT (QUadratic INtegral OPTimisation) is an open-source add-on for `YALMIP <
 	\end{aligned}
 	
 where :math:`Q_{\gamma}(x,u(x),u'(x),...,u^k(x))` is 
+
 1. polynomial in :math:`x \in [a,b]`
 2. homogeneous quadratic in :math:`u(x),u'(x),...,u^k(x)`
 3. affine the optimization (vector) variable :math:`\gamma \in \mathbb{R}^s`, and
