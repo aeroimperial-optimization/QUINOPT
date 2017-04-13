@@ -31,14 +31,22 @@ where :math:`Q_{\gamma}(x,u(x),u'(x),...,u^k(x))` is
 is the space of functions that satisfy the :math:`m` homogeneous boundary conditions specified through the vectors :math:`a_0,\,\ldots,\,a_{2k} \in \mathbb{R}^m`.
 
 
+-------
 License
 -------
 QUINOPT is distributed under the `Apache 2.0 License <https://www.apache.org/licenses/LICENSE-2.0>`_
 
+------------------------
+Bug reports and support
+------------------------
+
+Please report any issues via the `Github issue tracker <https://github.com/aeroimperial-optimization/QUINOPT/issues>`_, or `contact us <mailto:giovanni.fantuzzi10@imperial.ac.uk?Subject=QUINOPT%20issue>`_. All types of issues are welcome, including bug reports, documentation typos, feature requests and so on.
+
 
 .. toctree::
+   :hidden:
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Contents
    
    index
    requirements/index
