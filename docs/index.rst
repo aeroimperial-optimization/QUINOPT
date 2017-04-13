@@ -6,6 +6,31 @@
 Welcome to QUINOPT's documentation!
 ===================================
 
+QUINOPT (QUadratic INtegral OPTimisation) is an open-source add-on for `YALMIP <https://yalmip.github.io/>`_ to solve optimisation problems with polynomial quadratic integral inequality constraints. In the simplest form, these have the form
+
+.. math::
+
+	\begin{aligned}
+	\min_{\gamma} \quad &c^T \gamma\\
+	\text{subject to} \quad &\int_a^b Q_{\gamma}(x,u(x),u'(x),...,u^k(x)) 
+	\,{\rm d}x \geq 0 \quad \forall u(x) \in \mathcal{H}
+	\end{aligned}
+	
+where :math:`Q_{\gamma}(x,u(x),u'(x),...,u^k(x))` is polynomial in :math:`x`, homogeneous quadratic in :math:`u(x),u'(x),...,u^k(x)`, and depends affinely on the optimization (vector) variable :math:`\gamma`, and
+
+.. math::
+
+	\mathcal{H} := \left\{ u:[a,b]\to\mathbb{R},\quad 
+	a_1 u(a) + a_2 u(b) + a_3 u'(a) + \cdots + a_{2k} u^k(b) = 0\right\}
+	
+is the space of functions that satisfy the :math:`m` homogeneous boundary conditions specified through the vectors :math:`a_0,\,\ldots,\,a_{2k} \in \mathbb{R}^m`.
+
+
+License
+-------
+QUINOPT is distributed under the `Apache 2.0 License <https://www.apache.org/licenses/LICENSE-2.0>`_
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
