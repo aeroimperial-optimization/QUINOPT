@@ -48,7 +48,6 @@ Contents
 ------------------------
 .. toctree::
    :maxdepth: 2
-   :caption:
    
    index
    requirements/index
