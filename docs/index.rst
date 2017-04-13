@@ -40,6 +40,7 @@ QUINOPT is distributed under the `Apache 2.0 License <https://www.apache.org/lic
    :maxdepth: 2
    :caption: Contents:
    
+   index
    requirements/index
    installation/index
    examples/index
