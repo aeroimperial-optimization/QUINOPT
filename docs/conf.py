@@ -46,8 +46,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'QUINOPT'
-copyright = u'2017, Giovanni Fantuzzi, Andrew Wynn'
-author = u'Giovanni Fantuzzi, Andrew Wynn'
+copyright = u'2017, Giovanni Fantuzzi, Andrew Wynn, Paul Goulart, Antonis Papachristodoulou'
+author = u'Giovanni Fantuzzi, Andrew Wynn, Paul Goulart, Antonis Papachristodoulou'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -127,7 +127,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'QUINOPT.tex', u'QUINOPT Documentation',
-     u'Giovanni Fantuzzi, Andrew Wynn', 'manual'),
+     u'Giovanni Fantuzzi, Andrew Wynn, Paul Goulart, Antonis Papachristodoulou', 'manual'),
 ]
 
 
