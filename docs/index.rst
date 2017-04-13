@@ -47,7 +47,7 @@ Please report any issues via the `Github issue tracker <https://github.com/aeroi
 Contents
 ------------------------
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 0
 
    index
    requirements/index
