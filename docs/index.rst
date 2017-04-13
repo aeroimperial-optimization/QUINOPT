@@ -43,10 +43,13 @@ Bug reports and support
 Please report any issues via the `Github issue tracker <https://github.com/aeroimperial-optimization/QUINOPT/issues>`_, or `contact us <mailto:giovanni.fantuzzi10@imperial.ac.uk?Subject=QUINOPT%20issue>`_. All types of issues are welcome, including bug reports, documentation typos, feature requests and so on.
 
 
+------------------------
+Contents
+------------------------
 .. toctree::
    :hidden:
-   :maxdepth: 2
-   :caption: Contents
+   :maxdepth: 1
+   :caption:
    
    index
    requirements/index
