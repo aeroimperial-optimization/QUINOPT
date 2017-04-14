@@ -11,6 +11,5 @@ Welcome to QUINOPT!
    licenceandsysreq.rst
 
 
-Quick Links
------------
-* :ref:`mastertoc`
+
+`Back to Table of Contents <http://quinopt.readthedocs.io/>`_

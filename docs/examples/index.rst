@@ -10,7 +10,5 @@ Examples to come soon, please refer to the ``examples/`` folder!
    poincare.rst
    shearflow.rst
    
-------------
-Quick Links
-------------
-* :ref:`mastertoc`
+
+`Back to Table of Contents <http://quinopt.readthedocs.io/>`_

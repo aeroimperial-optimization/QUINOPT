@@ -26,7 +26,5 @@ where :math:`Q_{\gamma}(x,u(x),u'(x),...,u^k(x))` is
 is the space of functions that satisfy the :math:`m` homogeneous boundary conditions specified through the vectors :math:`a_0,\,\ldots,\,a_{2k} \in \mathbb{R}^m`.
 
 
------------
-Quick Links
------------
-* :ref:`mastertoc`
+
+`Back to Table of Contents <http://quinopt.readthedocs.io/>`_

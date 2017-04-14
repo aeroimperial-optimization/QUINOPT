@@ -15,7 +15,5 @@ Bug reports and support
 Please report any issues via the `Github issue tracker <https://github.com/aeroimperial-optimization/QUINOPT/issues>`_, or `contact us <mailto:giovanni.fantuzzi10@imperial.ac.uk?Subject=QUINOPT%20issue>`_. All types of issues are welcome, including bug reports, documentation typos, feature requests and so on.
 
 
-------------
-Quick Links
-------------
-* :ref:`mastertoc`
+
+`Back to Table of Contents <http://quinopt.readthedocs.io/>`_
