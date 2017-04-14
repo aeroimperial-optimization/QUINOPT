@@ -1,24 +1,16 @@
 # QUINOPT (QUadratic INtegral OPTimisation)
-An open-source add-on for YALMIP to solve optimisation problems with polynomial quadratic integral inequality constraints.
+An open-source add-on for YALMIP to solve optimisation problems with polynomial quadratic integral inequality constraints. Below is a quick guide to QUINOPT, but details, examples, and much more can be found in the [full online documentation](http://quinopt.readthedocs.io/).
 
-- [Latest release](#LatestRelease)
-- [Copyright](#Copyright)
+**Latest release:** 1.4  
+**Release date:** 02 March 2017  
+**Known bugs in version 1.4:**
+- No known bugs (yet!)
+
 - [System requirements](#Requirements)
 - [Installation](#Install)
 - [Getting started](#GettingStarted)
 - [How to cite](#Cite)
-
-## Latest release<a name="LatestRelease"></a>
-**Version:** 1.4  
-**Release date:** 02 March 2017  
-**Known bugs in version 1.4:**
-- No known bugs (yet!).
-
-## Copyright<a name="Copyright"></a>
-- Giovanni Fantuzzi (Department of Aeronautics, Imperial College London, UK. Email: gf910[at]ic.ac.uk)  
-- Andrew Wynn (Department of Aeronautics, Imperial College London, UK. Email: a.wynn[at]imperial.ac.uk)
-- Paul Goulart (Department of Engineering Science, University of Oxford, UK. Email: paul.goulart[at]eng.ox.ac.uk)
-- Antonis Papachristodoulou (Department of Engineering Science, University of Oxford, UK. Email: antonis[at]eng.ox.ac.uk)
+- [Copyright](#Copyright)
 
 ## System requirements<a name="Requirements"></a>
 
@@ -117,3 +109,9 @@ Should you wish to cite the code directly, please use the following BibTeX entry
     year         = 2017
     }
 ```
+
+## Copyright<a name="Copyright"></a>
+- Giovanni Fantuzzi (Department of Aeronautics, Imperial College London, UK. Email: gf910[at]ic.ac.uk)  
+- Andrew Wynn (Department of Aeronautics, Imperial College London, UK. Email: a.wynn[at]imperial.ac.uk)
+- Paul Goulart (Department of Engineering Science, University of Oxford, UK. Email: paul.goulart[at]eng.ox.ac.uk)
+- Antonis Papachristodoulou (Department of Engineering Science, University of Oxford, UK. Email: antonis[at]eng.ox.ac.uk)
