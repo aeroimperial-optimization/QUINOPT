@@ -3,8 +3,7 @@ An open-source add-on for YALMIP to solve optimisation problems with polynomial 
 
 **Latest release:** 1.4  
 **Release date:** 02 March 2017  
-**Known bugs in version 1.4:**
-- No known bugs (yet!)
+**Known bugs in version 1.4:** No known bugs (yet!)
 
 ## Contents
 - [System requirements](#Requirements)
