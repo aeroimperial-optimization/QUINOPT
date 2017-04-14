@@ -48,6 +48,7 @@ Please report any issues via the `Github issue tracker <https://github.com/aeroi
    :maxdepth: 2
    :caption: Contents
 
+   index
    requirements/index
    installation/index
    examples/index
