@@ -6,6 +6,7 @@ An open-source add-on for YALMIP to solve optimisation problems with polynomial 
 **Known bugs in version 1.4:**
 - No known bugs (yet!)
 
+## Contents
 - [System requirements](#Requirements)
 - [Installation](#Install)
 - [Getting started](#GettingStarted)
