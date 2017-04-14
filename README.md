@@ -1,16 +1,24 @@
 # QUINOPT (QUadratic INtegral OPTimisation)
-An open-source add-on for YALMIP to solve optimisation problems with polynomial quadratic integral inequality constraints. Below is a quick guide to QUINOPT, but details, examples, and much more can be found in the [full online documentation](http://quinopt.readthedocs.io/).
+An open-source add-on for YALMIP to solve optimisation problems with polynomial quadratic integral inequality constraints.
 
-**Latest release:** 1.4  
-**Release date:** 02 March 2017  
-**Known bugs in version 1.4:** No known bugs (yet!)
-
-## Contents
+- [Latest release](#LatestRelease)
+- [Copyright](#Copyright)
 - [System requirements](#Requirements)
 - [Installation](#Install)
 - [Getting started](#GettingStarted)
 - [How to cite](#Cite)
-- [Copyright](#Copyright)
+
+## Latest release<a name="LatestRelease"></a>
+**Version:** 1.4  
+**Release date:** 02 March 2017  
+**Known bugs in version 1.4:**
+- No known bugs (yet!).
+
+## Copyright<a name="Copyright"></a>
+- Giovanni Fantuzzi (Department of Aeronautics, Imperial College London, UK. Email: gf910[at]ic.ac.uk)  
+- Andrew Wynn (Department of Aeronautics, Imperial College London, UK. Email: a.wynn[at]imperial.ac.uk)
+- Paul Goulart (Department of Engineering Science, University of Oxford, UK. Email: paul.goulart[at]eng.ox.ac.uk)
+- Antonis Papachristodoulou (Department of Engineering Science, University of Oxford, UK. Email: antonis[at]eng.ox.ac.uk)
 
 ## System requirements<a name="Requirements"></a>
 
@@ -101,7 +109,7 @@ A selection of BibTex styles that support arXiv preprints can be found [here](ht
 Should you wish to cite the code directly, please use the following BibTeX entry:
 
 ```
-@misc{QUINOPTv1.4,
+@misc{CDCS,
     author       = {Fantuzzi, Giovanni and Wynn, Andrew and Goulart, Paul and Papachristodoulou, Antonis},
     title        = {{QUINOPT}, version 1.4},
     howpublished = {\url{https://github.com/aeroimperial-optimization/QUINOPT}},
@@ -109,9 +117,3 @@ Should you wish to cite the code directly, please use the following BibTeX entry
     year         = 2017
     }
 ```
-
-## Copyright<a name="Copyright"></a>
-- Giovanni Fantuzzi (Department of Aeronautics, Imperial College London, UK. Email: gf910[at]ic.ac.uk)  
-- Andrew Wynn (Department of Aeronautics, Imperial College London, UK. Email: a.wynn[at]imperial.ac.uk)
-- Paul Goulart (Department of Engineering Science, University of Oxford, UK. Email: paul.goulart[at]eng.ox.ac.uk)
-- Antonis Papachristodoulou (Department of Engineering Science, University of Oxford, UK. Email: antonis[at]eng.ox.ac.uk)
