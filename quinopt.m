@@ -1,4 +1,5 @@
-function varargout = quinopt(EXPR,BC,OBJ,CNSTR,PARAMETERS,N,OPTIONS)
+% function varargout = quinopt(EXPR,BC,OBJ,CNSTR,PARAMETERS,N,OPTIONS)
+function varargout = quinopt(varargin)
 
 %% QUINOPT.m Solve optimization problem with quadratic integral inequalities
 %
@@ -93,15 +94,30 @@ function varargout = quinopt(EXPR,BC,OBJ,CNSTR,PARAMETERS,N,OPTIONS)
 % Last Modified:    05/05/2016
 % ----------------------------------------------------------------------- %
 
-% Set empty arguments
+% Better method to clear model
+if nargin==1 && ischar(varargin{1}) && strcmpi(varargin{1},'clear')
+    clearModel;
+    return
+end
+
+% Set empty arguments & get variables
+if nargin < 1; help('quinopt'); return; end
+
 if nargin > 7; error('Too many inputs.'); end
-if nargin < 7; OPTIONS = struct([]); end
-if nargin < 6; N = []; end
-if nargin < 5; PARAMETERS = []; end
-if nargin < 4; CNSTR = []; end
-if nargin < 3; OBJ = []; end
-if nargin < 2; BC = []; end
-if nargin < 1; help('quinopt'); end
+if nargin < 7; varargin{7} = struct([]); end
+if nargin < 6; varargin{6} = []; end
+if nargin < 5; varargin{5} = []; end
+if nargin < 4; varargin{4} = []; end
+if nargin < 3; varargin{3} = []; end
+if nargin < 2; varargin{2} = []; end
+
+EXPR = varargin{1};
+BC = varargin{2};
+OBJ = varargin{3};
+CNSTR = varargin{4};
+PARAMETERS = varargin{5};
+N = varargin{6};
+OPTIONS = varargin{7};
 
 % Initialize empty SOL structure with required fields
 SOL.setupTime    = [];
