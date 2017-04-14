@@ -1,3 +1,6 @@
+.. include:: ../substitutions.txt
+
+
 Install QUINOPT
 ===============
 
@@ -57,7 +60,9 @@ To be able to use QUINOPT, you need to install a semidefinite programming (SDP) 
 Step 3: Install QUINOPT
 -----------------------
 	 
-If you have successfully installed YALMIP and a compatible SDP solver, you are ready to install QUINOPT. First, download QUINOPT's latest version (you can `find in on GitHub <https://github.com/aeroimperial-optimization/QUINOPT/releases>`_, or simply `click here to download <https://github.com/aeroimperial-optimization/QUINOPT/archive/v1.4.zip>`_). 
+If you have successfully installed YALMIP and a compatible SDP solver, you are ready to install QUINOPT. First, download QUINOPT's latest version (v.|current|, you can `find it on GitHub <https://github.com/aeroimperial-optimization/QUINOPT/releases>`_ or simply `click here to download`_). 
+
+
 After unzipping the downloaded folder, navigate to it in MATLAB and simply run the installer:
 
 .. code:: matlab
@@ -68,7 +73,6 @@ The installer should add the required folders to the MATLAB path and run
 some test problems to make sure everything is working. If you experience any installation problems, please `contact us`_ or file an issue issues via the `Github issue tracker <https://github.com/aeroimperial-optimization/QUINOPT/issues>`_.
 
 .. _contact us: mailto:giovanni.fantuzzi10@imperial.ac.uk?Subject=QUINOPT%20installation%20issue
-
 
 
 `Back to Table of Contents <http://quinopt.readthedocs.io/>`_

@@ -18,6 +18,7 @@
 #
 #import sphinx_rtd_theme
 import os, subprocess
+import sphinx.ext.extlinks
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
@@ -178,6 +179,3 @@ texinfo_documents = [
      author, 'QUINOPT', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-

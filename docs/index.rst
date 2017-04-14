@@ -13,7 +13,7 @@ Welcome to QUINOPT's documentation!
    :caption: Contents
    :name: mastertoc
 
-   introduction/index
-   installation/index
-   examples/index
+   00_introduction/index
+   01_installation/index
+   02_getting_started/index
    support/index
