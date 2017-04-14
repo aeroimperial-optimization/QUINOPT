@@ -44,7 +44,7 @@ Please report any issues via the `Github issue tracker <https://github.com/aeroi
 
 
 .. toctree::
-   :hidden:
+   :titlesonly:
    :maxdepth: 2
    :caption: Contents
 
