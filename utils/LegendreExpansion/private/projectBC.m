@@ -15,7 +15,8 @@ function [Q,M] = projectBC(Q,BC,G,H,opts)
 %% CODE
 
 M = bcProjMat(BC,G,H,opts);
-Q = M'*(Q*M);
+M = spblkdiag(1,M);
+Q = M.'*(Q*M);
 Q = (Q+Q.')./2;             % symmetrize again!
 
 

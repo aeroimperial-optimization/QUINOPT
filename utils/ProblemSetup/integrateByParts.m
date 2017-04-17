@@ -29,11 +29,12 @@ LFi = [1, UFi(1:end-1)+1];  % lower indices of diagonal blocks in Fi
 UFb = cumsum(2*MAXDER+2);   % upper indices of diagonal blocks in Fb
 LFb = [1, UFb(1:end-1)+1];  % lower indices of diagonal blocks in Fb
 
-
 % ----------------------------------------------------------------------- %
-% CHECK ON Fb AND Fm
+% CHECK ON Fb, Fm AND Lb
 % ----------------------------------------------------------------------- %
 n = size(INEQ.F.Fi,1);
+
+% Check on Fb
 if isempty(INEQ.F.Fb)
     % Reinitialise to sdpvar with dummy entry
     INEQ.F = rmfield(INEQ.F,'Fb');
@@ -44,12 +45,33 @@ elseif isnumeric(INEQ.F.Fb)
     INEQ.F.Fb = A+INEQ.F.Fb;
 end
 
+% Check on Fm
 if ~isempty(INEQ.F.Fm) && ~isZero(INEQ.F.Fm);
     intFm = 1;
 else
     % Set Fm to zero sparse matrix
     intFm = 0;
     INEQ.F.Fm = spalloc(size(INEQ.F.Fb,1),n,0);
+end
+
+% Check on Li
+if ~isempty(INEQ.L.Li) && ~isZero(INEQ.L.Li);
+    intLi = 1;
+else
+    % Set Li to zero sparse matrix
+    intLi = 0;
+    INEQ.L.Li = spalloc(n,1,0);
+end
+
+% Check on Lb
+if isempty(INEQ.L.Lb)
+    % Reinitialise to sdpvar with dummy entry
+    INEQ.L = rmfield(INEQ.L,'Lb');
+    INEQ.L.Lb(2*n,1) = x;
+elseif isnumeric(INEQ.L.Lb)
+    % Add to an sdpvar with dummy entry to obtain sdpvar
+    A(2*n,1) = x;
+    INEQ.L.Lb = A+INEQ.L.Lb;
 end
 
 % ----------------------------------------------------------------------- %
@@ -138,6 +160,19 @@ if ~isempty(rmBlk) && nBlk > 1
 end
 
 
+
+% ----------------------------------------------------------------------- %
+% INTEGRATE BY PARTS LINEAR TERMS
+% ----------------------------------------------------------------------- %
+for n = 1:nBlk
+    
+    I = LFi(n):UFi(n);          % Indices for submatrix of Li
+    J = LFb(n):UFb(n);          % Indices for submatrix of Lb
+    if intLi
+        [INEQ.L.Li(I),INEQ.L.Lb(J)] = integrateByPartsLi(INEQ.L.Li(I),INEQ.L.Lb(J),x);
+    end
+    
+end
 % ----------------------------------------------------------------------- %
 % SET OUTPUTS
 % ----------------------------------------------------------------------- %
@@ -145,7 +180,8 @@ INEQ.DERORD = rmfrom - 2;        % new highest order derivatives for each block
 INEQ.F.Fi = INEQ.F.Fi(keepFi,keepFi);
 INEQ.F.Fm = INEQ.F.Fm(:,keepFi);
 INEQ.F.Fb = replace(INEQ.F.Fb,x,0);       % Eliminate fake dependence on x from Fb
-
+INEQ.L.Li = INEQ.L.Li(keepFi);
+INEQ.L.Lb = replace(INEQ.L.Lb,x,0);       % Eliminate fake dependence on x from Lb
 
 % END CODE
 end

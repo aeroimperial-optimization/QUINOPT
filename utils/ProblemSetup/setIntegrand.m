@@ -20,14 +20,25 @@ function INEQ = setIntegrand(INEQ,EXPR)
 [coeff,monom,ivars] = coefficients(EXPR);
 
 % Is EXPR homogeneous quadratic?
-if any(sum(monom,2)~=2)
-    error('EXPR must be a homogeneous quadratic polynomial of the dependent variables.')
+mon_deg = sum(monom,2);
+if any(mon_deg>2)
+    error('EXPR must be a quadratic polynomial of the dependent variables.')
 end
 
 % Extract used variables
 allvars = getVariables([INEQ.DVAR; INEQ.BVAL],'stable');
 ndvar = length(INEQ.DVAR);
-Q = setQuadraticForm(coeff,monom,ivars,allvars);
+
+% Set homogeneous quadratic term
+quadratic = (mon_deg==2);
+Q = setQuadraticForm(coeff(quadratic),monom(quadratic,:),ivars,allvars);
+
+% Set linear term
+linear = (mon_deg==1);
+L = setLinearForm(coeff(linear),monom(linear,:),ivars,allvars);
+
+% Set constant
+C = coeff(mon_deg==0);
 
 % Rescale to [-1,1] if necessary
 if INEQ.DOMAIN(1)~=-1 || INEQ.DOMAIN(2)~=1
@@ -40,18 +51,39 @@ if INEQ.DOMAIN(1)~=-1 || INEQ.DOMAIN(2)~=1
         Q = replace(Q,INEQ.IVAR,z);
     end
     
+    % Rescale independent variable inside L (VERY SLOW FOR SDPVAR IF YALMIP HAS MANY INTERNALS)
+    if isa(L,'legpoly')
+        L = setDomain(L,[-1,1]);
+    elseif isa(Q,'sdpvar')
+        z = ((INEQ.DOMAIN(2)-INEQ.DOMAIN(1))*INEQ.IVAR + INEQ.DOMAIN(2) + INEQ.DOMAIN(1))/2;
+        L = replace(L,INEQ.IVAR,z);
+    end
+    
+    % Rescale independent variable inside C (VERY SLOW FOR SDPVAR IF YALMIP HAS MANY INTERNALS)
+    if isa(C,'legpoly')
+        C = setDomain(C,[-1,1]);
+    elseif isa(Q,'sdpvar')
+        z = ((INEQ.DOMAIN(2)-INEQ.DOMAIN(1))*INEQ.IVAR + INEQ.DOMAIN(2) + INEQ.DOMAIN(1))/2;
+        C = replace(C,INEQ.IVAR,z);
+    end
+    
     % Rescale dependent variables & their derivatives
     d = cell2mat(arrayfun(@(x)(0:x),INEQ.MAXDER,'uniformoutput',0));    % list of exponents
     d = ( 2/(INEQ.DOMAIN(2)-INEQ.DOMAIN(1))  ).^d;
     d = [d, transpose(vec(repmat(d,2,1)))];
     Q = Q.*(d'*d);
+    L = L.*d(:);
     
 end
 
-% Find submatrices (Q is always upper triangular)
+% Find submatrices of Q (Q is always upper triangular)
 Fi = Q(1:ndvar,1:ndvar);
 Fm = Q(1:ndvar,ndvar+1:end)';       % transpose since want in form BVAL*Fm*DVAR
 Fb = Q(ndvar+1:end,ndvar+1:end);
+
+% Find subvectors of L 
+Li = L(1:ndvar);
+Lb = L(ndvar+1:end);
 
 % Set outputs if non-zero
 if ~isZero(Fi); INEQ.F.Fi = Fi; end
@@ -60,6 +92,19 @@ if ~isZero(Fb);
     Fb = integrateBoundaryTerm(Fb,INEQ);        % must integrate beforehand!
     if isa(Fb,'legpoly'); Fb = sdpvar(Fb); end  % convert to sdpvar since no dependence on IVAR
     INEQ.F.Fb = Fb;
+end
+
+if ~isZero(Li); INEQ.L.Li = Li; end
+if ~isZero(Lb);
+    Lb = integrateBoundaryTerm(Lb,INEQ);        % must integrate beforehand!
+    if isa(Lb,'legpoly'); Lb = sdpvar(Lb); end  % convert to sdpvar since no dependence on IVAR
+    INEQ.L.Lb = Lb;
+end
+
+if ~isZero(C);
+    C = integrateBoundaryTerm(C,INEQ);        % must integrate beforehand!
+    if isa(C,'legpoly'); C = sdpvar(C); end  % convert to sdpvar since no dependence on IVAR
+    INEQ.C = C;
 end
 
 end
@@ -87,7 +132,7 @@ function B = integrateBoundaryTerm(B,mod)
     elseif isa(B,'legpoly')
 
         % Size and nonzero entries (B is square)
-        n = size(B,2);
+        [m,n] = size(B);
         [I,J] = find(any(B));
 
         % Loop to compute nonzero entries
@@ -115,11 +160,11 @@ function B = integrateBoundaryTerm(B,mod)
         end
 
         % Set B
-        B = sparse(I,J,val,n,n);
+        B = sparse(I,J,val,m,n);
         return
 
     else
-        error('Unknown class for INEQ.F.Fb.')
+        error('setIntegrand.integrateBoundaryTerm(B,mod): unknown class for B.')
 
     end
 end

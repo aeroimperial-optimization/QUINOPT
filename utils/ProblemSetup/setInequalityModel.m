@@ -61,6 +61,9 @@ INEQ.BVAL = mod.DEPVARMODEL.BVAL(ismember(bvalID,bvalNewID));
 INEQ.F.Fi = [];
 INEQ.F.Fm = [];
 INEQ.F.Fb = [];
+INEQ.L.Li = [];
+INEQ.L.Lb = [];
+INEQ.C = [];
 INEQ.BC = [];
 
 % Set fields F and BC using dedicated functions

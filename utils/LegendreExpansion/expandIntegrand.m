@@ -36,6 +36,7 @@ k = max(INEQ.DERORD);                % maximum order of derivative of function
 l = max(INEQ.MAXDER);                % maximum order of derivative in boundary values
 Lp = degree(INEQ.F.Fi,INEQ.IVAR);    % maximum degree of polynomials in Fi
 Lm = degree(INEQ.F.Fm,INEQ.IVAR);    % max degree in Fm
+Ll = degree(INEQ.L.Li,INEQ.IVAR);    % max degree in Li
 if opts.rigorous;
     Mleg = Lp+k;
 else
@@ -45,12 +46,12 @@ end
 if isempty(N)
     % Compute default value
     % Consider N=(Nleg+1) Legendre coefficients, from 0 to Nleg
-    Nleg = max([Lp+k-1,Lm,l]);
+    Nleg = max([Lp+k-1,Lm,Ll,l]);
 elseif ~isnumeric(N) || ~isscalar(N) || N<1 || rem(N,1)~=0
     % N was provided by the user, but is not a number or empty
     error('Input N must be an positive integer.')
 else
-    Nleg = max([N,Lp+k-1,Lm,l]);        % Consider N=(Nleg+1) Legendre coefficients, from 0 to Nleg
+    Nleg = max([N,Lp+k-1,Lm,Ll,l]);        % Consider N=(Nleg+1) Legendre coefficients, from 0 to Nleg
     if Nleg>N
         fprintf(['WARNING: You requested N = %i, but it is too small. '....
             'Using the minimum value N = %i instead.\n'],N,Nleg);
@@ -91,6 +92,15 @@ INEQ = permuteData(INEQ);
 [Q,S,slacks,MatrixInequalities,AuxVars] = ...
     expandQuadratic(INEQ,Nleg,Mleg,isFi,isFm,isFb,P,opts);
 
+% Expand linear part
+L = expandLinear(INEQ,Nleg,Mleg,P,opts);
+
+% Constant
+if isempty(INEQ.C); INEQ.C = 0; end
+
+% Build Q
+Q = [INEQ.C, L; zeros(size(L)).', Q]./2;
+Q = Q+Q.';
 
 
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
