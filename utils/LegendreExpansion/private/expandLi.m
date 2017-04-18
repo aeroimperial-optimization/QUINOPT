@@ -69,8 +69,8 @@ for i = 1:numLi
         
         % Build Lhat
         Ntot = Nleg+ALPHA;
-        Lhat = [pcoef'.*sqrt(2)./sqrt( 2.*(0:pdeg)+1 ), sparse(1,Ntot-pdeg)];
-        
+        Lhat = [pcoef'.*( sqrt(2)./sqrt( 2.*(0:pdeg)+1 ) ), sparse(1,Ntot-pdeg)];
+ 
         % Set Qm
         if ~rigorous; 
             % Set entries of unused coefficients to 0.

@@ -20,6 +20,8 @@ else
     % and non-rigorous expansion already taken into account by matrix P.
     if ~isempty(INEQ.L.Lb) && ~isZero(INEQ.L.Lb);
         L = INEQ.L.Lb.'*P;
+    else
+        L = sparse(1,dimint+dimbnd);
     end
     
     

@@ -54,7 +54,7 @@ if INEQ.DOMAIN(1)~=-1 || INEQ.DOMAIN(2)~=1
     % Rescale independent variable inside L (VERY SLOW FOR SDPVAR IF YALMIP HAS MANY INTERNALS)
     if isa(L,'legpoly')
         L = setDomain(L,[-1,1]);
-    elseif isa(Q,'sdpvar')
+    elseif isa(L,'sdpvar')
         z = ((INEQ.DOMAIN(2)-INEQ.DOMAIN(1))*INEQ.IVAR + INEQ.DOMAIN(2) + INEQ.DOMAIN(1))/2;
         L = replace(L,INEQ.IVAR,z);
     end
@@ -62,7 +62,7 @@ if INEQ.DOMAIN(1)~=-1 || INEQ.DOMAIN(2)~=1
     % Rescale independent variable inside C (VERY SLOW FOR SDPVAR IF YALMIP HAS MANY INTERNALS)
     if isa(C,'legpoly')
         C = setDomain(C,[-1,1]);
-    elseif isa(Q,'sdpvar')
+    elseif isa(C,'sdpvar')
         z = ((INEQ.DOMAIN(2)-INEQ.DOMAIN(1))*INEQ.IVAR + INEQ.DOMAIN(2) + INEQ.DOMAIN(1))/2;
         C = replace(C,INEQ.IVAR,z);
     end
@@ -71,7 +71,7 @@ if INEQ.DOMAIN(1)~=-1 || INEQ.DOMAIN(2)~=1
     d = cell2mat(arrayfun(@(x)(0:x),INEQ.MAXDER,'uniformoutput',0));    % list of exponents
     d = ( 2/(INEQ.DOMAIN(2)-INEQ.DOMAIN(1))  ).^d;
     d = [d, transpose(vec(repmat(d,2,1)))];
-    Q = Q.*(d'*d);
+    Q = Q.*(d.'*d);
     L = L.*d(:);
     
 end
