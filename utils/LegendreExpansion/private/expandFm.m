@@ -80,7 +80,7 @@ for i = 1:col
             end
             
             % Add to Fhat
-            Fhat = [Fhat; pcoef'.*sqrt(2)./sqrt( 2.*(0:pdeg)+1 ), sparse(1,Ntot-pdeg)];               
+            Fhat = [Fhat; pcoef'.*( sqrt(2)./sqrt( 2.*(0:pdeg)+1 ) ), sparse(1,Ntot-pdeg)];               
         end
         
         % Set Qm
