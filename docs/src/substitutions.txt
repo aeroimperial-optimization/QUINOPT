@@ -1,0 +1,2 @@
+.. |stable| replace:: 1.4
+.. |latest| replace:: 1.5

@@ -1,5 +1,0 @@
-.. |current| replace:: 1.4
-
-.. _click here to download: https://github.com/aeroimperial-optimization/QUINOPT/archive/v1.4.zip
-
-.. _our paper: https://arxiv.org/abs/1607.04210
