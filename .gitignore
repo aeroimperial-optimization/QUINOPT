@@ -1,6 +1,6 @@
 # html compiled docs #
 ######################
-./docs/html/*
+docs/_build/
 
 # Compiled source #
 ###################
