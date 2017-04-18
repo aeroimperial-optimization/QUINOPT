@@ -1,3 +1,7 @@
+# html compiled docs #
+######################
+./docs/html/*
+
 # Compiled source #
 ###################
 *.com
