@@ -131,7 +131,7 @@ if ~isempty(EXPR) && ~isa(EXPR,'dvarpoly')
     error('Class of EXPR must be "dvarpoly". Please use the commands INDVAR and DEPVAR to create your problem variables.')
 elseif ~isempty(BC) && ~isa(BC,'dvarpoly')
     error('Class of BC must be "dvarpoly". Please use the commands INDVAR and DEPVAR to create your problem variables.')
-elseif ~isempty(OBJ) && numel(OBJ)>1
+elseif ~isempty(OBJ) && ( numel(OBJ)>1 || ( ~( isa(OBJ,'sdpvar') || isnumeric(OBJ) ) ) )
     error('Objective function should be a scalar expression.')
 end
 

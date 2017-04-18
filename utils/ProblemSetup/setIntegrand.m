@@ -27,18 +27,32 @@ end
 
 % Extract used variables
 allvars = getVariables([INEQ.DVAR; INEQ.BVAL],'stable');
+ntotvars = length(allvars);
 ndvar = length(INEQ.DVAR);
 
 % Set homogeneous quadratic term
 quadratic = (mon_deg==2);
-Q = setQuadraticForm(coeff(quadratic),monom(quadratic,:),ivars,allvars);
+if any(quadratic)
+    Q = setQuadraticForm(coeff(quadratic),monom(quadratic,:),ivars,allvars);
+else
+    Q = zeros(ntotvars);
+end
 
 % Set linear term
 linear = (mon_deg==1);
-L = setLinearForm(coeff(linear),monom(linear,:),ivars,allvars);
+if any(linear)
+    L = setLinearForm(coeff(linear),monom(linear,:),ivars,allvars);
+else
+    L = zeros(ntotvars,1);
+end
 
 % Set constant
-C = coeff(mon_deg==0);
+const = (mon_deg==0);
+if any(const)
+    C = coeff(const);
+else
+    C = 0;
+end
 
 % Rescale to [-1,1] if necessary
 if INEQ.DOMAIN(1)~=-1 || INEQ.DOMAIN(2)~=1
@@ -105,6 +119,8 @@ if ~isZero(C);
     C = integrateBoundaryTerm(C,INEQ);        % must integrate beforehand!
     if isa(C,'legpoly'); C = sdpvar(C); end  % convert to sdpvar since no dependence on IVAR
     INEQ.C = C;
+elseif isZero(C)
+    INEQ.C = 0;
 end
 
 end

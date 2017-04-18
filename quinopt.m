@@ -153,7 +153,7 @@ if nargin>=4
             N = [];
         end
         
-    elseif isa(varargin{4},'constraint')
+    elseif isa(varargin{4},'constraint') || isa(varargin{4},'lmi')
         if ~warned_user
             warning(['The calling syntax for quinopt() has changed since version 1.5. ',...
                 'Please <a href="matlab:help(''quinopt'')">see the function help</a> for more details.'])
@@ -166,7 +166,7 @@ end
 
 % Fifth input: an sdpvar (deprecated), or a constraint
 if nargin>=5
-    if isa(varargin{5},'constraint')
+    if isa(varargin{5},'constraint') || isa(varargin{5},'lmi')
         CNSTR = varargin{5};
         
     elseif isa(varargin{5},'sdpvar')

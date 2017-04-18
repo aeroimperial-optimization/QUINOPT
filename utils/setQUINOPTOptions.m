@@ -70,7 +70,7 @@ else
     % Set options.rigorous, used in many functions (but deprecated)
     if strcmpi(options.method,'inner')
         options.rigorous = true;
-    elseif strcmpi(options.method,'inner')
+    elseif strcmpi(options.method,'outer')
         options.rigorous = false;
     else
         error('Option OPTIONS.method must be either ''inner'' or ''outer''.')
