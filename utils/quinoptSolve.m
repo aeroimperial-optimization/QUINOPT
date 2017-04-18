@@ -1,6 +1,6 @@
-function varargout = quinopt(varargin)
+function varargout = quinoptSolve(varargin)
 
-%% QUINOPT.m Solve optimization problem with quadratic integral inequalities
+%% QUINOPTSOLVE.m Main computational routine in QUINOPT
 %
 % SOL = QUINOPT(EXPR) tests whether the q homogeneous quadratic integral
 %     inequalities
@@ -12,7 +12,7 @@ function varargout = quinopt(varargin)
 %     i-th entry specifies the integrand of the i-th integral inequality.
 %     Each entry of EXPR must be a quadratic homogeneous polynomial of the
 %     variables returned by the commands <a href="matlab:help('indvar')">indvar</a> and <a href="matlab:help('depvar')">depvar</a> variables.
-%     Examples can be found in the folder "examples/". The output SOL is a
+%     Examples can be found in the folder "examples/". The output SOL is a 
 %     structure with the following fields:
 %
 %     - setupTime: the time taken to set up the problem
@@ -54,31 +54,26 @@ function varargout = quinopt(varargin)
 %
 %     - YALMIP: a substructure containing the options for YALMIP, set
 %               with YALMIP's command <a href="matlab:help('sdpsettings')">sdpsettings</a>.
-%
 %     - N: an integer specifying the number of Legendre coefficients to use in
 %          the expansion of the dependent variable to obtain an
 %          SDP-representable relaxation of the quadratic integral inequality.
-%
-%     - method: if set to 'inner' (default), QUINOPT generates an inner
+%     - method: if set to 'inner' (default), QUINOPT generates an inner 
 %               approximation of the feasible set of the integral inequalities
 %               specified by EXPR, i.e. the quadratic integral inequality is
 %               strenghtened. If set to 'outer', an outer approximation is
 %               constructed, i.e. the integral inequality is relaxed into a
 %               weaker constraint. (NOTE: OPTIONS.method replaces the deprecated
 %               option OPTIONS.rigorous).
-%
 %     - BCprojectorBasis: string specifying which basis to use for the
-%               projection on the boundary conditions. If set to 'rref'
+%               projection on the boundary conditions. If set to 'rref' 
 %               (default), use a "rational" basis. If set to 'orth', use an
 %               orthonormal basis. The orthonormal basis may be preferable
 %               numerically, but it may destroy sparsity of the data.
-%
 %     - sosdeg: the degree of the sum-of-squares polynomials used in the
 %               S-procedure to localize SOS constraints from the integral
 %               inequality to the integration domain. Default value: 6.
-%
 %     - solve: if set to 'true' (default), QUINOPT calls the solver specified by
-%              the YALMIP options (or YALMIP's default solver). If set to
+%              the YALMIP options (or YALMIP's default solver). If set to 
 %              'false', QUINOPT does not call the solver, but simply sets up the
 %              YALMIP problem structure. In this case, additional outputs to
 %              QUINOPT are required (see below).
@@ -93,7 +88,7 @@ function varargout = quinopt(varargin)
 %
 % See also INDVAR, DEPVAR, QUINOPTFEASCODE, OPTIMIZE, @SDPVAR/VALUE,
 %          SDPSETTINGS
-%
+%          
 
 % better input ordering: quinopt(expr,bc,obj,options,constraints,parameters),
 % and make N a field of the options.
@@ -106,117 +101,125 @@ function varargout = quinopt(varargin)
 % Last Modified:    18/04/2017
 % ----------------------------------------------------------------------- %
 
-% Better method to clear model
-if nargin==1 && ischar(varargin{1}) && strcmpi(varargin{1},'clear')
-    clearModel;
-    return
+
+% Set empty arguments & get variables
+if nargin > 7; error('Too many inputs.'); end
+if nargin < 7; varargin{7} = struct([]); end
+if nargin < 6; varargin{6} = []; end
+if nargin < 5; varargin{5} = []; end
+if nargin < 4; varargin{4} = []; end
+if nargin < 3; varargin{3} = []; end
+if nargin < 2; varargin{2} = []; end
+
+EXPR = varargin{1};
+BC = varargin{2};
+OBJ = varargin{3};
+CNSTR = varargin{4};
+PARAMETERS = varargin{5};
+N = varargin{6};
+OPTIONS = varargin{7};
+
+% Initialize empty SOL structure with required fields
+SOL.setupTime    = [];
+SOL.solutionTime = [];
+SOL.problem      = [];
+SOL.FeasCode     = [];
+SOL.YALMIP       = [];
+
+% Check on inputs
+if ~isempty(EXPR) && ~isa(EXPR,'dvarpoly')
+    error('Class of EXPR must be "dvarpoly". Please use the commands INDVAR and DEPVAR to create your problem variables.')
+elseif ~isempty(BC) && ~isa(BC,'dvarpoly')
+    error('Class of BC must be "dvarpoly". Please use the commands INDVAR and DEPVAR to create your problem variables.')
+elseif ~isempty(OBJ) && numel(OBJ)>1
+    error('Objective function should be a scalar expression.')
 end
 
-% Version
-if nargin==1 && ischar(varargin{1}) && strcmpi(varargin{1},'version')
-    varargout{1} = '1.5';
-    warning(['QUINOPT''s calling syntax has changed since version 1.5. ',...
-        '<a href="matlab:help(''quinopt'')">See the help for more details</a>.'])
-    return
-end
+% Set options
+OPTIONS = setQUINOPTOptions(OPTIONS);
 
-% Help?
-if nargin < 1;
-    help('quinopt');
-    return;
-end
-
-% ----------------------------------------------------------------------- %
-% Get variables
-% try to handle cases in which old syntax was used
-EXPR = [];
-BC = [];
-OBJ = [];
-OPTIONS = [];
-CNSTR = [];
-PARAMETERS = [];
-N = [];
-warned_user = 0;
-
-% First three inputs unchanged
-if nargin>=1; EXPR = varargin{1}; end
-if nargin>=2; BC = varargin{2}; end
-if nargin>=3; OBJ = varargin{3}; end
-
-% Fourth input: a constraint (deprecated), or options structure
-if nargin>=4
-    if isa(varargin{4},'struct')
-        OPTIONS = varargin{4};
-        try
-            N = OPTIONS.N;
-        catch
-            N = [];
-        end
-        
-    elseif isa(varargin{4},'constraint')
-        if ~warned_user
-            warning(['The calling syntax for quinopt() has changed since version 1.5. ',...
-                'Please <a href="matlab:help(''quinopt'')">see the function help</a> for more details.'])
-            warned_user = 1;
-        end
-        CNSTR = varargin{4};
-        
-    end
-end
-
-% Fifth input: an sdpvar (deprecated), or a constraint
-if nargin>=5
-    if isa(varargin{5},'constraint')
-        CNSTR = varargin{5};
-        
-    elseif isa(varargin{5},'sdpvar')
-        if ~warned_user
-            warning(['The calling syntax for quinopt() has changed since version 1.5. ',...
-                'Please <a href="matlab:help(''quinopt'')">see the function help</a> for more details.'])
-            warned_user = 1;
-        end
-        PARAMETERS = varargin{5};
-        
-    end
-end
-
-% Sixth input: a scalar (deprecated), or an sdpvar
-if nargin>=6
+% Setup integral inequality constraints
+time = tic;
+for i = length(EXPR):-1:1
     
-    if isa(varargin{6},'sdpvar')
-        PARAMETERS = varargin{6};
+    [QIICNSTR,DATA(i),FLAG] = setQuadIntIneq(EXPR(i),BC,N,OPTIONS);
+    if FLAG==0
+        % No problem, add constraints to list
+        CNSTR = [QIICNSTR; CNSTR];
+        PARAMETERS = [PARAMETERS; DATA(i).SumOfSquaresParameters];
+    else
+        % Problem infeasible (see warning message displayed for reason)
+        CNSTR = [];
+        SOL.FeasCode = 1;
+        break
+    end
+    
+end
+SOL.setupTime = toc(time);
+SOL.problem   = FLAG;
+
+% Solve if requested and no problem
+if OPTIONS.solve && FLAG==0
+
+% This check is not needed: removed to allow OBJ to be quadratic, and let YALMIP
+% take care of it. 
+%     % Check if any constraints, and solve
+%     if~isempty(CNSTR)
         
-    elseif isnumeric(varargin{6})
-        if ~warned_user
-            warning(['The calling syntax for quinopt() has changed since version 1.5. ',...
-                'Please <a href="matlab:help(''quinopt'')">see the function help</a> for more details.'])
-            warned_user = 1;
+        % Do we have a SOS problem
+        try
+            issos = any(is(CNSTR,'sos'));
+        catch
+            issos = 0;
         end
-        N = varargin{6};
-    end
+        
+        % Solve if no problem during setup
+        if issos
+            time = tic;
+            [yalmipsol,m,Q,res,everything] = solvesos(CNSTR,OBJ,OPTIONS.YALMIP,PARAMETERS);
+            SOL.solutionTime = toc(time);
+            SOL.FeasCode = yalmipsol.problem;
+            SOL.YALMIP = yalmipsol;
+            SOL.YALMIP.monomials = m;
+            SOL.YALMIP.sosDecompositionMatrices = Q;
+            SOL.YALMIP.residuals = res;
+            SOL.YALMIP.everything = everything;
+            
+        else
+            time = tic;
+            yalmipsol = optimize(CNSTR,OBJ,OPTIONS.YALMIP);
+            SOL.solutionTime = toc(time);
+            SOL.FeasCode = yalmipsol.problem;
+            SOL.YALMIP = yalmipsol;
+            
+        end
+
+% This is not needed: removed to allow OBJ to be quadratic, and let YALMIP take
+% care of it. 
+%     else
+%         
+%         % Unbounded problem (linear objective, no constraints)
+%         SOL.solutionTime = 0;
+%         SOL.FeasCode = 2;           % YALMIP code for "unbounded objective function"
+%         SOL.YALMIP = [];
+%         
+%     end
+    
+else
+    % Do not solve - no solution information
+    % Do not set sol.FeasCode - already either empty or 1 (if the relaxation was
+    % detected to be infeasible by QUINOPT)
+    SOL.solutionTime = [];
+    SOL.YALMIP = [];
+    
 end
 
-% Seventh inputh (deprecated)
-if nargin==7 && ( isempty(varargin{7}) || isa(varargin{7},'struct') )
-    if ~warned_user
-        warning(['The calling syntax for quinopt() has changed since version 1.5. ',...
-            'Please <a href="matlab:help(''quinopt'')">see the function help</a> for more details.'])
-    end
-    OPTIONS = varargin{7};
-end
-
-% Error if more than 7 inputs
-if nargin > 7; error('Too many input arguments'); end
-
-
-% Compute and set outputs
-[OUT1,OUT2,OUT3] = quinoptSolve(EXPR,BC,OBJ,CNSTR,PARAMETERS,N,OPTIONS);
+% Set outputs
 varargout = cell(nargout,1);
-if nargout > 0; varargout{1} = OUT1; end;
-if nargout > 1; varargout{2} = OUT2; end;
-if nargout > 2; varargout{3} = OUT3; end;
+if nargout > 0; varargout{1} = SOL; end;
+if nargout > 1; varargout{2} = CNSTR; end;
+if nargout > 2; varargout{3} = DATA; end;
 if nargout > 3; error('Too many output arguments.'); end;
-
 
 % END CODE
 end
