@@ -108,7 +108,16 @@ function varargout = quinopt(varargin)
 
 % Better method to clear model
 if nargin==1 && ischar(varargin{1}) && strcmpi(varargin{1},'clear')
-    clearModel;
+    W = evalin('caller','whos');
+    for i = 1:size(W,1)
+        if any(strcmp(W(i).class,{'legpoly','indvar','depvar'}))
+            evalin('caller', ['clear ' W(i).name ';']);
+        end
+    end
+    
+    % Clear persistend variables
+    evalin('caller','dvarlist clear');
+    evalin('caller','qiimodel clear');
     return
 end
 
