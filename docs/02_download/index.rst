@@ -35,7 +35,7 @@ The bleeding-edge version of QUINOPT (including all brand new features, up-to-da
 Old versions
 ------------------------
 
-You can find old versions `here <https://github.com/aeroimperial-optimization/QUINOPT/releases>`_
+You can find old versions `here <https://github.com/aeroimperial-optimization/QUINOPT/releases>`_.
 
 
 
