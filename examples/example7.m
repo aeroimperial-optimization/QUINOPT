@@ -1,4 +1,4 @@
-%% Example7.m
+%% example7.m
 %
 % Find values a, b, c, d to minimize a+b+c+d such that
 %
@@ -57,12 +57,13 @@ obj = a + b + c + d + e;
 % To run in silent mode, we set YALMIP's option 'verbose' to 0. Also, we
 % speed up the iteration by settin YALMIP's 'cachesolvers' option to 1.
 opts.YALMIP = sdpsettings('verbose',0,'cachesolvers',1,'solver','sdpt3');
-opts.rigorous = 0;
+opts.method = 'inner';
 
 for N = 1:10
     
     % Call QUINOPT
-    quinopt(expr,BC,obj,[],[],N,opts);
+    opts.N = N;
+    quinopt(expr,BC,obj,opts);
     fprintf('[a b c d e] = [%f %f %f %f %f]',value(a),value(b),value(c),value(d),value(e))
     fprintf('  obj = %f\n',value(obj))
 

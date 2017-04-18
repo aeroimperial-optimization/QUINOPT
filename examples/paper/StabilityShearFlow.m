@@ -9,13 +9,14 @@
 %                   Department of Aeronautics
 %                   Imperial College London
 %       Created:    08/04/2016
-% Last Modified:    12/05/2016
+% Last Modified:    17/04/2017
 % ----------------------------------------------------------------------- %
 
 %% PART 1: plot Figure
 
 % Initialization
 clear;          % clear workspace
+quinopt clear;  % clear QUINOPT's internals
 xi = 1:0.1:10;  % values of xi to solve for
 savefigs = 0;   % 1 to save plots, 0 otherwise
 
@@ -49,8 +50,9 @@ for N = [3 6 9];  % Legendre truncation parameter
         % The Legendre series truncation parameter is fixed to N=12.
         
         % Inner approximation (maximum lower bound on optimal gamma)
-        opts.rigorous = 1;
-        sol = quinopt(expr,BC,-gamma,[],[],N,opts);
+        opts.method = 'inner';
+        opts.N = N;
+        sol = quinopt(expr,BC,-gamma,opts);
         if sol.FeasCode==1
             % Infeasible for gamma~=0
             gamma_cr_inn(i) = 0;
@@ -62,8 +64,8 @@ for N = [3 6 9];  % Legendre truncation parameter
         end
         
         % Outer approximation (minimum upper bound on optimal gamma)
-        opts.rigorous = 0;
-        sol = quinopt(expr,BC,-gamma,[],[],N,opts);
+        opts.method = 'outer';
+        sol = quinopt(expr,BC,-gamma,opts);
         if sol.FeasCode==1
             % Infeasible for gamma~=0
             gamma_cr_out(i) = 0;
@@ -76,9 +78,9 @@ for N = [3 6 9];  % Legendre truncation parameter
         
         % Clear internal variables of QUINOPT and YALMIP to avoid buildup of
         % unused variables that slows down the execution of the next iteration.
-        clearModel;         % clear QUINOPT's internal variables
-        yalmip clear;       % clear YALMIP's internal variables
-        
+        quinopt clear;         % clear QUINOPT's internal variables
+        yalmip clear;          % clear YALMIP's internal variables
+          
     end
     fprintf('done in %.4f seconds\n',toc(chrono))
     
@@ -132,9 +134,10 @@ for i=1:length(N)
         % QUINOPT minimizes the objective function by default).
         
         % Inner approximation
-        opts.rigorous = 1;
+        opts.method = 'inner';
         chrono = tic;
-        sol = quinopt(expr,BC,-gamma,[],[],N(i),opts);
+        opts.N = N(i);
+        sol = quinopt(expr,BC,-gamma,opts);
         results(i,4*j-2) = toc(chrono);
         if sol.FeasCode==1
             % Infeasible for gamma~=0
@@ -147,9 +150,9 @@ for i=1:length(N)
         end
         
         % Outer approximation
-        opts.rigorous = 0;
+        opts.method = 'outer';
         chrono = tic;
-        sol = quinopt(expr,BC,-gamma,[],[],N(i),opts);
+        sol = quinopt(expr,BC,-gamma,opts);
         results(i,4*j) = toc(chrono);
         if sol.FeasCode==1
             % Infeasible for gamma~=0
@@ -164,7 +167,7 @@ for i=1:length(N)
         
         % Clear internal variables of QUINOPT and YALMIP to avoid buildup of
         % unused variables that slows down the execution of the next iteration.
-        clearModel;      % clear QUINOPT's internal variables
+        quinopt clear;   % clear QUINOPT's internal variables
         yalmip clear;    % clear YALMIP's internal variables
         
     end

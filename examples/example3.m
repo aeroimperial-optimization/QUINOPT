@@ -1,4 +1,4 @@
-%% AdditionalEx3.m
+%% example3.m
 %
 % Compute the optimal background field for 2D stress-driven shear flow at
 % Gr=1000 considering only one wavenumber k. This example illustrates how 
@@ -10,13 +10,14 @@
 %                   Department of Aeronautics
 %                   Imperial College London
 %       Created:    08/04/2016
-% Last Modified:    12/05/2016
+% Last Modified:    17/04/2017
 % ----------------------------------------------------------------------- %
 
 %% CODE
 
-clear;          % clear workspace
-clearModel;     % clear QUINOPT's internal variables
+clear;             % clean workspace 
+yalmip clear;      % clear YALMIP's internal variables
+quinopt clear;     % clear QUINOPT's internal variables
 
 %% Parameters
 Gamma = 2;   % period in x direction, x in [0,xPeriod]
@@ -51,7 +52,7 @@ cnstr = [sum(PhiHat)==G/2, S>=0];                         % vector of additional
 
 %% Solve optimization with integral inequality and additional constraint
 time = tic;
-quinopt(expr,BC,obj,cnstr);
+quinopt(expr,BC,obj,[],cnstr);
 time = toc(time);
 
 %% Compute and plot integral of Phi_x 

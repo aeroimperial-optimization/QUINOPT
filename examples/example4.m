@@ -1,4 +1,4 @@
-%% AdditionalEx4.m
+%% example4.m
 %
 % Compute the optimal background field for 3D stress-driven shear flow at
 % Gr=1000. We consider perturbations at the first 3 wave numbers. This 
@@ -10,12 +10,14 @@
 %                   Department of Aeronautics
 %                   Imperial College London
 %       Created:    08/04/2016
-% Last Modified:    12/05/2016
+% Last Modified:    17/04/2017
 % ----------------------------------------------------------------------- %
 
 %% CODE
 
-clear; clearModel;
+clear;             % clean workspace 
+yalmip clear;      % clear YALMIP's internal variables
+quinopt clear;     % clear QUINOPT's internal variables
 
 %% Parameters
 Gamma = 2;   % period in x direction, x in [0,xPeriod]
@@ -53,7 +55,7 @@ cnstr = [S>=0; sum(PhiHat)==G/2];                         % the additional const
 
 %% Solve optimization with integral inequality and additional constraint
 time = tic;
-quinopt(expr,BC,obj,cnstr);
+quinopt(expr,BC,obj,[],cnstr);
 time = toc(time);
 
 %% Compute and plot background field

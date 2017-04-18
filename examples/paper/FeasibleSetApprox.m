@@ -18,12 +18,13 @@
 %                   Department of Aeronautics
 %                   Imperial College London
 %       Created:    08/04/2016
-% Last Modified:    24/06/2016
+% Last Modified:    17/04/2017
 % ----------------------------------------------------------------------- %
 
 %% Setup
-clear;       
-savefigs = 1;           % 1 to save plots, 0 otherwise
+clear;    
+quinopt clear;
+savefigs = 0;           % 1 to save plots, 0 otherwise
 opts.YALMIP = sdpsettings('cachesolvers',1,'verbose',0);
 dom = [-1 1];
 bnds = [-5,5];
@@ -31,7 +32,7 @@ bnds = [-5,5];
 
 %% Loop over values on N
 % *Note*: may take a while!
-for N = [2 4 6 8 12 16 20 100]
+for N = [2 4 6 8]% 12 16 20 100]
     
     fprintf('N = %i\n',N)
     figure();
@@ -51,7 +52,7 @@ for N = [2 4 6 8 12 16 20 100]
     %% Outer approximation
     % Use YALMIP's plot function, since easy problem
     fprintf('Finding outer approximation...')
-    opts.rigorous = 0;
+    opts.method = 'outer';
     cnstr = setQuadIntIneq(expr,BC,N,opts);
     plot([cnstr; bnds(1)<=a<=bnds(2); bnds(1)<=b<=bnds(2)],[a,b],'r',[],opts.YALMIP)
     fprintf('done\n')
@@ -60,7 +61,7 @@ for N = [2 4 6 8 12 16 20 100]
     % manual setup: lmi/plot does not really work with SOS constraints
     fprintf('Finding inner approximation...')
     hold on
-    opts.rigorous = 1;
+    opts.method = 'inner';
     opts.sosdeg = 16;
     [cnstr,data] = setQuadIntIneq(expr,BC,N,opts);
     
@@ -87,9 +88,9 @@ for N = [2 4 6 8 12 16 20 100]
     end
     
     % Solve sequence of optimization problems
-    x_opt = zeros(2,300);
+    x_opt = zeros(2,150);
     i = 1;
-    for t = linspace(0,2*pi,300)
+    for t = linspace(0,2*pi,150)
         c = [cos(t); sin(t)];
         internalmodel.c = 0*internalmodel.c;
         internalmodel.c(localindex) = c;

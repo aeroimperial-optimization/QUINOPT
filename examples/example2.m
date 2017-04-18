@@ -1,4 +1,4 @@
-%% AdditionalEx2.m
+%% example2.m
 %
 % Find the minimum constant nu for which the inequality
 %
@@ -16,13 +16,14 @@
 %                   Department of Aeronautics
 %                   Imperial College London
 %       Created:    24/02/2016
-% Last Modified:    12/05/2016
+% Last Modified:    17/04/2017
 % ----------------------------------------------------------------------- %
 
 %% CODE
 
-clear;          % clean workspace 
-clearModel;     % clear QUINOPT's internal variables
+clear;             % clean workspace 
+yalmip clear;      % clear YALMIP's internal variables
+quinopt clear;     % clear QUINOPT's internal variables
 
 %% Initialization
 x = indvar(-1,1); % Initialize dependent variable with domain [-1,1]
@@ -43,7 +44,8 @@ disp(['Error with analytical ans: nu-1/pi^2 = ',num2str(nuval-1/pi^2)])
 disp('++++++++++++++++++++++++++++++++++++++++++++++++++++'); disp(' ')
 
 %% Refine solution
-quinopt(expr,BC,nu,[],[],5);
+opts.N = 5;
+quinopt(expr,BC,nu,opts);
 nuval = value(nu);
 disp('++++++++++++++++++++++++++++++++++++++++++++++++++++')
 disp('QUINOPT example 2: REFINED SOLUTION INFO');

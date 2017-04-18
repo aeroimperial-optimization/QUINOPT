@@ -1,4 +1,4 @@
-%% AdditionalEx5.m
+%% example5.m
 %
 % Compute the energy stability boundary of perturbation of wavenumber k to
 % conduction state of Benard-Marangoni convection problem. This example
@@ -14,12 +14,14 @@
 %                   Department of Aeronautics
 %                   Imperial College London
 %       Created:    08/04/2016
-% Last Modified:    12/05/2016
+% Last Modified:    17/04/2017
 % ----------------------------------------------------------------------- %
 
 %% CODE
 
-clear; clearModel;         
+clear;             % clean workspace 
+yalmip clear;      % clear YALMIP's internal variables
+quinopt clear;     % clear QUINOPT's internal variables         
 figure(gcf); clf;
 time = tic;
 
@@ -55,7 +57,7 @@ for i = 1:length(kval)
     Q = T(x,1)^2 + k^2*T(x)^2 + Ma*F*T(x)*T(1);
     
     % Solve
-    quinopt(Q,BC,-Ma,[],[],[],opts);
+    quinopt(Q,BC,-Ma,opts);
     Ma_cr(i) = value(Ma);
     
 end

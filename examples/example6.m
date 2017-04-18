@@ -1,4 +1,4 @@
-%% AdditionalEx6.m
+%% example6.m
 % 
 % We study the weighted L2 stability of a linear PDE
 %
@@ -24,12 +24,13 @@
 %                   Department of Aeronautics
 %                   Imperial College London
 %       Created:    08/04/2016
-% Last Modified:    12/05/2016
+% Last Modified:    17/04/2017
 % ----------------------------------------------------------------------- %
 
 %% Clear previous model and variables
-clearModel
-clear
+clear;             % clean workspace 
+yalmip clear;      % clear YALMIP's internal variables
+quinopt clear;     % clear QUINOPT's internal variables
 
 %% Problem variables
 x = indvar(0,1);
@@ -55,7 +56,8 @@ u_t = u(x,2) + (k-24*x+24*x^2)*u(x);      % the right-hand side of the PDE
 expr = u(x)*u_t;                          % the integrand
 
 options.YALMIP = sdpsettings('verbose',0);
-quinopt(-expr,bc,-k,[],[],5,options);   % require positivity of -V_t(u)!
+options.N = 5;
+quinopt(-expr,bc,-k,options);   % require positivity of -V_t(u)!
 disp('+++++++++++++++++++++++++++++++++++++++++++++++++++++++')
 disp('QUINOPT example 6')
 fprintf('Optimal k from energy stability: k = %4.4f\n',value(k))
@@ -96,8 +98,9 @@ expr = [ p*u(x)^2; ...                    % positivity of V(u)
 
 % Solve the feasibility problem. We need to specify that the coefficients c
 % and d are parameters and not independent variables to obtain the correct
-% answer.
-sol = quinopt(expr,bc,[],cnstr,[],[],options);
+% answer. Moreover, we set options.N to be empty to use the default value.
+options.N = [];
+sol = quinopt(expr,bc,[],options,cnstr);
 
 % Plot p(x) if problem was successfully solved
 if sol.FeasCode==0

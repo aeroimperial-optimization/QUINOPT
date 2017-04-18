@@ -1,4 +1,4 @@
-%% Example1.m
+%% example1.m
 %
 % Find the minimum constant nu for which the Poincare inequality
 %
@@ -16,15 +16,16 @@
 %                   Department of Aeronautics
 %                   Imperial College London
 %       Created:    24/02/2016
-% Last Modified:    02/05/2016
+% Last Modified:    17/04/2017
 % ----------------------------------------------------------------------- %
 
 
 %% Initialization
 %
 % First, we remove any existing variables to avoid unexpected dependencies
-clear;          % clear workspace
-clearModel;     % clear QUINOPT's internal variables
+clear;              % clear workspace
+yalmip clear;       % clear YALMIP's internal variables
+quinopt clear;      % clear QUINOPT's internal variables
 
 % Then we initialize the independent variable of integration, the dependent
 % variable u and the optimization variable gamma with the commands
@@ -65,7 +66,8 @@ for N = 1:7
     
     % Call and time QUINOPT
     time = tic;
-    quinopt(expr,BC,obj,[],[],N,opts);
+    opts.N = N;
+    quinopt(expr,BC,obj,opts);
     time = toc(time);
 
     % Extract the solution and compare it to the analytical answer
