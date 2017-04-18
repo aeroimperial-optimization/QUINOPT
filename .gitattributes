@@ -52,7 +52,7 @@
 README.md export-ignore
 
 # Docs - only there for Read The Docs
-./docs/* export-ignore
+./docs/ export-ignore
 
 # Git files - only want to give source to people, not repository!
 .git/ export-ignore
