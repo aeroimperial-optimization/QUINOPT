@@ -149,8 +149,14 @@ end
 % ----------------------------------------------------------------------- %
 % Remove zero rows/cols and try to detect block-diagonal structure
 % ----------------------------------------------------------------------- %
-Q = makeBlkDiag(Q);
+[Q, Equalities, FLAG] = makeBlkDiag(Q,Equalities, FLAG);
 S = makeBlkDiag(S);
+if FLAG==1
+    fprintf(['\nWARNING: Seeking a block-diagonal structure produced an infeasible constraint.',...
+            'Your problem is infeasible!\n\n']);
+    varargout{3} = FLAG;
+    return
+end
 
 % ----------------------------------------------------------------------- %
 % Set constraints 

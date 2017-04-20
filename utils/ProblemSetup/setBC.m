@@ -59,6 +59,11 @@ for i=1:length(BCEXPR)
         d = ( 2/(INEQ.DOMAIN(2)-INEQ.DOMAIN(1))  ).^expon(ind(J));
         coeff = coeff.*d(:);
     end
+    
+    % Rescale to unit norm
+    coeff = coeff./norm(coeff,'fro');
+    
+    % Set
     INEQ.BC = [INEQ.BC; sparse(1,ind(J),coeff,1,nbcvars)];
     
     

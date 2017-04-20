@@ -58,6 +58,9 @@ else
     end
 end
 
+% Save Nleg and Mleg
+INEQ.Nleg = Nleg;
+INEQ.Mleg = Mleg;
 
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
 % Expand terms
@@ -102,6 +105,10 @@ if isempty(INEQ.C); INEQ.C = 0; end
 Q = [INEQ.C, L; zeros(size(L)).', Q]./2;
 Q = Q+Q.';
 
+% Enforce symmetry
+if any(INEQ.DVAR_SYMM)
+   [Q,INEQ] = enforceSymmetry(Q,INEQ); 
+end
 
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
 % Project onto boundary conditions

@@ -46,7 +46,7 @@ elseif isnumeric(INEQ.F.Fb)
 end
 
 % Check on Fm
-if ~isempty(INEQ.F.Fm) && ~isZero(INEQ.F.Fm);
+if ~isempty(INEQ.F.Fm) && ~isZero(INEQ.F.Fm)
     intFm = 1;
 else
     % Set Fm to zero sparse matrix
@@ -55,7 +55,7 @@ else
 end
 
 % Check on Li
-if ~isempty(INEQ.L.Li) && ~isZero(INEQ.L.Li);
+if ~isempty(INEQ.L.Li) && ~isZero(INEQ.L.Li)
     intLi = 1;
 else
     % Set Li to zero sparse matrix
