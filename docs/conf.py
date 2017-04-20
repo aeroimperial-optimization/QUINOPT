@@ -24,7 +24,7 @@ import sphinx.ext.extlinks
 # sys.path.insert(0, os.path.abspath('.'))
 
 # Set version for bumpversion
-__version__ = "0.1.1"
+__version__ = "1.5.0"
 
 # -- General configuration ------------------------------------------------
 
@@ -122,7 +122,7 @@ else:
                 'https://media.readthedocs.org/css/readthedocs-doc-embed.css',
                 '_static/css/osqp_theme.css'],
     }
-    
+
 
 # -- Options for HTMLHelp output ------------------------------------------
 
