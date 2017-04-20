@@ -80,7 +80,7 @@ end
 % Transform other inputs in legpoly objects
 for n = 1:length(theOthers)
     position = theOthers(n);
-    if isa(varargin{position},'sdpvar')
+    if isa(varargin{position},'sdpvar') && ~isempty(ivar0id)
         varargin{position} = legpoly(domn0,ivar0,varargin{position});
     else
         % a number (or an unknown class object, but shoud throw error)
