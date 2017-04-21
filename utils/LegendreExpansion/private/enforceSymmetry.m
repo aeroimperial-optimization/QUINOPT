@@ -1,10 +1,12 @@
-function [Q,INEQ] = enforceSymmetry(Q,INEQ)
+function [Q,G,INEQ] = enforceSymmetry(Q,G,INEQ)
 
 % ENFORCESYMMETRY.m     Enforce symmetry of dependent variables
 %
-% Q = ENFORCESYMMETRY(Q,INEQ) enforces the symmetry of the dependent variables
-%           by setting to zero the rows/cols of Q corresponding to the even/odd
-%           Legendre expansion coefficients.
+% [Q,G,INEQ] = ENFORCESYMMETRY(Q,G,INEQ) enforces the symmetry of the dependent 
+%           variables by setting to zero the rows/cols of Q corresponding to the
+%           even/odd Legendre expansion coefficients, and similarly for the
+%           column of the matrix G, that represents the expansion of the
+%           boundary values of the derivatives of order 0 up to INEQ.DERORD-1.
 
 
 % Extract useful stuff
@@ -16,6 +18,10 @@ DVAR_SYMM = INEQ.DVAR_SYMM;
 % Partitioning of Q, plus add 1 to take into account linear terms
 QpartU = 1+cumsum( Nleg+Mleg+1+2*DERORD ); % upper limit
 QpartL = [2, QpartU(1:end-1)+1];           % lower limit
+
+% Partitioning of G
+GpartU = cumsum( Nleg + Mleg + 1 + 2*DERORD ); % upper limit
+GpartL = [1, GpartU(1:end-1)+1];               % lower limit
 
 % Loop over variables with symmetry
 varsID = find(DVAR_SYMM>0);
@@ -29,11 +35,15 @@ for i = varsID
         % Keep odd coefficients only
        
         % Modify Q: set to zero even coefficients
-        % Take into account that first 2*DERORD(i) entries are boundary values, not
+        % Take into account that first DERORD(i) entries are boundary values, not
         % Legendre coeffs
-        ind = QpartL(i)+2*DERORD(i):2:QpartU(i);
+        ind = QpartL(i)+DERORD(i):2:QpartU(i);
         Q(ind,:) = 0;
         Q(:,ind) = 0;
+        
+        % Modify G
+        ind = GpartL(i)+DERORD(i):2:GpartU(i);
+        G(:,ind) = 0;          
         
         % Add boundary conditions - needed for derivatives up to MAXDER
         INEQ.BC = addSymmetyBCs(i,DERORD,INEQ.MAXDER,INEQ.BC,DVAR_SYMM(i));
@@ -47,6 +57,10 @@ for i = varsID
         ind = QpartL(i)+2*DERORD(i)+1:2:QpartU(i);
         Q(ind,:) = 0;
         Q(:,ind) = 0;
+        
+        % Modify G
+        ind = GpartL(i)+DERORD(i)+1:2:GpartU(i);
+        G(:,ind) = 0;  
         
         % Add boundary conditions - needed for derivatives up to MAXDER
         INEQ.BC = addSymmetyBCs(i,DERORD,INEQ.MAXDER,INEQ.BC,DVAR_SYMM(i));

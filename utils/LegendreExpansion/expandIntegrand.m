@@ -37,7 +37,7 @@ l = max(INEQ.MAXDER);                % maximum order of derivative in boundary v
 Lp = degree(INEQ.F.Fi,INEQ.IVAR);    % maximum degree of polynomials in Fi
 Lm = degree(INEQ.F.Fm,INEQ.IVAR);    % max degree in Fm
 Ll = degree(INEQ.L.Li,INEQ.IVAR);    % max degree in Li
-if opts.rigorous;
+if opts.rigorous
     Mleg = Lp+k;
 else
     Mleg = 0;
@@ -107,7 +107,7 @@ Q = Q+Q.';
 
 % Enforce symmetry
 if any(INEQ.DVAR_SYMM)
-   [Q,INEQ] = enforceSymmetry(Q,INEQ); 
+   [Q,G,INEQ] = enforceSymmetry(Q,G,INEQ); 
 end
 
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %

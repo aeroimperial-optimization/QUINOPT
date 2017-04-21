@@ -42,8 +42,10 @@ function M = bcProjMat(BC,G,H,opts)
     % Set type of null space projection
     if strcmpi(opts.BCprojectorBasis,'orth')
         projtype=[];
+        cleanTol = 0;
     else
         projtype='r';
+        cleanTol = 1e-15;
     end
 
     % Compute projector
@@ -95,14 +97,21 @@ function M = bcProjMat(BC,G,H,opts)
 
         end
 
-    else
+    elseif ~opts.rigorous
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Simpler projection if not rigorous!
         % Does not care about zero columns...
         M = A + B;
-        M = null(full(M), projtype);
+        M = sparse(null(full(M), projtype));
 
+    else
+        M = sparse(null(full([A,B]), projtype));
+        
     end
 
+    % Clean
+%     M(abs(M)<=cleanTol) = 0;
+    
+    
 % END FUNCTION
 end

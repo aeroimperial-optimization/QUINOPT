@@ -49,15 +49,28 @@ for i = ind:-1:2
     if ~isZero(P)
         
         % Update Li
-        Li(1:i-1) = Li(1:i-1) - jacobian(P,x);
+%         Li(1:i-1) = Li(1:i-1) - jacobian(P,x);
+%         if isa(Li(i),'legpoly')
+%             % can only assign object of same class since "subsasgn" was not
+%             % redefined for legpoly class
+%             Li(i) = legpoly(0);
+%         else
+%             % subsasgn works for sdpvars!
+%             Li(i) = 0;
+%         end
+
+        % First remove what I integrated
         if isa(Li(i),'legpoly')
             % can only assign object of same class since "subsasgn" was not
             % redefined for legpoly class
-            Li(i) = legpoly(0);
+            Li(2:ind) = legpoly(0);
         else
             % subsasgn works for sdpvars!
-            Li(i) = 0;
+            Li(2:ind) = 0;
         end
+        
+        % Then add jacobian
+        Li(1:i-1) = Li(1:i-1) - jacobian(P,x);
         
         % Find boundary values
         if isa(P,'legpoly')
@@ -77,20 +90,22 @@ for i = ind:-1:2
     
 end
 
+% END CODE
+end
+
+
 % ----------------------------------------------------------------------- %
 % NESTED FUNCTIONS
 % ----------------------------------------------------------------------- %
-    function qbv = getbv(q)
-        % Only works for vectors - very specific to this application.
-        % First col gives, BV at 1, second col gives BV at -1
-        qbv = [];
-        for j = 1:numel(q)
-            qc = coefficients(q(j));
-%             qbv = [qbv; sum(qc), (1.^(0:length(qc)-1))*qc(:)];        % Wrong?
-            qbv = [qbv; sum(qc), ( (-1).^(0:length(qc)-1) )*qc(:)];
-        end
+function qbv = getbv(q)
+    % Only works for vectors - very specific to this application.
+    % First col gives, BV at 1, second col gives BV at -1
+    qbv = [];
+    for j = 1:numel(q)
+        qc = coefficients(q(j));
+        %             qbv = [qbv; sum(qc), (1.^(0:length(qc)-1))*qc(:)];        % Wrong?
+        qbv = [qbv; sum(qc), ( (-1).^(0:length(qc)-1) )*qc(:)];
     end
+end
 % ----------------------------------------------------------------------- %
 
-% END CODE
-end
