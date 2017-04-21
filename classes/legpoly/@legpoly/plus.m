@@ -106,7 +106,14 @@ elseif isa(X,'legpoly') && isa(Y,'legpoly')
         [s(1:m,1:n).ivar] = deal(ivar{:});
         
         % Update domain
-        domn = cellfun(@(x,y)any(x)*domX,ivar,'uniformoutput',0);
+        if any(domX)
+            domn = cellfun(@(x)any(x)*domX,ivar,'uniformoutput',0);
+        elseif any(domY)
+            domn = cellfun(@(x)any(x)*domY,ivar,'uniformoutput',0);
+        else
+            % Two constant legpolys - zero domain!
+            domn = mat2cell(zeros(m*n,2),m*n,2);
+        end
         [s(1:m,1:n).domn] = deal(domn{:});
         
         % Set output
