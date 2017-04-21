@@ -191,7 +191,8 @@ end
         qbv = [];
         for j = 1:numel(q)
             qc = coefficients(q(j));
-            qbv = [qbv; sum(qc), (1.^(0:length(qc)-1))*qc(:)];
+             %qbv = [qbv; sum(qc), (1.^(0:length(qc)-1))*qc(:)];        % Wrong?
+            qbv = [qbv; sum(qc), ( (-1).^(0:length(qc)-1) )*qc(:)];
         end
     end
 % ----------------------------------------------------------------------- %
