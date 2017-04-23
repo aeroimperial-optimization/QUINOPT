@@ -107,7 +107,7 @@ Q = Q+Q.';
 
 % Enforce symmetry
 if any(INEQ.DVAR_SYMM)
-   [Q,G,INEQ] = enforceSymmetry(Q,G,INEQ); 
+   [Q,G,H,INEQ] = enforceSymmetry(Q,G,H,INEQ,opts); 
 end
 
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %

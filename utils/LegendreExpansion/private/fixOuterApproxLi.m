@@ -3,7 +3,7 @@ function [Q,H] = fixOuterApproxLi(Q,INEQ,N,M)
 % FIXOUTERAPPROXL
 %
 % Fix L for outer aproximation by expanding everything in terms of derivatives
-% of order specified by INEQ.MAXDER
+% of order specified by INEQ.MAXDER (plus one to enhance sparsity)
 
 
 % Loop over dependent variables
