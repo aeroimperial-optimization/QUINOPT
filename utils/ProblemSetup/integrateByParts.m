@@ -223,6 +223,12 @@ for i = 1:nBlk
     TMP = ceil(TMP/2) -1;
     MAXDER(i) = max([MAXDER(i); TMP]);
     
+    % maybe larger in BC?
+    [R,C] = find(INEQ.BC(:,I));
+    TMP = max(C);
+    TMP = ceil(TMP/2) -1;
+    MAXDER(i) = max([MAXDER(i); TMP]);
+    
     % update cnt and keepFb
     keepFb = [keepFb, cnt+1:cnt+2*(MAXDER(i)+1)];
     cnt = cnt + 2*(INEQ.MAXDER(i)+1);
