@@ -173,15 +173,77 @@ for n = 1:nBlk
     end
     
 end
+
+
+% ----------------------------------------------------------------------- %
+% GET MAXDER
+% ----------------------------------------------------------------------- %
+% A rubbish but simple loop...
+cnt = 0;
+MAXDER = rmfrom - 2;        % the new highest order derivatives appearing in Fi
+keepFb = [];
+for i = 1:nBlk
+    
+    % Which indices?
+    I = cnt+1:cnt+2*(INEQ.MAXDER(i)+1);
+    
+    % last entry in Fb, which is upper triangular
+    Fb = replace(INEQ.F.Fb(I,I),x,0);
+    if isnumeric(Fb)
+        [R,C] = find(Fb);
+    else
+        % sdpvar or legpoly: use any
+        [R,C] = find(any(Fb));
+    end
+    TMP = max(C);
+    TMP = ceil(TMP/2) -1;
+    MAXDER(i) = max([MAXDER(i); TMP]);
+    
+    % maybe larger in Fm?
+    Fm = INEQ.F.Fm(I,:);
+    if isnumeric(Fm)
+        [R,C] = find(Fm);
+    else
+        % sdpvar or legpoly: use any
+        [R,C] = find(any(Fm));
+    end
+    TMP = max(R);
+    TMP = ceil(TMP/2) -1;
+    MAXDER(i) = max([MAXDER(i); TMP]);
+    
+    % maybe larger in Lb?
+    Lb = replace(INEQ.L.Lb(I),x,0);
+    if isnumeric(Lb)
+        [R] = find(Lb);
+    else
+        % sdpvar or legpoly: use any
+        [R] = find(any(Lb));
+    end
+    TMP = max(R);
+    TMP = ceil(TMP/2) -1;
+    MAXDER(i) = max([MAXDER(i); TMP]);
+    
+    % update cnt and keepFb
+    keepFb = [keepFb, cnt+1:cnt+2*(MAXDER(i)+1)];
+    cnt = cnt + 2*(INEQ.MAXDER(i)+1);
+    
+end
+
+
 % ----------------------------------------------------------------------- %
 % SET OUTPUTS
 % ----------------------------------------------------------------------- %
 INEQ.DERORD = rmfrom - 2;        % new highest order derivatives for each block
+INEQ.MAXDER = MAXDER;            % new MAXDER
 INEQ.F.Fi = INEQ.F.Fi(keepFi,keepFi);
-INEQ.F.Fm = INEQ.F.Fm(:,keepFi);
+INEQ.F.Fm = INEQ.F.Fm(keepFb,keepFi);
 INEQ.F.Fb = replace(INEQ.F.Fb,x,0);       % Eliminate fake dependence on x from Fb
+INEQ.F.Fb = INEQ.F.Fb(keepFb,keepFb);     % remove unused entries
 INEQ.L.Li = INEQ.L.Li(keepFi);
 INEQ.L.Lb = replace(INEQ.L.Lb,x,0);       % Eliminate fake dependence on x from Lb
+INEQ.L.Lb = INEQ.L.Lb(keepFb);            % remove unused entries
+INEQ.BC = INEQ.BC(:,keepFb);
+
 
 % END CODE
 end

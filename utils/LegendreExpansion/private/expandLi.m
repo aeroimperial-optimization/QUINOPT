@@ -81,5 +81,5 @@ for i = 1:numLi
     end    
 end
 
-% Remove spurious dependence on IVAR & fix for outer approximation if required
+% Remove spurious dependence on IVAR
 Qm = replace(Qm,IVAR,0);

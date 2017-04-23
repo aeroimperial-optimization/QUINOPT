@@ -17,19 +17,25 @@ MAXDER = INEQ.MAXDER;
 DVAR_SYMM = INEQ.DVAR_SYMM;
 
 if opts.rigorous
+    
     % Partitioning of Q, plus add 1 to take into account linear terms
     QpartU = 1+cumsum( Nleg+Mleg+1+2*DERORD ); % upper limit
     QpartL = [2, QpartU(1:end-1)+1];           % lower limit
+    
     % Partitioning of G
     GpartU = cumsum( Nleg + Mleg + 1 + 2*DERORD ); % upper limit
     GpartL = [1, GpartU(1:end-1)+1];               % lower limit
+    
 else
+    
     % Partitioning of Q, plus add 1 to take into account linear terms
-    QpartU = 1+cumsum( Nleg+Mleg+1+2*(MAXDER+1) ); % upper limit
-    QpartL = [2, QpartU(1:end-1)+1];           % lower limit
+    QpartU = 1+cumsum( Nleg+Mleg+1+2*(MAXDER+1) );  % upper limit
+    QpartL = [2, QpartU(1:end-1)+1];                % lower limit
+    
     % Partitioning of G
     GpartU = cumsum( Nleg + Mleg + 1 + 2*(MAXDER+1) ); % upper limit
-    GpartL = [1, GpartU(1:end-1)+1];               % lower limit
+    GpartL = [1, GpartU(1:end-1)+1];                   % lower limit
+
 end
 
 % Loop over variables with symmetry
@@ -104,7 +110,7 @@ end
 
 % Remove linearly dependent BCs
 litol = 1e-10;
-INEQ.BC = lirows(INEQ.BC,litol);
+INEQ.BC = lirowsBC(INEQ.BC,litol);
 
 % END FUNCTION
 end
@@ -150,7 +156,7 @@ end
 
 
 % ----------------------------------------------------------------------- %
-function [BC,idx]=lirows(BC,tol)
+function [BC,idx]=lirowsBC(BC,tol)
     % Extract a linearly independent set of rows of a given matrix X
     %
     %    [Xsub,idx]=lirows(X)
