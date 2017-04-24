@@ -17,7 +17,7 @@ function [D,B] = legendreDiff(Nleg,Mleg,ALPHA,K,LIMITS,options)
 %                   Department of Aeronautics
 %                   Imperial College London
 %       Created:    16/03/2015
-% Last Modified:    05/04/2016
+% Last Modified:    24/04/2017
 % ----------------------------------------------------------------------- %
 
 %% CODE
@@ -50,6 +50,8 @@ if isempty(LIMITS);
         B = spalloc(Nleg+ALPHA+1,K,2^(K-ALPHA)-1);
         S = sqrt( 2*(0:Nleg+ALPHA).'+1 )./sqrt(2);
         
+        rt2 = sqrt(2);
+        
         for i = 0:K-ALPHA-1
             
             eta = ALPHA+i;
@@ -57,10 +59,15 @@ if isempty(LIMITS);
             
             % matrix E_eta
             %             E = sparse(1,eta+1,1,n,K+2);
-            %             B = B+D*E;
+            %            B = B+D*E;
+            
+            % GF on 24 Apr 2017: the following is wrong - I fixed it
+            % T = [sparse(Nleg+ALPHA+1,eta), ...
+            %      D(:,1)./S, ...
+            %      sparse(Nleg+ALPHA+1,K-1-eta)];
             T = [sparse(Nleg+ALPHA+1,eta), ...
-                 D(:,1)./S, ...
-                 sparse(Nleg+ALPHA+1,K-1-eta)];
+                D(:,1).*rt2, ...
+                sparse(Nleg+ALPHA+1,K-1-eta)];
             B = B + T;
             
             if n>=2
