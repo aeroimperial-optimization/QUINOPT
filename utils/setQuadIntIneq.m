@@ -66,6 +66,7 @@ function varargout = setQuadIntIneq(EXPR,BC,N,OPTIONS)
 % Initialize output
 varargout = cell(nargout,1);
 
+
 % ----------------------------------------------------------------------- %
 % Set default inputs
 % ----------------------------------------------------------------------- %
@@ -98,6 +99,8 @@ INEQ = setInequalityModel(EXPR,BC);
 if FLAG==1
     fprintf(['\nWARNING: Integration by parts produced an infeasible constraint.',...
             'Your problem is infeasible!\n\n']);
+    varargout{1} = NaN;
+    varargout{2} = NaN;
     varargout{3} = FLAG;
     return
 end
@@ -152,8 +155,10 @@ end
 [Q, Equalities, FLAG] = makeBlkDiag(Q,Equalities, FLAG);
 S = makeBlkDiag(S);
 if FLAG==1
-    fprintf(['\nWARNING: Seeking a block-diagonal structure produced an infeasible constraint.',...
+    fprintf(['\nWARNING: Seeking a block-diagonal structure produced an infeasible constraint.\n',...
             'Your problem is infeasible!\n\n']);
+    varargout{1} = NaN;
+    varargout{2} = NaN;
     varargout{3} = FLAG;
     return
 end
