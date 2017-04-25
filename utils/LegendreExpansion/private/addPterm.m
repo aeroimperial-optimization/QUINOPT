@@ -80,10 +80,10 @@ X = legendreTripleProduct(nnzIdx-1,0,nMax,0,mMax);
 % SET OUTPUT
 % ----------------------------------------------------------------------- %
 % Form the matrix representation of p(x)*d^ALPHA(u)*d^BETA(v)
-Pmat = pcoef(1).*([Ba';Da']*X{1}*[Bb, Db]);
+Pmat = pcoef(1).*([Ba.';Da.']*X{1}*[Bb, Db]);
 for j = 2:length(pcoef)
     % loop not entered if length(pcoef)<2!
-    Pmat = Pmat + pcoef(j).*([Ba';Da']*X{j}*[Bb, Db]);
+    Pmat = Pmat + pcoef(j).*([Ba.';Da.']*X{j}*[Bb, Db]);
 end
 
 % Set entries to zero if not rigorous
@@ -94,7 +94,11 @@ if ~rigorous
 end
 
 % Assign output
-T(row,col) = T(row,col) + Pmat;
+if isa(T,'sdpvar') || isa(Pmat,'sdpvar')
+    T = sdpvarAddInPlace(T,Pmat,row,col);
+else
+    T(row,col) = T(row,col) + Pmat;
+end
 
 end
 %% END SCRIPT

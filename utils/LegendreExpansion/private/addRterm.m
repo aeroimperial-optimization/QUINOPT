@@ -114,8 +114,15 @@ else
 %     T(row(I),row(J)) = T(row(I),row(J)) - pinf*(ee.*Za(I,J));
 %     [I,J] = find(Za);
 %     T(col(I),col(J)) = T(col(I),col(J)) - pinf*(Zb(I,J)./ee);
-    T(row,row) = T(row,row) - pinf*ee*blkdiag( zeros(Ka),Za );
-    T(col,col) = T(col,col) - pinf/ee*blkdiag( zeros(Kb),Zb );
+    if isa(T,'sdpvar') || isa(pinf,'sdpvar')
+        T = sdpvarAddInPlace(T,-(pinf*ee).*spblkdiag(zeros(Ka),Za),row,row);
+        T = sdpvarAddInPlace(T,-(pinf*ee).*spblkdiag(zeros(Kb),Zb),col,col);
+    else
+        % T(row,row) = T(row,row) - pinf*ee*blkdiag( zeros(Ka),Za );
+        % T(col,col) = T(col,col) - pinf/ee*blkdiag( zeros(Kb),Zb );
+        T(row,row) = T(row,row) - (pinf*ee).*spblkdiag( zeros(Ka),Za );
+        T(col,col) = T(col,col) - (pinf/ee).*spblkdiag( zeros(Kb),Zb );
+    end
 
     S(dvar(1),dvar(1)) = S(dvar(1),dvar(1)) - pinf*(ee*lambda_a);
     S(dvar(2),dvar(2)) = S(dvar(2),dvar(2)) - pinf*(lambda_b/ee);
