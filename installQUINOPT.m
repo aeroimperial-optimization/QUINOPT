@@ -93,6 +93,16 @@ if isa(detected,'cell') && ~isempty(detected)
     warning(wrn);
     savepath;
     
+    % Compile mex files
+    cd('utils/LegendreExpansion/private/')
+    if (~isempty (strfind (computer, '64')))
+        mexcmd = 'mex -largeArrayDims -silent' ;
+    else
+        mexcmd = 'mex -silent' ;
+    end
+    eval([mexcmd, ' computeTripleProducts.c']);
+    cd(currDir)
+    
 else
     error(['A working version of YALMIP is required. '...
         'Please correct this, then run the installation again.']);
