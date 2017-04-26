@@ -11,6 +11,14 @@ docs/_build/
 *.o
 *.so
 
+# Compiled MATLAB mex files #
+#############################
+*.mexa64
+*.mexmaci64
+*.mexw32
+*.mexw64
+
+
 # Packages #
 ############
 # it's better to unpack these files and commit the raw source
