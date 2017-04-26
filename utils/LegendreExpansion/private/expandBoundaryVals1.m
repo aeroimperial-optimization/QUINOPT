@@ -23,7 +23,7 @@ ndvars = length(INEQ.DERORD);    % number of dependent variables
 G = [];                     % initialise empty matrix
 for i = 1:ndvars
     k = INEQ.DERORD(i);
-    Gblk = findGblk(Nleg,Mleg,0,k-1,k,1);     % matrix G as in Lemma 2 (boundary conditions)
+    Gblk = findGblk(Nleg,Mleg,0,k-1,k,1,INEQ.DVAR_SYMM(i)); % matrix G as in Lemma 2 (boundary conditions)
     G = spblkdiag(G,Gblk);
 end
 

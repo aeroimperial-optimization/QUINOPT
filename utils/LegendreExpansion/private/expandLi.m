@@ -1,4 +1,4 @@
-function Qm = expandLi(Nleg,Mleg,Li,IVAR,DERORD,rigorous)
+function Qm = expandLi(Nleg,Mleg,Li,IVAR,DERORD,DVAR_SYMM,rigorous)
 
 % EXPANDLI.m
 %
@@ -44,13 +44,14 @@ for i = 1:numLi
         dvar = find(i-dvarpart<=0,1);               % which dependent variable
         Ka = DERORD(dvar);                          % maximum derivative order
         ALPHA = Ka-dvarpart(dvar)+i;                % which derivative
+        SYMM_ALPHA = DVAR_SYMM(dvar);                % which symmetry
         
         if ALPHA==Ka
             LIMITS = [0, Nleg+Ka];
         else
             LIMITS = [];
         end
-        [Da,Ba] = legendreDiff(Nleg,Mleg,ALPHA,Ka,LIMITS); % integration matrices
+        [Da,Ba] = legendreDiff(Nleg,Mleg,ALPHA,Ka,LIMITS,SYMM_ALPHA); % integration matrices
         
         
         % Find Legendre coefficient of entry Li(i) as a column vector
@@ -72,7 +73,7 @@ for i = 1:numLi
         Lhat = [pcoef'.*( sqrt(2)./sqrt( 2.*(0:pdeg)+1 ) ), sparse(1,Ntot-pdeg)];
  
         % Set Qm
-        if ~rigorous; 
+        if ~rigorous
             % Set entries of unused coefficients to 0.
             Da(:,Nleg+2:end) = 0;   
         end

@@ -45,7 +45,7 @@ function M = bcProjMat(BC,G,H,opts)
         cleanTol = 0;
     else
         projtype='r';
-        cleanTol = 1e-15;
+        cleanTol = 1e-16;
     end
 
     % Compute projector
@@ -109,7 +109,7 @@ function M = bcProjMat(BC,G,H,opts)
         
     end
 
-    % Clean
+%     % Clean
 %     M(abs(M)<=cleanTol) = 0;
     
     

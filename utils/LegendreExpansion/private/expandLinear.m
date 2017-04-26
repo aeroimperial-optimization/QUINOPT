@@ -30,7 +30,7 @@ else
     % However, still need to fix the outer approximation if not rigorous: expand
     % with more coefficient than in "expandLi.m".
     if ~isempty(INEQ.L.Li) && ~isZero(INEQ.L.Li)
-        Lint = expandLi(Nleg,Mleg,INEQ.L.Li,INEQ.IVAR,INEQ.DERORD,opts.rigorous);
+        Lint = expandLi(Nleg,Mleg,INEQ.L.Li,INEQ.IVAR,INEQ.DERORD,INEQ.DVAR_SYMM,opts.rigorous);
         if opts.rigorous
             Lint = [Lint, sparse(1,dimbnd)];
         else

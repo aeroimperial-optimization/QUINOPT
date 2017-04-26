@@ -29,11 +29,11 @@ for i = 1:INEQ.ndvars
     L = INEQ.MAXDER(i);
     
     % Find Gblk
-    Gblk = findGblk(Nleg,Mleg,0,K-1,L+1,0);
+    Gblk = findGblk(Nleg,Mleg,0,K-1,L+1,0,INEQ.DVAR_SYMM(i)); % matrix G as in Lemma 2 (boundary conditions)
     G = spblkdiag(G,Gblk);
     
     % Find Hblk
-    Hblk = findGblk(Nleg,Mleg,K,L,L+1,0);
+    Hblk = findGblk(Nleg,Mleg,K,L,L+1,0,INEQ.DVAR_SYMM(i));
     H = spblkdiag(H,Hblk);
 end
 

@@ -1,4 +1,4 @@
-function T = addPterm(T,Nleg,Mleg,pcoef,nnzIdx,dvar,ALPHA,BETA,DERORD,rigorous)
+function T = addPterm(T,Nleg,Mleg,pcoef,nnzIdx,dvar,ALPHA,BETA,DERORD,DVAR_SYMM,rigorous)
 
 %% addPterm.m
 %
@@ -70,8 +70,8 @@ else
 end
 
 % Setup differentiation matrices
-[Da,Ba] = legendreDiff(Nleg,Mleg,ALPHA,Ka,LIMITS_ALPHA);
-[Db,Bb] = legendreDiff(Nleg,Mleg,BETA,Kb,LIMITS_BETA);
+[Da,Ba] = legendreDiff(Nleg,Mleg,ALPHA,Ka,LIMITS_ALPHA,DVAR_SYMM(dvar(1)));
+[Db,Bb] = legendreDiff(Nleg,Mleg,BETA,Kb,LIMITS_BETA,DVAR_SYMM(dvar(2)));
 
 % Integrals of triple products - a cell array X
 X = legendreTripleProduct(nnzIdx-1,0,nMax,0,mMax);
@@ -80,10 +80,12 @@ X = legendreTripleProduct(nnzIdx-1,0,nMax,0,mMax);
 % SET OUTPUT
 % ----------------------------------------------------------------------- %
 % Form the matrix representation of p(x)*d^ALPHA(u)*d^BETA(v)
-Pmat = pcoef(1).*([Ba.';Da.']*X{1}*[Bb, Db]);
+Ma = [Ba.'; Da.'];
+Mb = [Bb, Db];
+Pmat = pcoef(1).*(Ma*X{1}*Mb);
 for j = 2:length(pcoef)
     % loop not entered if length(pcoef)<2!
-    Pmat = Pmat + pcoef(j).*([Ba.';Da.']*X{j}*[Bb, Db]);
+    Pmat = Pmat + pcoef(j).*(Ma*X{j}*Mb);
 end
 
 % Set entries to zero if not rigorous

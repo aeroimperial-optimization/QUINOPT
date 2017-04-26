@@ -1,4 +1,4 @@
-function [T,S,slk] = addRterm(T,S,slk,Nleg,Mleg,degp,pcoef,nnzIdx,IVAR,dvar,ALPHA,BETA,DERORD)
+function [T,S,slk] = addRterm(T,S,slk,Nleg,Mleg,degp,pcoef,nnzIdx,IVAR,dvar,ALPHA,BETA,DERORD,DVAR_SYMM)
 
 %% addRterm.m
 %
@@ -17,6 +17,8 @@ function [T,S,slk] = addRterm(T,S,slk,Nleg,Mleg,degp,pcoef,nnzIdx,IVAR,dvar,ALPH
 
 Ka = DERORD(dvar(1));   % maximum derivative of first variable
 Kb = DERORD(dvar(2));   % maximum derivative of second variable
+SYMM_ALPHA = DVAR_SYMM(dvar(1));
+SYMM_BETA  = DVAR_SYMM(dvar(2));
 
 % Find the appropriate portion of the matrix T to add terms.
 % NOTE: only need the part with actual Legendre coefficients, not the 
@@ -49,13 +51,13 @@ else
     
     % Find the matrices
     ee = (Nleg+1)^(BETA-ALPHA);
-    Za = computeZmatrix(Nleg,Mleg,ALPHA,Ka);
+    Za = computeZmatrix(Nleg,Mleg,ALPHA,Ka,SYMM_ALPHA);
     lambda_a = computelambda(Nleg,Mleg,ALPHA,Ka);
     if BETA==ALPHA && Kb==Ka
         Zb = Za;
         lambda_b = lambda_a;
     else
-        Zb = computeZmatrix(Nleg,Mleg,BETA,Kb);
+        Zb = computeZmatrix(Nleg,Mleg,BETA,Kb,SYMM_BETA);
         lambda_b = computelambda(Nleg,Mleg,BETA,Kb);
     end
     
@@ -110,16 +112,10 @@ else
     
     
     % Set output (only add nonzero terms)
-%     [I,J] = find(Za);
-%     T(row(I),row(J)) = T(row(I),row(J)) - pinf*(ee.*Za(I,J));
-%     [I,J] = find(Za);
-%     T(col(I),col(J)) = T(col(I),col(J)) - pinf*(Zb(I,J)./ee);
     if isa(T,'sdpvar') || isa(pinf,'sdpvar')
         T = sdpvarAddInPlace(T,-(pinf*ee).*spblkdiag(zeros(Ka),Za),row,row);
-        T = sdpvarAddInPlace(T,-(pinf*ee).*spblkdiag(zeros(Kb),Zb),col,col);
+        T = sdpvarAddInPlace(T,-(pinf/ee).*spblkdiag(zeros(Kb),Zb),col,col);
     else
-        % T(row,row) = T(row,row) - pinf*ee*blkdiag( zeros(Ka),Za );
-        % T(col,col) = T(col,col) - pinf/ee*blkdiag( zeros(Kb),Zb );
         T(row,row) = T(row,row) - (pinf*ee).*spblkdiag( zeros(Ka),Za );
         T(col,col) = T(col,col) - (pinf/ee).*spblkdiag( zeros(Kb),Zb );
     end
@@ -141,13 +137,13 @@ end
 %^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^%
 
 % Find Z
-function  Z = computeZmatrix(Nleg,Mleg,ALPHA,K)
-    Z = computeHmatrix(Nleg,Mleg,ALPHA,K);
+function  Z = computeZmatrix(Nleg,Mleg,ALPHA,K,SYMM)
+    Z = computeHmatrix(Nleg,Mleg,ALPHA,K,SYMM);
     if ALPHA < K
-        T = computeTmatrix(Nleg,Mleg,ALPHA+1,K);
+        T = computeTmatrix(Nleg,Mleg,ALPHA+1,K,SYMM);
         Z = Z + T;
         for i=1:K-ALPHA-1
-            T = computeTmatrix(Nleg,Mleg,ALPHA+1+i,K);
+            T = computeTmatrix(Nleg,Mleg,ALPHA+1+i,K,SYMM);
             omega = computeomega(Nleg,Mleg,ALPHA+1:ALPHA+i);
             Z = Z + prod(omega).*T;
         end
@@ -169,8 +165,8 @@ function  lambda = computelambda(Nleg,Mleg,ALPHA,Ka)
 end
 
 % Find H
-function  H = computeHmatrix(Nleg,Mleg,ALPHA,K)
-    D = legendreDiff(Nleg,Mleg,ALPHA,K,[Nleg+ALPHA+1,Nleg+Mleg+ALPHA]);
+function  H = computeHmatrix(Nleg,Mleg,ALPHA,K,SYMM)
+    D = legendreDiff(Nleg,Mleg,ALPHA,K,[Nleg+ALPHA+1,Nleg+Mleg+ALPHA],SYMM);
     % Old code - no rescaling
     % <-----
     % v = 1./( 2*( Nleg+ALPHA+1:Nleg+Mleg+ALPHA )' + 1 );
@@ -181,10 +177,10 @@ function  H = computeHmatrix(Nleg,Mleg,ALPHA,K)
 end
 
 % Find T
-function  T = computeTmatrix(Nleg,Mleg,eta,K)
+function  T = computeTmatrix(Nleg,Mleg,eta,K,SYMM)
     if eta < K+1
         % Interesting case
-        D = legendreDiff(Nleg,Mleg,eta,K,[Nleg+Mleg+eta-1,Nleg+Mleg+eta]);
+        D = legendreDiff(Nleg,Mleg,eta,K,[Nleg+Mleg+eta-1,Nleg+Mleg+eta],SYMM);
         % Old code - no rescaling
         % <-----
         % N = [2/( 2*(Nleg+Mleg+eta)-1 )^2/(2*(Nleg+Mleg+eta)+1); ...
@@ -192,7 +188,7 @@ function  T = computeTmatrix(Nleg,Mleg,eta,K)
         % ---->
         N = [1/( 2*(Nleg+Mleg+eta)-1 )/(2*(Nleg+Mleg+eta)+1); ...
              1/( 2*(Nleg+Mleg+eta)+1 )/(2*(Nleg+Mleg+eta)+3)];
-        T = D'*spdiags(N,0,2,2)*D;
+        T = D.'*spdiags(N,0,2,2)*D;
     else
         % a zero matrix - can set to scalar, will be taken as element-wise
         % addition (NOTE: this case should never be reached, added for safety)

@@ -9,7 +9,7 @@ function [Q,H] = fixOuterApproxQ(Q,INEQ,N,M)
 % Loop over dependent variables
 H = [];
 for i = 1:INEQ.ndvars
-    Hblk = findHblk(INEQ.DERORD(i),INEQ.MAXDER(i),N,M);
+    Hblk = findHblk(INEQ.DERORD(i),INEQ.MAXDER(i),N,M,INEQ.DVAR_SYMM(i));
     H = spblkdiag(H,Hblk);
 end
 
@@ -21,10 +21,10 @@ end
 
 %% Nested function
 
-function Hblk = findHblk(k,l,N,M)
+function Hblk = findHblk(k,l,N,M,SYMM)
 
 % Find matrix to expand variables of k-th derivative to l-th derivative
-[D,B] = legendreDiff(N,M,k,l+1); 
+[D,B] = legendreDiff(N,M,k,l+1,[],SYMM); 
 E = spdiags(ones(k,1),0,k,l+1);
 Hblk = [E, sparse(k,size(D,2)); B, D];
 

@@ -1,4 +1,5 @@
-function [Qi,S,slk,MatrixInequalities,AuxVars] = expandFi(Qi,Nleg,Mleg,Fi,IVAR,DERORD,opts)
+function [Qi,S,slk,MatrixInequalities,AuxVars] = ...
+    expandFi(Qi,Nleg,Mleg,Fi,IVAR,DERORD,DVAR_SYMM,opts)
 
 % EXPANDFIM.m
 %
@@ -36,7 +37,7 @@ dvarpart = cumsum(DERORD+1);    % indices to partition the dependent variables
 [row,col] = size(Fi);
 
 % Consistency checks
-if row~=col;
+if row~=col
     error('Fi must be a square cell array.');
 elseif row~=ntot
     error('The dimensions of Fi and the number of variables and derivatives is not consistent.');
@@ -104,11 +105,11 @@ for i = 1:ntot
         BETA =  DERORD(dvar(2))-dvarpart(dvar(2))+j;
         
         % Compute relaxation of term \int p(x)*d^ALPHA(u)*d^BETA(v) dx
-        Qi = addPterm(Qi,Nleg,Mleg,pcoef,nnzIdx,dvar,ALPHA,BETA,DERORD,opts.rigorous);
+        Qi = addPterm(Qi,Nleg,Mleg,pcoef,nnzIdx,dvar,ALPHA,BETA,DERORD,DVAR_SYMM,opts.rigorous);
         if opts.rigorous
             % the terms Q and R only appear if series is not truncated
-            [Qi,S,MatrixInequalities,AuxVars] = addQterm(Qi,S,MatrixInequalities,AuxVars,Nleg,Mleg,pdeg,pcoef,nnzIdx,dvar,ALPHA,BETA,DERORD);
-            [Qi,S,slk] = addRterm(Qi,S,slk,Nleg,Mleg,pdeg,pcoef,nnzIdx,IVAR,dvar,ALPHA,BETA,DERORD);
+            [Qi,S,MatrixInequalities,AuxVars] = addQterm(Qi,S,MatrixInequalities,AuxVars,Nleg,Mleg,pdeg,pcoef,nnzIdx,dvar,ALPHA,BETA,DERORD,DVAR_SYMM);
+            [Qi,S,slk] = addRterm(Qi,S,slk,Nleg,Mleg,pdeg,pcoef,nnzIdx,IVAR,dvar,ALPHA,BETA,DERORD,DVAR_SYMM);
         end
         
     end
@@ -118,8 +119,8 @@ end
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
 % SET OUTPUT
 % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ %
-Qi = 0.5*(Qi+Qi');
-if opts.rigorous; S = replace(S,dum,0); S = 0.5*(S+S'); end
+Qi = 0.5*(Qi+Qi.');
+if opts.rigorous; S = replace(S,dum,0); S = 0.5*(S+S.'); end
 
 
 % END SCRIPT

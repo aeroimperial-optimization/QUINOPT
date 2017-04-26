@@ -1,4 +1,4 @@
-function Qm = expandFm(Nleg,Mleg,Fm,IVAR,DERORD,rigorous)
+function Qm = expandFm(Nleg,Mleg,Fm,IVAR,DERORD,DVAR_SYMM,rigorous)
 
 % EXPANDFM.m
 %
@@ -44,13 +44,14 @@ for i = 1:col
         dvar = find(i-dvarpart<=0,1);               % which dependent variable
         Ka = DERORD(dvar);                          % maximum derivative order
         ALPHA = Ka-dvarpart(dvar)+i;                % which derivative
+        SYMM_ALPHA = DVAR_SYMM(dvar);               % which symmetry
         
         if ALPHA==Ka
             LIMITS = [0, Nleg+Ka];
         else
             LIMITS = [];
         end
-        [Da,Ba] = legendreDiff(Nleg,Mleg,ALPHA,Ka,LIMITS); % integration matrices
+        [Da,Ba] = legendreDiff(Nleg,Mleg,ALPHA,Ka,LIMITS,SYMM_ALPHA); % integration matrices
         
         % Select nonzero entries only
         if isnumeric(Fcol)
@@ -84,7 +85,7 @@ for i = 1:col
         end
         
         % Set Qm
-        if ~rigorous; 
+        if ~rigorous
             % Set entries of unused coefficients to 0.
             Da(:,Nleg+2:end) = 0;   
         end

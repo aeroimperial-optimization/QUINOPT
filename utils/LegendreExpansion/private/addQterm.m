@@ -1,4 +1,4 @@
-function [T,S,LMI,auxVars] = addQterm(T,S,LMI,auxVars,Nleg,Mleg,degp,pcoef,nnzIdx,dvar,ALPHA,BETA,DERORD)
+function [T,S,LMI,auxVars] = addQterm(T,S,LMI,auxVars,Nleg,Mleg,degp,pcoef,nnzIdx,dvar,ALPHA,BETA,DERORD,DVAR_SYMM)
 
 %% addQterm.m
 %
@@ -223,6 +223,7 @@ else
     
     DerPairs = [ALPHA, BETA; BETA, ALPHA];
     HighDer = [Ka, Kb; Kb, Ka];
+    Symm = [DVAR_SYMM([dvar(1) dvar(2)]); DVAR_SYMM([dvar(2) dvar(1)])];
     Q = cell(2,1);
     
     for i=1:2
@@ -231,6 +232,8 @@ else
         BETA = DerPairs(i,2);   % derivative order of the infinite dimensional term
         Ka = HighDer(i,1);
         Kb = HighDer(i,2);
+        SYMM_ALPHA = Symm(i,1);
+        SYMM_BETA = Symm(i,2);
         
         % Limits for integration matrices
         % NOTE: since have chosen Nleg >= Lp+max(Ka,Kb)-1, always have 
@@ -243,15 +246,17 @@ else
         if ( nMax>=nMin ) && ( mMax>=mMin ) 
             
             % if all limits are sorted, then must compute            
-            [Da,Ba] = legendreDiff(Nleg,Mleg,ALPHA,Ka,[nMin,nMax]);
-            [Db,Bb] = legendreDiff(Nleg,Mleg,BETA,Kb,[mMin, mMax]);
+            [Da,Ba] = legendreDiff(Nleg,Mleg,ALPHA,Ka,[nMin,nMax],SYMM_ALPHA);
+            [Db,Bb] = legendreDiff(Nleg,Mleg,BETA,Kb,[mMin, mMax],SYMM_BETA);
             
             % Matrix of integral of triple products of Legendre polynomials
             % Values for l are given by nnzIdx-1
             Y = legendreTripleProduct(nnzIdx-1,nMin,nMax,mMin,mMax);
-            H = pcoef(1).*([Ba';Da']*Y{1}*[Bb, Db]);
+            Ma = [Ba.'; Da.'];
+            Mb = [Bb, Db];
+            H = pcoef(1).*(Ma*Y{1}*Mb);
             for j = 2:length(pcoef)
-                H = H + pcoef(j).*([Ba';Da']*Y{j}*[Bb, Db]);
+                H = H + pcoef(j).*(Ma*Y{j}*Mb);
             end
             
             % Set matrix Q
