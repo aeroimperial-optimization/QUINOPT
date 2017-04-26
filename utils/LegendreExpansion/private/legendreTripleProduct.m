@@ -38,7 +38,6 @@ cols = length(mVals);           % cols in each matrix X{l}
 S =  ( sqrt(2*nVals(:)+1)*sqrt(2*mVals+1) ) ./2;
 
 
-
 % Loop
 for k = 1:numlVals
     
