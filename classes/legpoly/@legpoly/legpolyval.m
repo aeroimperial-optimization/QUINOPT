@@ -37,7 +37,7 @@ end
 
 % Rescale x , vectorize, and check all points are in [-1,1]
 x = (2*x(:)-DOM(2)-DOM(1))/(DOM(2)-DOM(1));   
-if any(x<-1) || any(x>1)
+if any(x<-1-1e-15) || any(x>1+1e-15)
     error('Legendre polynomial must be evaulated ad points in its domain [%0.6g,%0.6g]',DOM(1),DOM(2));
 end
 
