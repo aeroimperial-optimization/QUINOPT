@@ -15,9 +15,9 @@ One of the most basic applications of QUINOPT is to find one value of an optimiz
 for all differentiable functions :math:`u(x)`. Clearly, possible choices are :math:`\gamma=0`, and :math:`\gamma=-2` or :math:`\gamma=2` (when the integrand is a perfect square).
 
 
------------------------
-Creating the variables
------------------------
+--------------------------
+1. Creating the variables
+--------------------------
 
 The first step to use QUINOPT is to set up the problem variables. These are the integration variable :math:`x\in[0,1]` (the *independent variable*), the unknown function :math:`u(x)` (the *dependent variable*), and the optimization parameter :math:`\gamma`.
 
@@ -47,9 +47,9 @@ Finally, we set up the optimization parameter :math:`\gamma` using the command `
 		The commands ``indvar()`` and ``depvar()`` return MATLAB objects of class ``@indvar`` and ``@depvar``, respectively. While the ``@indvar`` class behaves like a usual YALMIP variable, the ``@depvar`` class is specific to QUINOPT and does **not** behave like a YALMIP variable. Instead, it is intended to be used only as shown in the following.
 
 
---------------------------
-Setting up the inequality
---------------------------
+-----------------------------
+2. Setting up the inequality
+-----------------------------
 
 Once the variables have been set up, we can set up the inequality. This is done in QUINOPT by constructing the integrand expression.
 
@@ -65,7 +65,7 @@ In the expression above, the syntax ``u(x,DER)`` is used to specify the derivati
 		The integration interval has already been specified when defining the independent variable.
 
 -----------------------------------
-Solving the problem with QUINOPT
+3. Solving the problem with QUINOPT
 -----------------------------------
 
 Once the variables and the integrand of the inequality have been set up, a value of :math:`\gamma` for which the integral functional is positive semidefinite can be found using the command ``quinopt()``, together with YALMIP's command ``value()``
@@ -77,7 +77,7 @@ Once the variables and the integrand of the inequality have been set up, a value
 
 
 -----------------------------------
-Summary
+4. Summary
 -----------------------------------
 In summary, a feasible value :math:`\gamma` such that the integral inequality at the top of the page holds can be found using the following simple commands:
 
