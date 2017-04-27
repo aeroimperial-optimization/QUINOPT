@@ -52,7 +52,7 @@ As in the :doc:`previous example <./feas_nobc>`, we begin by constructing the in
 
 .. code:: matlab
 
-	>> EXPR = u(x,1)^2 +gamma*u(x,1)*u(x) + u(x)^2;	% Create the integrand
+	>> EXPR = u(x,1)^2 + gamma*u(x,1)*u(x) + u(x)^2;	% Create the integrand
 
 The boundary condition can be specified through a vector ``BC``, which is interpreted internally as the element-wise condition ``BC=0``:
 
@@ -92,9 +92,9 @@ In summary, a feasible value :math:`\gamma` such that the integral inequality at
 	>> x = indvar(0,1); 					% Create the independent variable with domain [0,1]
 	>> u = depvar(x);					% Create the dependent variable u(x)
 	>> parameters gamma;					% Create the optimization variable gamma
-	>> EXPR = u(x,1)^2 +gamma*u(x,1)*u(x) + u(x)^2;		% Create the integrand
+	>> EXPR = u(x,1)^2 + gamma*u(x,1)*u(x) + u(x)^2;       % Create the integrand
 	>> BC(1) = [u(0,1)];					% Create the boundary condition u'(0)=0
-	>> BC(2) = [u(1)]; 					% Create the boundary condition u(0)-u(1)=0
+	>> BC(2) = [u(1)]; 					% Create the boundary condition u(1)=0
 	>> quinopt(EXPR,BC);					% Solve the problem
 	>> value(gamma) 					% Extract the value of gamma
 

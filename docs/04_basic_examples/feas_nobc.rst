@@ -3,7 +3,7 @@
 Feasibility of an integral inequality
 ================================================
 
-One of the most basic applications of QUINOPT is to find one value of an optimization parameter such that a homogeneous quadratic integral functional is positive. Here, we demonstrate how to use QUINOPT to find the minimum value :math:`\gamma` such that
+One of the most basic applications of QUINOPT is to find one value of an optimization parameter such that a homogeneous quadratic integral functional is positive. Here, we demonstrate how to use QUINOPT to find a value :math:`\gamma` such that
 
 .. math::
 
@@ -55,7 +55,7 @@ Once the variables have been set up, we can set up the inequality. This is done 
 
 .. code:: matlab
 
-	>> EXPR = u(x,1)^2 +gamma*u(x,1)*u(x) + u(x)^2;	% Create the integrand
+	>> EXPR = u(x,1)^2 + gamma*u(x,1)*u(x) + u(x)^2;	% Create the integrand
 
 In the expression above, the syntax ``u(x,DER)`` is used to specify the derivative of :math:`u(x)` of order ``DER``. In other words, ``u(x,1)`` is the first derivative of :math:`u(x)`.
 
@@ -86,7 +86,7 @@ In summary, a feasible value :math:`\gamma` such that the integral inequality at
 	>> x = indvar(0,1); 					% Create the independent variable with domain [0,1]
 	>> u = depvar(x);					% Create the dependent variable u(x)
 	>> parameters gamma;					% Create the optimization variable gamma
-	>> EXPR = u(x,1)^2 +gamma*u(x,1)*u(x) + u(x)^2;		% Create the integrand
+	>> EXPR = u(x,1)^2 + gamma*u(x,1)*u(x) + u(x)^2;       % Create the integrand
 	>> quinopt(EXPR);					% Solve the problem
 	>> value(gamma) 					% Extract the value of gamma
 

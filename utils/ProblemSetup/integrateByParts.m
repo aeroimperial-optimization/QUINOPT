@@ -227,10 +227,12 @@ for i = 1:nBlk
     MAXDER(i) = max([MAXDER(i); TMP]);
     
     % maybe larger in BC?
-    [R,C] = find(INEQ.BC(:,I));
-    TMP = max(C);
-    TMP = ceil(TMP/2) -1;
-    MAXDER(i) = max([MAXDER(i); TMP]);
+    if ~isempty(INEQ.BC)
+        [R,C] = find(INEQ.BC(:,I));
+        TMP = max(C);
+        TMP = ceil(TMP/2) -1;
+        MAXDER(i) = max([MAXDER(i); TMP]);
+    end
     
     % update cnt and keepFb
     keepFb = [keepFb, cnt+1:cnt+2*(MAXDER(i)+1)];
@@ -251,7 +253,9 @@ INEQ.F.Fb = INEQ.F.Fb(keepFb,keepFb);     % remove unused entries
 INEQ.L.Li = INEQ.L.Li(keepFi);
 INEQ.L.Lb = replace(INEQ.L.Lb,x,0);       % Eliminate fake dependence on x from Lb
 INEQ.L.Lb = INEQ.L.Lb(keepFb);            % remove unused entries
-INEQ.BC = INEQ.BC(:,keepFb);
+if ~isempty(INEQ.BC)
+    INEQ.BC = INEQ.BC(:,keepFb);
+end
 
 
 % END CODE
