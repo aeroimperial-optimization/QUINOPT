@@ -108,6 +108,9 @@ for n = 1:nBlk
     end
     
     % Update list of rows/cols of Fi to keep
+    % Not so good if there is a variable with no derivatives?
+    lastnnz = max([2,lastnnz]);
+    if lastnnz>length(I); lastnnz = length(I); end
     keepFi = [keepFi, I(1):I(lastnnz)];
    
     if lastnnz~=numel(I)
