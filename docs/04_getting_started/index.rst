@@ -10,14 +10,14 @@ If you wish to know more about the theory behind QUINOPT, have look at `our pape
 ---------
 Examples
 ---------
-.. toctree::	
+.. toctree::
    :maxdepth: 1
    :glob:
 
    feas_nobc.rst
    feas_withbc.rst
    poincare.rst
-   shearflow.rst
-   
+ ..  shearflow.rst
+
 
 `Back to Table of Contents <http://quinopt.readthedocs.io/>`_
