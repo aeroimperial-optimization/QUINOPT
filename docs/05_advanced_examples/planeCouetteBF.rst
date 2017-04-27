@@ -4,6 +4,12 @@ Bounds on energy dissipation for plane Couette flow
 
 In this example we will compute bounds on the infinite-time-and-volume-averaged energy dissipation for plane Couette flow using the *indefinite storage functional method* with a quadratic storage functional.
 
+:download:`Download the MATLAB file for this example <./example11.m>`
+
+.. warning::
+
+    This example may take a few minutes to run: it took 53 seconds on a linux machine with a 3.40GHz Intel Core i7-4770 CPU, running MATLAB2016b and using MOSEK as the SDP solver. Please, do not panic if the code seems slow - this is a relatively hard example!
+
 ------------------------------
 1. Description of the flow
 ------------------------------
@@ -58,7 +64,7 @@ Here, we choose
     - \varphi(z)\,\boldsymbol{\hat{k}}\cdot \boldsymbol{v}
     \right]d\Omega.
 
-with :math:`a\in\mathbb{R}` and the function :math:`\varphi(z)` to be determined such that the bounding inequality is satisfied. We also assume that :math:`\varphi(0)=\varphi(1)=0`. The bounds obtained with the indefinite storage funcional method are then the same as those obtained with the *background method* (see e.g. `Plasting & Kerswell, *J. Fluid Mech.* 477, 363–379 (2003) <https://dx.doi.org/10.1017/S0022112002003361>`_).
+with :math:`a\in\mathbb{R}` and the function :math:`\varphi(z)` to be determined such that the bounding inequality is satisfied. We also assume that :math:`\varphi(0)=\varphi(1)=0`. The bounds obtained with the indefinite storage funcional method are then the same as those obtained with the *background method* (see e.g. `Plasting & Kerswell, J. Fluid Mech. 477, 363–379 (2003) <https://dx.doi.org/10.1017/S0022112002003361>`_).
 
 With these choices, the bounding inequality can be rearranged into
 
@@ -120,7 +126,7 @@ In these equations primes denote differentiation with respect to :math:`z`, whil
 
 To compute the optimal bound on the infinite-time average of the bulk energy dissipation :math:`\varepsilon(t)` for plane Couette flow, we use QUINOPT to minimize :math:`U` subject to the set of inequalities derived in the previous section.
 
-As usual, we begin by clearing the workspace and defining some of the problem parameters. For illustration, we consider :math:`{\it Re}=500` and :math:`\Lambda_y = 8\,\pi`.
+As usual, we begin by clearing the workspace and defining some of the problem parameters. For illustration, we consider :math:`{\it Re}=500` and :math:`\Lambda_y = 4\,\pi`.
 
 .. code:: matlab
 
@@ -128,7 +134,7 @@ As usual, we begin by clearing the workspace and defining some of the problem pa
     >> yalmip clear         % clear YALMIP's internal variables
     >> quinopt clear        % clear QUINOPT's internal variables
     >> Re = 500;
-    >> Lambda_y = 8*pi;
+    >> Lambda_y = 4*pi;
 
 We then proceed to define the independent variable of integration :math:`z`, the dependent variables :math:`\hat{u}_k` and :math:`\hat{w}_k` (we will drop the subscript :math:`k` and the hats in the code), and the boundary conditions.
 
@@ -142,12 +148,12 @@ We then proceed to define the independent variable of integration :math:`z`, the
 
     When a problem has multiple integral inequality constraints with the same integration domain, there is no need to define different independent and dependend variables for each. Since the dependent variables are simply symbolic variables in MATLAB, they can be re-used when defining multiple inequalities (provided the integration domain is the same).
 
-We now need to define the optimization variables of the problem, i.e. the scalars :math:`a` and :math:`U`, and the function :math:`\varphi(z)`. We take :math:`\varphi(z)` to be a polynomial of degree 35 in the Legendre basis, constructed using the command ``legpoly()``. Moreover, we enforce the boundary conditions :math:`\varphi(0)=0=\varphi(1)` using the  command ``legpolyval()`` to evaluate Legendre polynomials. The code reads:
+We now need to define the optimization variables of the problem, i.e. the scalars :math:`a` and :math:`U`, and the function :math:`\varphi(z)`. We take :math:`\varphi(z)` to be a polynomial of degree 25 in the Legendre basis, constructed using the command ``legpoly()``. Moreover, we enforce the boundary conditions :math:`\varphi(0)=0=\varphi(1)` using the  command ``legpolyval()`` to evaluate Legendre polynomials. The code reads:
 
 .. code:: matlab
 
     >> parameters a U
-    >> PHI = legpoly(z,35);
+    >> PHI = legpoly(z,25);
     >> PHI_BC = [legpolyval(PHI,0)==0; legpolyval(PHI,1)==0];
 
 In order to define the integral inequality constraints, we need the first and second derivatives of :math:`\varphi(z)`. These are easily obtained with the command ``jacobian()``:
@@ -157,12 +163,14 @@ In order to define the integral inequality constraints, we need the first and se
     >> D1PHI = jacobian(PHI,z);
     >> D2PHI = jacobian(D1PHI,z);
 
-We are now in a position to define the integral inequalities. Of course, only a finite number of wavenumbers can be implemented in QUINOPT; guided by the results of `Plasting & Kerswell, *J. Fluid Mech.* 477, 363–379 (2003) <https://dx.doi.org/10.1017/S0022112002003361>`_, we consider the first 41 wavenumbers, which corresponds to considering :math:`k\leq 10` only.
+We are now in a position to define the integral inequalities. Of course, only a finite number of wavenumbers can be implemented in QUINOPT; in this example, we consider :math:`k\leq 10` only.
 
 .. code:: matlab
 
     >> EXPR =  (a-1)*u(z,1)^2 + D2PHI*u(z) + U-1;           % the inequality for k=0
-    >> for n = 1:40
+    >> n = 0; k = 0;
+    >> while k < 10
+    >>      n = n+1;
     >>      k = 2*pi*n/Lambda_y;
     >>      EXPR(end+1) = (a-1)*( u(z,1)^2 + k^2*u(z)^2 ) ...
                          +(a-1)*( w(z,2)^2/k^2 + 2*w(z,1)^2 + k^2*w(z)^2 ) ...
@@ -177,7 +185,7 @@ Finally, we can solve the problem using the command ``quinopt()``. We will use t
     >> value(U)                             % extract the optimal value
 
 
-We find :math:`U = 4.8797`. The variation of this result with Reynolds number is plotted below; in fact, the blue curve replicates the results presented in Figure 2 of `Plasting & Kerswell, *J. Fluid Mech.* 477, 363–379 (2003) <https://dx.doi.org/10.1017/S0022112002003361>`_. Note also that the laminar dissipation value :math:`U=1` is achieved up to the well-known energy stability boundary :math:`{\it Re}= 82.7`.
+We find :math:`U = 4.8797`. The variation of this result with Reynolds number is plotted below; in fact, the blue curve replicates the results presented in Figure 2 of `Plasting & Kerswell, J. Fluid Mech. 477, 363–379 (2003) <https://dx.doi.org/10.1017/S0022112002003361>`_. Note also that the laminar dissipation value :math:`U=1` is achieved up to the well-known energy stability boundary :math:`{\it Re}\approx 82.7`.
 
 .. image:: planeCouette.png
 

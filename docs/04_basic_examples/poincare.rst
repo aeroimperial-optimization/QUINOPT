@@ -26,6 +26,7 @@ In this example, we verify that the constant :math:`\pi^2` on the right-hand sid
 	\quad u\in C^1([0,1],\mathbb{R}),\quad u(0)=0=u(1).
 	\end{aligned}
 
+:download:`Download the MATLAB file for this example <./example03.m>`
 
 --------------------------
 1. Creating the variables

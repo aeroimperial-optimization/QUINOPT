@@ -18,6 +18,7 @@ for all differentiable functions :math:`u(x)` that satisfy the boundary conditio
 
 	u'(0) = 0, \quad \text{and} \quad u(1)=0.
 
+:download:`Download the MATLAB file for this example <./example02.m>`
 
 ---------------------------
 1. Clearing the workspace
@@ -97,7 +98,6 @@ In summary, a feasible value :math:`\gamma` such that the integral inequality at
 	>> BC(2) = [u(1)]; 					% Create the boundary condition u(1)=0
 	>> quinopt(EXPR,BC);					% Solve the problem
 	>> value(gamma) 					% Extract the value of gamma
-
 
 
 `Back to Table of Contents <http://quinopt.readthedocs.io/>`_
