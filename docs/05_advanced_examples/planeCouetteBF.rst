@@ -58,7 +58,7 @@ Here, we choose
     - \varphi(z)\,\boldsymbol{\hat{k}}\cdot \boldsymbol{v}
     \right]d\Omega.
 
-with :math:`a\in\mathbb{R}` and the function :math:`\varphi(z)` to be determined such that the bounding inequality is satisfied. We also assume that :math:`\varphi(0)=\varphi(1)=0`. The bounds obtained with the indefinite storage funcional method are then the same as those obtained with the *background method* (see e.g. Plasting & Kerswell, J. Fluid Mech. 2003).
+with :math:`a\in\mathbb{R}` and the function :math:`\varphi(z)` to be determined such that the bounding inequality is satisfied. We also assume that :math:`\varphi(0)=\varphi(1)=0`. The bounds obtained with the indefinite storage funcional method are then the same as those obtained with the *background method* (see e.g. `Plasting & Kerswell, *J. Fluid Mech.* 477, 363–379 (2003) <https://dx.doi.org/10.1017/S0022112002003361>`_).
 
 With these choices, the bounding inequality can be rearranged into
 
@@ -157,7 +157,7 @@ In order to define the integral inequality constraints, we need the first and se
     >> D1PHI = jacobian(PHI,z);
     >> D2PHI = jacobian(D1PHI,z);
 
-We are now in a position to define the integral inequalities. Of course, only a finite number of wavenumbers can be implemented in QUINOPT; guided by the results of Plasting & Kerswell (J. Fluid Mech., 2003) we consider the first 41 wavenumbers, which corresponds to considering :math:`k\leq 10` only.
+We are now in a position to define the integral inequalities. Of course, only a finite number of wavenumbers can be implemented in QUINOPT; guided by the results of `Plasting & Kerswell, *J. Fluid Mech.* 477, 363–379 (2003) <https://dx.doi.org/10.1017/S0022112002003361>`_, we consider the first 41 wavenumbers, which corresponds to considering :math:`k\leq 10` only.
 
 .. code:: matlab
 
@@ -177,7 +177,7 @@ Finally, we can solve the problem using the command ``quinopt()``. We will use t
     >> value(U)                             % extract the optimal value
 
 
-We find :math:`U = 4.8797`. The variation of this result with Reynolds number is plotted below; in fact, the blue curve is the same as that presented by Plasting & Kerswell that the laminar dissipation value :math:`U=1` is achieved up to the well-known energy stability boundary :math:`{\it Re}= 82.7`.
+We find :math:`U = 4.8797`. The variation of this result with Reynolds number is plotted below; in fact, the blue curve replicates the results presented in Figure 2 of `Plasting & Kerswell, *J. Fluid Mech.* 477, 363–379 (2003) <https://dx.doi.org/10.1017/S0022112002003361>`_. Note also that the laminar dissipation value :math:`U=1` is achieved up to the well-known energy stability boundary :math:`{\it Re}= 82.7`.
 
 .. image:: planeCouette.png
 

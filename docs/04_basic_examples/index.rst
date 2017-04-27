@@ -1,6 +1,6 @@
 .. include:: ../substitutions.txt
 
-Getting Started
+Basic Examples
 ===============
 
 The best way to get started with QUINOPT is to look at some examples. Below is a list of demo problems, each of which introduces a new feature of QUINOPT.
@@ -17,7 +17,8 @@ Examples
    feas_nobc.rst
    feas_withbc.rst
    poincare.rst
- ..  shearflow.rst
+
+..  shearflow.rst
 
 
 `Back to Table of Contents <http://quinopt.readthedocs.io/>`_

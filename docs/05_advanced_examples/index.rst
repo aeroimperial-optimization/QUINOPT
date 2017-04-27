@@ -10,6 +10,7 @@ This section shows how to use QUINOPT to solve more advanced problems:
    :glob:
 
    planeCouetteBF.rst
+
 ..   BenardMarangoniES.rst
 
 `Back to Table of Contents <http://quinopt.readthedocs.io/>`_
