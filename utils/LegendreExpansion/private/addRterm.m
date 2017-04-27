@@ -41,7 +41,13 @@ if ALPHA==Ka && BETA==Kb
     mons = monolist(IVAR,degp);
     
     % Assign
-    S(dvar(1),dvar(2)) = S(dvar(1),dvar(2)) + pcoef(:)'*mons;
+    PP = pcoef(:)'*mons;
+    if isa(S,'sdpvar') || isa(PP,'sdpvar')
+        S = sdpvarAddInPlace(S,PP,dvar(1),dvar(2));
+    else
+        S(dvar(1),dvar(2)) = S(dvar(1),dvar(2)) + pcoef(:)'*mons;
+    end
+    
     
     
 else
@@ -119,9 +125,14 @@ else
         T(row,row) = T(row,row) - (pinf*ee).*spblkdiag( zeros(Ka),Za );
         T(col,col) = T(col,col) - (pinf/ee).*spblkdiag( zeros(Kb),Zb );
     end
-
-    S(dvar(1),dvar(1)) = S(dvar(1),dvar(1)) - pinf*(ee*lambda_a);
-    S(dvar(2),dvar(2)) = S(dvar(2),dvar(2)) - pinf*(lambda_b/ee);
+    
+    if isa(S,'sdpvar') || isa(pinf,'sdpvar')
+        S = sdpvarAddInPlace(S,-pinf*(ee*lambda_a),dvar(1),dvar(1));
+        S = sdpvarAddInPlace(S,-pinf*(lambda_b/ee),dvar(2),dvar(2));
+    else
+        S(dvar(1),dvar(1)) = S(dvar(1),dvar(1)) - pinf*(ee*lambda_a);
+        S(dvar(2),dvar(2)) = S(dvar(2),dvar(2)) - pinf*(lambda_b/ee);
+    end
     
     slk.t = [slk.t; t(:)];
     slk.pcoef = [slk.pcoef; addToList];
