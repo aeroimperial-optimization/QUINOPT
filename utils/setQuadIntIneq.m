@@ -128,6 +128,10 @@ if ~any(INEQ.DERORD)
     % Make symmetric
     S = (S+S')/2;
     
+    % Is S a legpoly? convert to SDPVAR
+    if isa(S,'legpoly')
+        S = sdpvar(S);
+    end
     % Project on BCs
     if ~isempty(INEQ.BC)&&~isZero(INEQ.BC)
         if strcmpi(OPTIONS.BCprojectorBasis,'rref')
