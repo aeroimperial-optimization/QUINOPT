@@ -24,20 +24,20 @@ The first step to use QUINOPT is to set up the problem variables. These are the 
 
 First, we create the independent variable :math:`x\in[0,1]` using the command ``indvar()``, as
 
-.. code:: matlab
+.. code-block:: matlabsession
 
 	>> x = indvar(0,1);			% Create the independent variable with domain [0,1]
 
 Then, we set up the dependent variable :math:`u(x)` using the command ``depvar()``:
 
-.. code:: matlab
+.. code-block:: matlabsession
 
 	>> u = depvar(x);			% Create the dependent variable u(x)
 
 
 Finally, we set up the optimization parameter :math:`\gamma` using the command ``parameters``
 
-.. code:: matlab
+.. code-block:: matlabsession
 
 	>> parameters gamma;			% Create the optimization variable gamma
 
@@ -54,7 +54,7 @@ Finally, we set up the optimization parameter :math:`\gamma` using the command `
 
 Once the variables have been set up, we can set up the inequality. This is done in QUINOPT by constructing the integrand expression.
 
-.. code:: matlab
+.. code-block:: matlabsession
 
 	>> EXPR = u(x,1)^2 + gamma*u(x,1)*u(x) + u(x)^2;	% Create the integrand
 
@@ -71,7 +71,7 @@ In the expression above, the syntax ``u(x,DER)`` is used to specify the derivati
 
 Once the variables and the integrand of the inequality have been set up, a value of :math:`\gamma` for which the integral functional is positive semidefinite can be found using the command ``quinopt()``, together with YALMIP's command ``value()``
 
-.. code:: matlab
+.. code-block:: matlabsession
 
 	>> quinopt(EXPR);	% Solve the problem
 	>> value(gamma) 	% Extract the value of gamma
@@ -82,7 +82,7 @@ Once the variables and the integrand of the inequality have been set up, a value
 -----------------------------------
 In summary, a feasible value :math:`\gamma` such that the integral inequality at the top of the page holds can be found using the following simple commands:
 
-.. code:: matlab
+.. code-block:: matlabsession
 
 	>> x = indvar(0,1); 					% Create the independent variable with domain [0,1]
 	>> u = depvar(x);					% Create the dependent variable u(x)

@@ -26,7 +26,7 @@ for all differentiable functions :math:`u(x)` that satisfy the boundary conditio
 
 Before we solve a new example, it is good practice to clear the variables from the workspace using MATLAB's ``clear`` command. Moreover, to prevent the build-up of unused internal variables in QUINOPT, it is useful to clear QUINOPT's internal variables using the command ``quinopt clear``:
 
-.. code:: matlab
+.. code-block:: matlabsession
 
 	>> clear
 	>> quinopt clear
@@ -38,7 +38,7 @@ Before we solve a new example, it is good practice to clear the variables from t
 
 As in the :doc:`previous example <./feas_nobc>`, we create the independent variable :math:`x\in[0,1]`, the dependent variable :math:`u(x)`, and the optimization parameter :math:`\gamma`:
 
-.. code:: matlab
+.. code-block:: matlabsession
 
 	>> x = indvar(0,1);
 	>> u = depvar(x);
@@ -51,13 +51,13 @@ As in the :doc:`previous example <./feas_nobc>`, we create the independent varia
 
 As in the :doc:`previous example <./feas_nobc>`, we begin by constructing the integrand expression.
 
-.. code:: matlab
+.. code-block:: matlabsession
 
 	>> EXPR = u(x,1)^2 + gamma*u(x,1)*u(x) + u(x)^2;	% Create the integrand
 
 The boundary condition can be specified through a vector ``BC``, which is interpreted internally as the element-wise condition ``BC=0``:
 
-.. code:: matlab
+.. code-block:: matlabsession
 
 	>> BC(1) = [u(0,1)];		% Create the boundary condition u'(0)=0
 	>> BC(2) = [u(1)]; 		% Create the boundary condition u(0)-u(1)=0
@@ -75,7 +75,7 @@ The boundary condition can be specified through a vector ``BC``, which is interp
 
 Once the variables and the integrand of the inequality have been set up, a value of :math:`\gamma` for which the integral functional is positive semidefinite can be found using the command ``quinopt()`` with two inputs:
 
-.. code:: matlab
+.. code-block:: matlabsession
 
 	>> quinopt(EXPR,BC);	% Solve the problem
 	>> value(gamma) 	% Extract the value of gamma
@@ -86,7 +86,7 @@ Once the variables and the integrand of the inequality have been set up, a value
 -----------------------------------
 In summary, a feasible value :math:`\gamma` such that the integral inequality at the top of the page holds can be found using the following simple commands:
 
-.. code:: matlab
+.. code-block:: matlabsession
 
 	>> clear						% Clear workspace
 	>> quinopt clear					% Clear QUINOPT internals

@@ -44,7 +44,7 @@ expr = u(x,1)^2 - gamma*u(x)^2;
 % the vector
 BC = [u(0); u(1)];
 
-% where the syntax u(0) specifies the value of $u$ at the boundary point x = 0.
+% where the syntax u(0) specifies the value of u at the boundary point x = 0.
 
 % Finally we specify the objective. QUINOPT minimizes the objective function it
 % receives, so to maximize gamma we minimize:

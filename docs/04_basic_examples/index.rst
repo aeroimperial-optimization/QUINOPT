@@ -17,7 +17,8 @@ Examples
    feas_nobc.rst
    feas_withbc.rst
    poincare.rst
-
+   wirtinger.rst
+   
 ..  shearflow.rst
 
 

@@ -1,7 +1,7 @@
-Poincaré inequality with Dirichlet boundary conditions
-======================================================
+Poincaré's inequality with Dirichlet boundary conditions
+=========================================================
 
-The Poincaré inequality for functions :math:`u:[0,1]\to\mathbb{R}` that satify the Dirichlet boundary conditions
+Poincaré's inequality for functions :math:`u:[0,1]\to\mathbb{R}` that satify the Dirichlet boundary conditions
 
 .. math::
 
@@ -34,7 +34,7 @@ In this example, we verify that the constant :math:`\pi^2` on the right-hand sid
 
 As usual, we start by clearing the model and creating the variables:
 
-.. code:: matlab
+.. code-block:: matlabsession
 
 	>> clear
 	>> quinopt clear
@@ -47,15 +47,15 @@ As usual, we start by clearing the model and creating the variables:
 2. Setting up the inequality
 ------------------------------
 
-To set up the Poincaré inequality constraint, first we specify the integrand:
+To set up Poincaré's inequality constraint, first we specify the integrand:
 
-.. code:: matlab
+.. code-block:: matlabsession
 
 	>> EXPR = u(x,1)^2 - gamma*u(x)^2;
 
 and then we set up the vector of boundary conditions (this can be a row vector as in the previous example, or a column vector):
 
-.. code:: matlab
+.. code-block:: matlabsession
 
 	>> BC = [u(0); u(1)];
 
@@ -71,28 +71,22 @@ To solve the problem and maximize :math:`\gamma`, we use once again the command 
 
 Since QUINOPT minimizes the specified objective function, instead of maximizing :math:`\gamma` we minimize :math:`-\gamma`:
 
-.. code:: matlab
+.. code-block:: matlabsession
 
 	>> quinopt(EXPR,BC,-gamma);		% Maximize gamma (by minimizing -gamma)
 	>> value(gamma)/pi^2			% Get the optimal value (in units of pi^2)
 
-With the default parameters in QUINOPT, we obtain
-
-.. math::
-
-	\gamma_{\rm opt} = 0.9994 \,\pi^2,
-
-i.e. the optimal solution returned by QUINOPT is within 99.9% of true optimum :math:`\gamma_{\rm opt}=\pi^2`.
+With the default parameters in QUINOPT, we obtain :math:``\gamma_{\rm opt} = 0.9994 \,\pi^2`, i.e. the optimal solution returned by QUINOPT is within 99.9% of true optimum :math:`\gamma_{\rm opt}=\pi^2`.
 
 
 -----------------------
 4. Summary
 -----------------------
 
-In summary, the optimal Poincaré constant can be determined with the following simple lines of code:
+In summary, the optimal constant for Poincaré's inequality can be determined with the following simple lines of code:
 
 
-.. code:: matlab
+.. code-block:: matlabsession
 
 	>> clear
 	>> quinopt clear
