@@ -128,29 +128,29 @@ To compute the optimal bound on the infinite-time average of the bulk energy dis
 
 As usual, we begin by clearing the workspace and defining some of the problem parameters. For illustration, we consider :math:`{\it Re}=500` and :math:`\Lambda_y = 4\,\pi`.
 
-.. code:: matlab
+.. code-block:: matlabsession
 
-    >> clear                % clear the workspace
-    >> yalmip clear         % clear YALMIP's internal variables
-    >> quinopt clear        % clear QUINOPT's internal variables
+    >> clear;                % clear the workspace
+    >> yalmip clear;         % clear YALMIP's internal variables
+    >> quinopt clear;        % clear QUINOPT's internal variables
     >> Re = 500;
     >> Lambda_y = 4*pi;
 
 We then proceed to define the independent variable of integration :math:`z`, the dependent variables :math:`\hat{u}_k` and :math:`\hat{w}_k` (we will drop the subscript :math:`k` and the hats in the code), and the boundary conditions.
 
-.. code:: matlab
+.. code-block:: matlabsession
 
     >> z = indvar(0,1);
     >> [u,w] = depvar(z);
     >> BC = [u(0); u(1); w(0); w(1); w(0,1); w(1,1)];
 
-.. note::
+.. code-block::
 
     When a problem has multiple integral inequality constraints with the same integration domain, there is no need to define different independent and dependend variables for each. Since the dependent variables are simply symbolic variables in MATLAB, they can be re-used when defining multiple inequalities (provided the integration domain is the same).
 
 We now need to define the optimization variables of the problem, i.e. the scalars :math:`a` and :math:`U`, and the function :math:`\varphi(z)`. We take :math:`\varphi(z)` to be a polynomial of degree 25 in the Legendre basis, constructed using the command ``legpoly()``. Moreover, we enforce the boundary conditions :math:`\varphi(0)=0=\varphi(1)` using the  command ``legpolyval()`` to evaluate Legendre polynomials. The code reads:
 
-.. code:: matlab
+.. code-block:: matlabsession
 
     >> parameters a U
     >> PHI = legpoly(z,25);
@@ -158,36 +158,45 @@ We now need to define the optimization variables of the problem, i.e. the scalar
 
 In order to define the integral inequality constraints, we need the first and second derivatives of :math:`\varphi(z)`. These are easily obtained with the command ``jacobian()``:
 
-.. code:: matlab
+.. code-block:: matlabsession
 
     >> D1PHI = jacobian(PHI,z);
     >> D2PHI = jacobian(D1PHI,z);
 
 We are now in a position to define the integral inequalities. Of course, only a finite number of wavenumbers can be implemented in QUINOPT; in this example, we consider :math:`k\leq 10` only.
 
-.. code:: matlab
+.. code-block:: matlabsession
 
     >> EXPR =  (a-1)*u(z,1)^2 + D2PHI*u(z) + U-1;           % the inequality for k=0
     >> n = 0; k = 0;
     >> while k < 10
     >>      n = n+1;
     >>      k = 2*pi*n/Lambda_y;
-    >>      EXPR(end+1) = (a-1)*( u(z,1)^2 + k^2*u(z)^2 ) ...
-                         +(a-1)*( w(z,2)^2/k^2 + 2*w(z,1)^2 + k^2*w(z)^2 ) ...
-                         + Re*( a+D1PHI )*u(z)*w(z);
+    >>      EXPR(end+1) = (a-1)*( u(z,1)^2 + k^2*u(z)^2 ) +(a-1)*( w(z,2)^2/k^2 + 2*w(z,1)^2 + k^2*w(z)^2 ) + Re*( a+D1PHI )*u(z)*w(z);
     >> end
 
 Finally, we can solve the problem using the command ``quinopt()``. We will use the default options, but we need to pass the boundary condition on :math:`\varphi(z)` as additional constraint, so we call
 
-.. code:: matlab
+.. code-block:: matlabsession
 
     >> quinopt(EXPR,BC,U,[],PHI_BC);        % solve with additional constraints
     >> value(U)                             % extract the optimal value
 
 
-We find :math:`U = 4.8797`. The variation of this result with Reynolds number is plotted below; in fact, the blue curve replicates the results presented in Figure 2 of `Plasting & Kerswell, J. Fluid Mech. 477, 363–379 (2003) <https://dx.doi.org/10.1017/S0022112002003361>`_. Note also that the laminar dissipation value :math:`U=1` is achieved up to the well-known energy stability boundary :math:`{\it Re}\approx 82.7`.
+We find :math:`U = 4.8797`. The figure below illustrates how the bound, plotted in terms of the usual friction coefficient :math:`{\it Re}^{-1}\times U`, varies with the reynolds number :math:`{\it Re}`. The blue curve replicates the results presented in Figure 2 of `Plasting & Kerswell, J. Fluid Mech. 477, 363–379 (2003) <https://dx.doi.org/10.1017/S0022112002003361>`_. Note also that the bound coincides with the laminar dissipation value (indicated by the dot-dashed line in the figure below) up to the well-known energy stability boundary :math:`{\it Re}\approx 82.7`.
 
 .. image:: planeCouette.png
 
+
+.. note::
+
+    The results obtained in this example are, strictly speaking, upper bounds on the optimal :math:`U`. This is because QUINOPT strengthens the integral inequality constraints by default to obtain a finite- dimensional *inner* approximation of their feasible set. Lower bounds on the optimal :math:`U` can also be found with QUINOPT, by defining a structure ``OPTIONS`` with a field called ``method`` set to ``'outer'``. Then, QUINOPT will relax the integral inequality constraints to obtain an *outer* approximation of their feasible set. The following snippet of code demonstrate how to do this in practice:
+
+    .. code-block:: matlabsession
+
+        >> OPTIONS.method = 'outer';
+        >> quinopt(EXPR,BC,U,OPTIONS,PHI_BC);       % Call quinopt() with user-defined options
+
+    Computing both upper and lower bounds is useful to assess how far from "true optimality" the answer returned by QUINOPT is. If needed, the quality of QUINOPT's approximation can be improved as described `in this previous example`_. More details regarding inner and outer approximations of the feasible set of integral inequalities can be found in `our paper <https://arxiv.org/pdf/1607.04210.pdf>`_.
 
 `Back to Table of Contents <http://quinopt.readthedocs.io/>`_
