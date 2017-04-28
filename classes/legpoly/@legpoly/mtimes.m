@@ -24,9 +24,10 @@ else
         error('Dimension of factors mismatch.')
     end
     s = [];
+    X = X.';
     for j=1:colsY
         for i=1:rowsX
-           s = [s; sum( X(i,:)'.*Y(:,j) )]; 
+           s = [s; sum( X(:,i).*Y(:,j) )]; 
         end
     end
     s = reshape(s,rowsX,colsY);
