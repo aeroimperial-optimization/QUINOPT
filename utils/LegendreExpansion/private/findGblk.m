@@ -10,13 +10,21 @@ function Gblk = findGblk(N,M,alpha,beta,k,rigorous,SYMM)
 %
 % NOTE: ALPHA,BETA < k!
 
-if max(alpha,beta)>=k
+if max(alpha,beta)>k
     error('Inputs alpha and beta must be <= k-1')
 elseif alpha>beta
     % swap around
     tmp = alpha;
     alpha = beta;
     beta = tmp;
+end
+
+% If beta==k, have no boundary values to represent, but need to take into
+% account the expansion coefficient: need Gblk to be a matrix with 0 rows, but
+% the correct number of columns!
+if beta==k
+    Gblk = sparse(0,N+M+2*k+1);
+    return
 end
 
 if nargin<7
