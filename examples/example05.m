@@ -1,8 +1,8 @@
 %% example05.m
 % 
-% We study the nonlinear stability of a linear PDE
+% We establish the nonlinear stability of a linear PDE
 %
-% u_t = u_xx+ (k - 24*x + 24*x^2)*u,  
+% u_t = u_xx+ (15 - 24*x + 24*x^2)*u,  
 %
 % with boundary conditions
 %
@@ -108,7 +108,7 @@ if SOL.FeasCode==0
     fprintf('p(x) = %s\n',s{1});
     clf
     plot(0:0.01:1,p)
-    xlabel('x'); ylabel('p(x)');
+    xlabel('x'); ylabel('p(x)')
 else
     fprintf('A feasible p(x) could not be found (FeasCode = %2i).\n',SOL.FeasCode)
 end
