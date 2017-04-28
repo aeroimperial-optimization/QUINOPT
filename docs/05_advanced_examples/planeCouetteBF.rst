@@ -144,7 +144,7 @@ We then proceed to define the independent variable of integration :math:`z`, the
     >> [u,w] = depvar(z);
     >> BC = [u(0); u(1); w(0); w(1); w(0,1); w(1,1)];
 
-.. code-block::
+.. note::
 
     When a problem has multiple integral inequality constraints with the same integration domain, there is no need to define different independent and dependend variables for each. Since the dependent variables are simply symbolic variables in MATLAB, they can be re-used when defining multiple inequalities (provided the integration domain is the same).
 
@@ -197,6 +197,6 @@ We find :math:`U = 4.8797`. The figure below illustrates how the bound, plotted 
         >> OPTIONS.method = 'outer';
         >> quinopt(EXPR,BC,U,OPTIONS,PHI_BC);       % Call quinopt() with user-defined options
 
-    Computing both upper and lower bounds is useful to assess how far from "true optimality" the answer returned by QUINOPT is. If needed, the quality of QUINOPT's approximation can be improved as described `in this previous example`_. More details regarding inner and outer approximations of the feasible set of integral inequalities can be found in `our paper <https://arxiv.org/pdf/1607.04210.pdf>`_.
+    Computing both upper and lower bounds is useful to assess how far from "true optimality" the answer returned by QUINOPT is. If needed, the quality of QUINOPT's approximation can be improved as described `in this previous example <../04_basic_examples/wirtinger.rst>`_. More details regarding inner and outer approximations of the feasible set of integral inequalities can be found in `our paper <https://arxiv.org/pdf/1607.04210.pdf>`_.
 
 `Back to Table of Contents <http://quinopt.readthedocs.io/>`_

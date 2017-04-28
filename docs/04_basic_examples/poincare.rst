@@ -76,7 +76,7 @@ Since QUINOPT minimizes the specified objective function, instead of maximizing 
 	>> quinopt(EXPR,BC,-gamma);		% Maximize gamma (by minimizing -gamma)
 	>> value(gamma)/pi^2			% Get the optimal value (in units of pi^2)
 
-With the default parameters in QUINOPT, we obtain :math:``\gamma_{\rm opt} = 0.9994 \,\pi^2`, i.e. the optimal solution returned by QUINOPT is within 99.9% of true optimum :math:`\gamma_{\rm opt}=\pi^2`.
+With the default parameters in QUINOPT, we obtain :math:`\gamma_{\rm opt} = 0.9994 \,\pi^2`, i.e. the optimal solution returned by QUINOPT is within 99.9% of true optimum :math:`\gamma_{\rm opt}=\pi^2`.
 
 
 -----------------------
