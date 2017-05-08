@@ -22,8 +22,8 @@ quinopt clear;
 
 % Then, we set some problem variables: the horizontal period Lambda, the largest
 % wavenumber to test.
-lambda = 4*pi;
-k_max  = 10; 
+lambda = 6*pi;
+k_max  = 5; 
 
 % To run in silent mode, we set YALMIP's option 'verbose' to 0. Also, we
 % speed up the iterations by settin YALMIP's 'cachesolvers' option to 1.
@@ -39,18 +39,18 @@ n = 1;
 while k <= k_max
     
         % Setup the variables
-        x = indvar(-1,1);   % define variable of integration over [-1,1]
-        [u,v] = depvar(x);  % define two dependent variables u and v
+        y = indvar(0,1);   % define variable of integration over [0,1]
+        [u,v] = depvar(y);  % define two dependent variables u and v
         parameters G        % define the optimization variable
         
         % Setup the inequality & the boundary conditions
         k(n) = 2*pi*n/lambda;
-        expr = 16/k(n)^2*( u(x,2)^2+v(x,2)^2 ) ...
-              +8*( u(x,1)^2+v(x,1)^2 ) ...
-              +k(n)^2*( u(x)^2+v(x)^2 )  ...
-              - 2*G/k(n)*( u(x)*v(x,1) - u(x,1)*v(x) );
-        bc = [u(-1); u(1); u(-1,1); u(1,2); ...        % BC on u
-              v(-1); v(1); v(-1,1); v(1,2)];           % BC on v
+        expr = ( u(y,2)^2+v(y,2)^2 )/k(n)^2 ...
+              +2*( u(y,1)^2+v(y,1)^2 ) ...
+              +k(n)^2*( u(y)^2+v(y)^2 )  ...
+              - G/k(n)*( u(y)*v(y,1) - u(y,1)*v(y) );
+        bc = [u(0); u(1); u(0,1); u(1,2); ...        % BC on u
+              v(0); v(1); v(0,1); v(1,2)];           % BC on v
         
         % Maximize G using an inner approximation of the integral inequality 
         % (we minimize -G, so we obtain a lower bound on the "true" optimal G)
@@ -74,9 +74,9 @@ while k <= k_max
 end
 
 %% Plot the results
-plot(k,LB,'.-','displayname','lower bound on critical G'); hold on;
-plot(k,UB,'x-','displayname','upper bound on critical G'); hold off;
-xlim([0, k_max])
+plot(k*lambda/2/pi,LB,'.-','displayname','lower bound on critical G'); hold on;
+plot(k*lambda/2/pi,UB,'x-','displayname','upper bound on critical G'); hold off;
+xlim([0, k_max*lambda/2/pi])
 legend toggle
 xlabel('k'); ylabel('UB and LB on optimal G');
 %% END CODE

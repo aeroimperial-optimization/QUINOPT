@@ -19,8 +19,7 @@ Examples
    poincare.rst
    wirtinger.rst
    pde_L2_stability.rst
-
-..  shearflow.rst
+   shearflowES.rst
 
 
 `Back to Table of Contents <http://quinopt.readthedocs.io/>`_
