@@ -62,7 +62,10 @@ function varargout = qiimodel(varargin)
 % ----------------------------------------------------------------------- %
 % Declare persistent variables
 % ----------------------------------------------------------------------- %
-persistent INDVARMODEL DEPVARMODEL
+persistent INDVARMODEL DEPVARMODEL MAXDVARID
+if isempty(MAXDVARID)
+    MAXDVARID = 0; 
+end
 
 % ----------------------------------------------------------------------- %
 % Check first input
@@ -77,10 +80,12 @@ end
 if any(strcmpi(varargin{1},{'querymodel','query','recover'}))
     varargout{1}.INDVARMODEL = INDVARMODEL;
     varargout{1}.DEPVARMODEL = DEPVARMODEL;
+    varargout{1}.MAXDVARID   = MAXDVARID;
     
 elseif strcmpi(varargin{1},'clear')
     INDVARMODEL = [];
     DEPVARMODEL = [];
+    MAXDVARID   = 0;
     
 elseif strcmpi(varargin{1},'indvar')
     % Update list of independent variable identifiers
@@ -116,7 +121,8 @@ elseif strcmpi(varargin{1},'depvar')
         DVAR = dvarpoly(sum(MAXDER+1),1);    % Dependent variables & derivatives
         BVAL = dvarpoly(2*sum(MAXDER+1),1);  % Boundary values
         if isempty(DEPVARMODEL)
-            DVARID = 1:ndvars;
+            DVARID = MAXDVARID+(1:ndvars);
+            MAXDVARID = max(DVARID);
             DEPVARMODEL.DVARID = DVARID;
             DEPVARMODEL.IVAR = IVAR*ones(1,ndvars);
             DEPVARMODEL.MAXDER = MAXDER;
@@ -126,7 +132,9 @@ elseif strcmpi(varargin{1},'depvar')
             DEPVARMODEL.BVALPART = [0, 2*cumsum(MAXDER+1)];
             DEPVARMODEL.SYMMETRY = 0;                       % no symmetry by default
         else
-            DVARID = DEPVARMODEL.DVARID(end)+(1:ndvars);
+            % DVARID = DEPVARMODEL.DVARID(end)+(1:ndvars);
+            DVARID = MAXDVARID+(1:ndvars);
+            MAXDVARID = max(DVARID);
             DEPVARMODEL.DVARID = [DEPVARMODEL.DVARID, DVARID];
             DEPVARMODEL.IVAR = [DEPVARMODEL.IVAR, IVAR*ones(1,ndvars)];
             DEPVARMODEL.MAXDER = [DEPVARMODEL.MAXDER, MAXDER];
@@ -193,18 +201,21 @@ elseif strcmpi(varargin{1},'cleardepvar')
     % Are there more than one variable in the model?
     if length(DEPVARMODEL.DVARID)>1
         varIndex = find(DEPVARMODEL.DVARID==varargin{2});
-        Il = DEPVARMODEL.DVARPART(varIndex);    % last variable before those to remove
-        Iu = DEPVARMODEL.DVARPART(varIndex+1);  % last variable to remove
-        Jl = DEPVARMODEL.BVALPART(varIndex);
-        Ju = DEPVARMODEL.BVALPART(varIndex+1);
-        DEPVARMODEL.DVARID = DEPVARMODEL.DVARID([1:varIndex-1,varIndex+1:end]);
-        DEPVARMODEL.IVAR = DEPVARMODEL.IVAR([1:varIndex-1,varIndex+1:end]);
-        DEPVARMODEL.MAXDER = DEPVARMODEL.MAXDER([1:varIndex-1,varIndex+1:end]);
-        DEPVARMODEL.DVAR = DEPVARMODEL.DVAR([1:Il,Iu+1:end]);
-        DEPVARMODEL.BVAL = DEPVARMODEL.BVAL([1:Jl,Ju+1:end]);
-        DEPVARMODEL.DVARPART = [0, cumsum(DEPVARMODEL.MAXDER+1)];
-        DEPVARMODEL.BVALPART = [0, 2*cumsum(DEPVARMODEL.MAXDER+1)];
-    else
+        if ~isempty(varIndex)
+            Il = DEPVARMODEL.DVARPART(varIndex);    % last variable before those to remove
+            Iu = DEPVARMODEL.DVARPART(varIndex+1);  % last variable to remove
+            Jl = DEPVARMODEL.BVALPART(varIndex);
+            Ju = DEPVARMODEL.BVALPART(varIndex+1);
+            DEPVARMODEL.DVARID = DEPVARMODEL.DVARID([1:varIndex-1,varIndex+1:end]);
+            DEPVARMODEL.IVAR = DEPVARMODEL.IVAR([1:varIndex-1,varIndex+1:end]);
+            DEPVARMODEL.MAXDER = DEPVARMODEL.MAXDER([1:varIndex-1,varIndex+1:end]);
+            DEPVARMODEL.DVAR = DEPVARMODEL.DVAR([1:Il,Iu+1:end]);
+            DEPVARMODEL.BVAL = DEPVARMODEL.BVAL([1:Jl,Ju+1:end]);
+            DEPVARMODEL.DVARPART = [0, cumsum(DEPVARMODEL.MAXDER+1)];
+            DEPVARMODEL.BVALPART = [0, 2*cumsum(DEPVARMODEL.MAXDER+1)];
+        end
+    % Does it exist or has it been already cleared by class destructors?
+    elseif DEPVARMODEL.DVARID==varargin{2}
         DEPVARMODEL = [];
     end
     
