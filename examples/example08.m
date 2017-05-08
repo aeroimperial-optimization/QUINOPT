@@ -1,4 +1,4 @@
-%% example11.m
+%% example08.m
 %
 % Compute bounds on energy dissipation for 3D plane Couette flow using the
 % indefinite storage functional method (this is equivalent to the usual
@@ -19,10 +19,10 @@ quinopt clear;
 % Then,we set some problem parameters: the Reynolds number, the period Lambda_y
 % in the y direction, the degree of the linear term PHI in the storage
 % functional, and the maximum horizontal wavenumber to test:
-Re       = 500;
-Lambda_y = 8*pi;
-PHI_DEG  = 35;
-k_max    = 10;
+Re       = 200;
+Lambda_y = 4*pi;
+PHI_DEG  = 15;
+k_max    = 5;
 
 % Finally, we define the integration variables, the flow variables, and the
 % boundary conditions

@@ -4,7 +4,7 @@ Bounds on energy dissipation for plane Couette flow
 
 In this example we will compute bounds on the infinite-time-and-volume-averaged energy dissipation for plane Couette flow using the *indefinite storage functional method* with a quadratic storage functional.
 
-:download:`Download the MATLAB file for this example <./example11.m>`
+:download:`Download the MATLAB file for this example <./example08.m>`
 
 .. warning::
 

@@ -20,7 +20,7 @@ In this example, we verify that the smallest possible constant is :math:`C = 1`.
 :download:`Download the MATLAB file for this example <./example04.m>`
 
 --------------------------------
-1. Reformulating the problem
+1. Reformulate the problem
 --------------------------------
 Before inputting the integral inequality into QUINOPT, we need to remove the integral constraint on :math:`v(x)`. This can be done by defining
 
@@ -43,7 +43,7 @@ Moreover, by definition of :math:`u(x)` we have the additional boundary conditio
     \right]{\rm d}x \geq 0.
 
 --------------------------
-2. Setting up the problem
+2. Set up the problem
 --------------------------
 
 As usual, we start by clearing the model and creating the variables:
@@ -66,7 +66,7 @@ To set up the integral inequality constraint, we specify the integrand and the v
 
 
 --------------------------
-3. Solving the problem
+3. Solve the problem
 --------------------------
 
 We seek upper and lower bounds on the lowest possible :math:`C`. QUINOPT's default behaviour is to compute upper bounds on the optimal objective value by formulating and inner approximation of the feasible set of the integral inequality constraints. A lower bound is found by overriding the default method with an ``options`` structure:
@@ -101,7 +101,7 @@ To compute an upper bound, we need to reset QUINOPT's default behaviour:
     The commands above return an upper bound``UB = 1.000618`` , but a lower bound ``LB = NaN``. This is because QUINOPT's default outer approximation is always feasible, and so the optimization problem that is solved has an unbounded objective value. This issue is resolved in the next section.
 
 --------------------------
-4. Improving the results
+4. Improve the results
 --------------------------
 
 As we have seen, the lower bound obtained with QUINOPT's default outer approximation is not good. This issue can be resolved by refining the approximation that QUINOPT builds. Roughly speaking, QUINOPT builds such approximations by expanding the dependent variables as polynomials of degree :math:`N`. By default, QUINOPT determines :math:`N` based on the problem (`see our paper for details <https://arxiv.org/pdf/1607.04210.pdf>`_): for Wirtinger's inequality, the default value is :math:`N=2`. Fortunately, we can tell QUINOPT to use a larger value by specifying the option ``options.N``:

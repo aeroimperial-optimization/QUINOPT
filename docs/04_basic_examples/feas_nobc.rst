@@ -17,7 +17,7 @@ for all differentiable functions :math:`u(x)`. Clearly, possible choices are :ma
 :download:`Download the MATLAB file for this example <./example01.m>`
 
 --------------------------
-1. Creating the variables
+1. Create the variables
 --------------------------
 
 The first step to use QUINOPT is to set up the problem variables. These are the integration variable :math:`x\in[0,1]` (the *independent variable*), the unknown function :math:`u(x)` (the *dependent variable*), and the optimization parameter :math:`\gamma`.
@@ -49,7 +49,7 @@ Finally, we set up the optimization parameter :math:`\gamma` using the command `
 
 
 -----------------------------
-2. Setting up the inequality
+2. Set up the inequality
 -----------------------------
 
 Once the variables have been set up, we can set up the inequality. This is done in QUINOPT by constructing the integrand expression.
@@ -66,7 +66,7 @@ In the expression above, the syntax ``u(x,DER)`` is used to specify the derivati
 		The integration interval has already been specified when defining the independent variable.
 
 -----------------------------------
-3. Solving the problem with QUINOPT
+3. Solve the problem with QUINOPT
 -----------------------------------
 
 Once the variables and the integrand of the inequality have been set up, a value of :math:`\gamma` for which the integral functional is positive semidefinite can be found using the command ``quinopt()``, together with YALMIP's command ``value()``

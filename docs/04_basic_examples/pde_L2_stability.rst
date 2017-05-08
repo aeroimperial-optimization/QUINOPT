@@ -105,7 +105,7 @@ The output ``SOL`` contains information about the solution, such as the CPU time
 
 
 -----------------------------------
-4. Plotting :math:`p(x)`
+4. Plot :math:`p(x)`
 -----------------------------------
 
 Once a feasible polynomial :math:`p(x)` is found, as is the case when :math:`k=15`, one may wish to see what it looks like. MATLAB's usual ``plot()`` function is overloaded on polynomials defined with the command ``legpoly()``, making it really easy to plot :math:`p(x)`. Juse type:

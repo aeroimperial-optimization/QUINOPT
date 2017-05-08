@@ -1,117 +1,99 @@
-%% example6.m
-% 
-% We study the weighted L2 stability of a linear PDE
+%% example11.m
 %
-% u_t = u_xx+ (k - 24*x + 24*x^2)*u,  
+% Compute bounds on energy dissipation for 3D plane Couette flow using the
+% indefinite storage functional method (this is equivalent to the usual
+% background method formulation of the problem, see e.g. Plasting & Kerswell, J.
+% Fluid Mech. 477, 363–379, 2003).
 %
-% with boundary conditions
-%
-% u(-1)=u(1)=0
-%
-% The goal is to maximize k. The maximum k should be given by energy 
-% stability (linear stability analysis gives the same eigenvalue problem 
-% obtained by studying the energy stability using the calculus of variations).
-% This example shows how QuadIntIneq automatically performs integration by
-% parts when needed to obtain a sensible problem.
-%
-% This example was taken from: 
-% [1] Valmorbida, Ahmadi, Papachristodoulou, "Semi-definite programming and 
-% functional inequalities for Distributed Parameter Systems", 53rd IEEE 
-% Conference on Decision and Control, 2014.
+% A full description of the problem can be found online at
+% http://quinopt.readthedocs.io/05_advanced_examples/planeCouetteBF.html
 
-% ----------------------------------------------------------------------- %
-%        Author:    Giovanni Fantuzzi
-%                   Department of Aeronautics
-%                   Imperial College London
-%       Created:    08/04/2016
-% Last Modified:    17/04/2017
-% ----------------------------------------------------------------------- %
-
-%% Clear previous model and variables
-clear;             % clean workspace 
-yalmip clear;      % clear YALMIP's internal variables
-quinopt clear;     % clear QUINOPT's internal variables
-
-%% Problem variables
-x = indvar(0,1);
-u = depvar(x);
-bc = [u(0); u(1)];
-
-%% Classic energy stability: find the optimal k
-% Check if 
+%% Initialization
 %
-%       /1
-% V(u)= |  0.5*p(x)*u^2 dx 
-%       /-1 
-%
-% is a Lyapunov function by testing if 
-%
-%       /1
-% V_t(u)= |  p(x)*u*u_t dx  <= 0 for all u.
-%       /-1 
-%
-% Use automatic integration by parts to formulate a well-posed inequality.
-sdpvar k
-u_t = u(x,2) + (k-24*x+24*x^2)*u(x);      % the right-hand side of the PDE
-expr = u(x)*u_t;                          % the integrand
+% First, we remove any existing variables to avoid unexpected dependencies, and
+% clear YALMIP's and QUINOPT's internals
+clear;
+yalmip clear;
+quinopt clear;
 
-options.YALMIP = sdpsettings('verbose',0);
-options.N = 5;
-quinopt(-expr,bc,-k,options);   % require positivity of -V_t(u)!
-disp('+++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-disp('QUINOPT example 6')
-fprintf('Optimal k from energy stability: k = %4.4f\n',value(k))
+% Then,we set some problem parameters: the Reynolds number, the period Lambda_y
+% in the y direction, the degree of the linear term PHI in the storage
+% functional, and the maximum horizontal wavenumber to test:
+Re       = 500;
+Lambda_y = 8*pi;
+PHI_DEG  = 35;
+k_max    = 10;
 
-%% Weighted energy stability
-% Test if a weighted energy Lyapunov function achieves the same energy
-% stability limit: this is not the case when the SOS method of [1] is used.
-% Specifically, we use 
-%
-%       /1
-% V(u)= |  0.5*p(x)*u^2 dx 
-%       /-1
-%
-% as a Lyapunov function, where p(x) is a polynomial of degree d. 
-% For a constant c>0 we therefore require:
-%
-% 1) V(u) >= c*||u||^2
-% 2) V_t(u) = \int_{-1}^{1} p(x)*u*u_t dx <= 0.
-%
-% Since both expressions are homogeneous in p(x), take c=1 without loss of
-% generality. Moreover, we require that the sum of the coefficients of the
-% monomials x, x^2, ..., x^d in p(x) is larger than 1, so we don't get a 
-% constant polynomial p(x) (this corresponds to the usual energy stability 
-% choice).
+% Finally, we define the integration variables, the flow variables, and the
+% boundary conditions
+z = indvar(0,1);
+[u,w] = depvar(z);
+BC = [u(0); u(1); w(0); w(1); w(0,1); w(1,1)];
 
-% Define p using YALMIP's "polynomial" function
-d = 10;
-[p,c] = polynomial(x,d);      % the Lyapunov function is \int p(x)*u^2 dx
-cnstr = sum(c(2:end))>=1;     % avoid solution p(x)=const.
+%% Setting up the optimization variables
+% The optimization variables are:
+% 1) a, a scalar known in the literature as "balance parameter"
+% 2) U, the upper bound on the time-average bulk dissipation
+% 3) PHI, a polynomial of degree PHI_DEG satisfying the conditions PHI(0)=0 and
+%    PHI(1)=0. We set up PHI as a polynomial in the Legendre basis, which is how
+%    QUINOPT represents variable internally.
+parameters a U
+PHI = legpoly(z,PHI_DEG);
 
-% Setup feasibility problem for optimal value of k (actually, we try 0.9999
-% of it to account for roundoff errors that might make the optimal k
-% obtained from the energy stability slightly infeasible)
-k = 0.9999*value(k);        
-u_t = u(x,2) + (k-24*x+24*x^2)*u(x);
-expr = [ p*u(x)^2; ...                    % positivity of V(u)
-        -p*u(x)*u_t];                     % positivity of -V_t(u)
+% The boundary conditions on PHI are specified in a vector, using the command
+% legpoly() to compute the boundary values of PHI.
+PHI_BC = [legpolyval(PHI,0)==0; legpolyval(PHI,1)==0];
 
-% Solve the feasibility problem. We need to specify that the coefficients c
-% and d are parameters and not independent variables to obtain the correct
-% answer. Moreover, we set options.N to be empty to use the default value.
-options.N = [];
-sol = quinopt(expr,bc,[],options,cnstr);
+% Finally, we will need the first two derivatives of PHI. These can be computed
+% using the function jacobian().
+D1PHI = jacobian(PHI,z);
+D2PHI = jacobian(D1PHI,z);
 
-% Plot p(x) if problem was successfully solved
-if sol.FeasCode==0
-    ttot = sol.solutionTime+sol.setupTime;
-    fprintf('Feasible nonconstant p(x) could be found in %4.2f sec.\n',ttot);
-    cval = clean(value(c),1e-8);        % YALMIP: remove small coefficients
-    xp = 0:0.01:1;
-    pval = polyval(flipud(cval),xp);    % polyval uses reverse order of coefficients
-    figure(gcf); clf; plot(xp,pval,'Linewidth',1.5); xlabel('x'); ylabel('p(x)')
-else
-    fprintf('Feasible nonconstant p(x) could not be found (FeasCode = %2i).\n',sol.FeasCode)
+%% Setting up the inequality constraints
+% To set up the integral inequality constraints, we construct a vector EXPR 
+% containing the integrand of each inequality.
+n = 0;
+k = 0;
+EXPR(1) = (a-1)*u(z,1)^2 + D2PHI*u(z) + U-1;
+while k<k_max
+    n = n+1;
+    k = 2*pi*n/Lambda_y;
+    EXPR(end+1) = (a-1)*( u(z,1)^2 + k^2*u(z)^2 ) ...
+                 +(a-1)*( w(z,2)^2/k^2 + 2*w(z,1)^2 + k^2*w(z)^2 ) ...
+                 + Re*( a+D1PHI )*u(z)*w(z);
 end
-disp('+++++++++++++++++++++++++++++++++++++++++++++++++++++++'); disp(' ')
+
+%% Solve the problem
+% The aim of the optimization is to minimize the upper bound U on the energy
+% dissipation. To specify the extra constraints on the optimization variables,
+% we use the command quinopt() with five inputs: EXPR and BC to specify the
+% integral inequalities, U as the objective, an options structure (empty) and
+% the additional constraints PHI_BC.
+opts.YALMIP = sdpsettings('solver','mosek');
+opts.method = 'outer';
+quinopt(EXPR,BC,U,opts,PHI_BC);
+U_OPT = value(U);
+
+% Print some solution info
+fprintf('\n==============================\n')
+fprintf('Reynolds number: %g\n',Re)
+fprintf('Period Lambda_y: %g*pi\n',Lambda_y/pi)
+fprintf('Optimal bound U: %g\n',U_OPT)
+fprintf('==============================\n\n')
+
+%% Inspecting the solution
+% As a final step, we can inspect the solution to see what the optimal choice of
+% the polynomial PHI is. To do so, we use the command plot(), which is
+% overloaded on Legendre polynomials.
+subplot(2,1,1)
+plot(0:0.01:1,PHI)
+xlabel('z'); ylabel('\phi(z)')
+
+% In fact, to compare the optimization results obtained with QUINOPT to those in
+% Plasting & Kerswell, J. Fluid Mech. 477, 363–379 (2003) it is convenient to
+% use PHI and the balance parameter a to plot the usual "background field",
+% given by a^{-1}*PHI(z) + z   
+subplot(2,1,2)
+plot(0:0.01:1,PHI/value(a)+z)
+xlabel('z'); ylabel('a^{-1}\phi(z)+z')
 

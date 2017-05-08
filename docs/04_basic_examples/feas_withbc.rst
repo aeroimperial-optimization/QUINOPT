@@ -21,7 +21,7 @@ for all differentiable functions :math:`u(x)` that satisfy the boundary conditio
 :download:`Download the MATLAB file for this example <./example02.m>`
 
 ---------------------------
-1. Clearing the workspace
+1. Clear the workspace
 ---------------------------
 
 Before we solve a new example, it is good practice to clear the variables from the workspace using MATLAB's ``clear`` command. Moreover, to prevent the build-up of unused internal variables in QUINOPT, it is useful to clear QUINOPT's internal variables using the command ``quinopt clear``:
@@ -33,7 +33,7 @@ Before we solve a new example, it is good practice to clear the variables from t
 
 
 ---------------------------
-2. Creating the variables
+2. Create the variables
 ---------------------------
 
 As in the :doc:`previous example <./feas_nobc>`, we create the independent variable :math:`x\in[0,1]`, the dependent variable :math:`u(x)`, and the optimization parameter :math:`\gamma`:
@@ -46,7 +46,7 @@ As in the :doc:`previous example <./feas_nobc>`, we create the independent varia
 
 
 ------------------------------
-3. Setting up the inequality
+3. Set up the inequality
 ------------------------------
 
 As in the :doc:`previous example <./feas_nobc>`, we begin by constructing the integrand expression.
@@ -70,7 +70,7 @@ The boundary condition can be specified through a vector ``BC``, which is interp
 
 
 -----------------------------------
-4. Solving the problem with QUINOPT
+4. Solve the problem with QUINOPT
 -----------------------------------
 
 Once the variables and the integrand of the inequality have been set up, a value of :math:`\gamma` for which the integral functional is positive semidefinite can be found using the command ``quinopt()`` with two inputs:

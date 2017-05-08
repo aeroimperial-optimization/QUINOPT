@@ -29,7 +29,7 @@ In this example, we verify that the constant :math:`\pi^2` on the right-hand sid
 :download:`Download the MATLAB file for this example <./example03.m>`
 
 --------------------------
-1. Creating the variables
+1. Create the variables
 --------------------------
 
 As usual, we start by clearing the model and creating the variables:
@@ -44,7 +44,7 @@ As usual, we start by clearing the model and creating the variables:
 
 
 ------------------------------
-2. Setting up the inequality
+2. Set up the inequality
 ------------------------------
 
 To set up Poincaré's inequality constraint, first we specify the integrand:
@@ -61,7 +61,7 @@ and then we set up the vector of boundary conditions (this can be a row vector a
 
 
 --------------------------
-3. Solving the problem
+3. Solve the problem
 --------------------------
 
 To solve the problem and maximize :math:`\gamma`, we use once again the command ``quinopt()``, this time with three arguments: ``EXPR``, ``BC`` and the objective function.
