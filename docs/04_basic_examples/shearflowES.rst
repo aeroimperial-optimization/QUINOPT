@@ -3,7 +3,7 @@ Energy stability of a stress-driven shear flow
 
 Consider an idealized two-dimensional layer of fluid, periodic in the horizontal (:math:`x`) direction with period :math:`\Lambda`, bounded below (:math:`y=0`) by a solid wall, and driven at the surface (:math:`y=1`) by a shear stress of non-dimensional magnitude :math:`G` (known as the *Grashoff number*).
 
-The linear velocity profile :math:`G y\,\boldsymbol{\hat{i}}`, where :math:`\boldsymbol{\hat{i}}` is the unit vector along the :math:`x` direction, is globally stable when :math:`G` is sufficiently small. In particular it can be shown that a velocity perturbation
+The linear velocity profile :math:`G y\,\boldsymbol{\hat{i}}`, where :math:`\boldsymbol{\hat{i}}` is the unit vector along the :math:`x` direction, is globally stable when :math:`G` is sufficiently small. In particular it can be shown (see e.g. `Fantuzzi & Wynn, Phys. Rev. E 93(4), 043308 (2016) <https://dx.doi.org/10.1103/PhysRevE.93.043308>`_) that a velocity perturbation
 
 .. math::
 
