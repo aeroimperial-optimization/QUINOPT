@@ -179,7 +179,7 @@ elseif isa(X,'legpoly') && isa (Y,'legpoly')
         error(['Legendre polynomials have different independent variables. '...
             'Only operations between polynomials with the same independent variable are supported.'])
         
-    elseif any(domX-domY)
+    elseif any(domX-domY) && any(domX) && any(domY)
         error('Cannot multiply Legendre polynomials defined over different intervals.')
         
     elseif ~any(size(X)-size(Y)) %size(X)==size(Y)
@@ -191,10 +191,12 @@ elseif isa(X,'legpoly') && isa (Y,'legpoly')
             index = find(ivarX);
             % ivar = num2cell(ivarX(index(1)).*any(ivarX+ivarY));
             ivar = ivarX(index(1));
+            ivar_domn = domX;
         elseif degY ~=0
             index = find(ivarY);
             % ivar = num2cell(ivarY(index(1)).*any(ivarX+ivarY));
             ivar = ivarY(index(1));
+            ivar_domn = domY;
         else
             % ivar = {0};
             ivar = 0;
@@ -219,7 +221,7 @@ elseif isa(X,'legpoly') && isa (Y,'legpoly')
                     % X.coef or Y.coef is a scalar
                     s(i,j).ivar = ivar;
                     s(i,j).coef = X(i,j).coef.*Y(i,j).coef;
-                    s(i,j).domn = domX;
+                    s(i,j).domn = ivar_domn;
                     
                 else
                     % OLD: convert to sdpvar, multiply and convert back
@@ -229,7 +231,7 @@ elseif isa(X,'legpoly') && isa (Y,'legpoly')
                     % NEW, 17/06/2016: multiplication in legendre basis
                     s(i,j).ivar = ivar;
                     s(i,j).coef = legProd(X(i,j).coef,Y(i,j).coef);
-                    s(i,j).domn = domX;
+                    s(i,j).domn = ivar_domn;
                     
                 end
                 

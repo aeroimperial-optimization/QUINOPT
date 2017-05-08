@@ -42,7 +42,7 @@ degc = length(c)-1;
 
 %% First, assume the independent variable is in [-1,1]
 % Zero polynomial first
-if degc == 1 && c(1) == 0
+if degc == 1 && isZero(c(1))% == 0
     prd = c;
 else
     m = (0:degc+1)';
