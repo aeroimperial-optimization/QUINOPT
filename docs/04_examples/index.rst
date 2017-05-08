@@ -1,6 +1,6 @@
 .. include:: ../substitutions.txt
 
-Basic Examples
+Examples
 ===============
 
 The best way to get started with QUINOPT is to look at some examples. Below is a list of demo problems of increasing difficulty, each of which introduces a new feature of QUINOPT. The last three examples, in particular, solve non-trivial problems from the field of fluid dynamics.
