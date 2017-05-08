@@ -197,6 +197,6 @@ We find :math:`U = 4.8797`. The figure below illustrates how the bound, plotted 
         >> OPTIONS.method = 'outer';
         >> quinopt(EXPR,BC,U,OPTIONS,PHI_BC);       % Call quinopt() with user-defined options
 
-    Computing both upper and lower bounds is useful to assess how far from "true optimality" the answer returned by QUINOPT is. If needed, the quality of QUINOPT's approximation can be improved as described `in this previous example <../04_basic_examples/wirtinger.rst>`_. More details regarding inner and outer approximations of the feasible set of integral inequalities can be found in `our paper <https://arxiv.org/pdf/1607.04210.pdf>`_.
+    Computing both upper and lower bounds is useful to assess how far from "true optimality" the answer returned by QUINOPT is. If needed, the quality of QUINOPT's approximation can be improved as described :doc:`in this previous example <../04_basic_examples/wirtinger>`. More details regarding inner and outer approximations of the feasible set of integral inequalities can be found in `our paper <https://arxiv.org/pdf/1607.04210.pdf>`_.
 
 `Back to Table of Contents <http://quinopt.readthedocs.io/>`_
