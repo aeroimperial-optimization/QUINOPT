@@ -1,9 +1,9 @@
 function Q = int(varargin)
 
-%% OVERLOADED: @LEGPOLY/INT.m integrate a polynomial in the Legendre basis.
+%% INT.m    Integrate a polynomial in the Legendre basis.
 %
 % P = INT(p) or P = INT(p,x) integrates the polynomial p in Legendre basis 
-%       (class "legpoly") with respect to its independent variable x. Indefinite
+%       (class <a href="matlab:help('legpoly')">legpoly</a>) with respect to its independent variable x. Indefinite
 %       integration is performed such that P(0)=0. If a different behaviour is
 %       required, please use the function <a href="matlab:help('legpolyint')">legpolyint</a>.
 %
