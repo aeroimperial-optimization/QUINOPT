@@ -109,9 +109,11 @@ for i = 1:length(k_val)
 end
 fprintf('=======================\n\n')
 
-% Finally, we plot the results
+%% Plot the results
 clf; 
 plot(k_val,M_OPT,'.-','linewidth',1,'markersize',12); 
 set(gca,'TickLabelInterpreter','latex','FontSize',10);
 xlabel('$k$','interpreter','latex','fontsize',12); 
 ylabel('$M$','interpreter','latex','fontsize',12);
+
+%% END CODE

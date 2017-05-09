@@ -90,4 +90,4 @@ disp(['Solution time:  ',num2str(time),' seconds'])
 disp(['Upper bound on dissipation coefficient = ',num2str(UB)])
 disp('++++++++++++++++++++++++++++++++++++++++++++++++++++'); disp(' ')
 
-  
+%% END CODE 

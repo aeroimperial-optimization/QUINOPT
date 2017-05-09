@@ -66,5 +66,3 @@ fprintf('Percentage error    : %6.4f %%\n',error/pi^2*100)
 fprintf('======================================\n\n')
 
 %% END CODE
-
-%% END SCRIPT
