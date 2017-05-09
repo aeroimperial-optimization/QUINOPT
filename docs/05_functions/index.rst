@@ -3,11 +3,8 @@
 List of main functions
 =======================
 
-Below is a list of the main functions needed to use QUINOPT. By clicking on each function, you can access a detailed documentation as if running ``help <fuction-name>`` in MATLAB.
+The main functions needed to work with QUINOPT, which have been used in the examples contained in this documentation, are listed below. Click on a function name to access its documentation.
 
-------------------
-List of examples
-------------------
 .. toctree::
    :maxdepth: 1
    :glob:
@@ -20,6 +17,7 @@ List of examples
    legpolyval.rst
    jacobian.rst
    int.rst
+   plot.rst
    flt.rst
 
 * :doc:`Back to Table of Contents <../index>`
