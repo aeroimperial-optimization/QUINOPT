@@ -22,6 +22,6 @@ List of examples
    shearflowES.rst
    shearflowBF.rst
    planeCouetteBF.rst
-
+   BenardMarangoniES.rst
 
 `Back to Table of Contents <http://quinopt.readthedocs.io/>`_
