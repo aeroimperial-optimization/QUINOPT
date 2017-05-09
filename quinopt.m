@@ -10,8 +10,9 @@ function varargout = quinopt(varargin)
 %     are feasible using a finite dimensional relaxation based on semidefinite
 %     programming. As shown in the expression above, EXPR is a vector whose
 %     i-th entry specifies the integrand of the i-th integral inequality.
-%     Each entry of EXPR must be a quadratic homogeneous polynomial of the
-%     variables returned by the commands <a href="matlab:help('indvar')">indvar</a> and <a href="matlab:help('depvar')">depvar</a> variables.
+%     Each entry of EXPR must be a polynomial of the integration variable
+%     returned by the function <a href="matlab:help('indvar')">indvar</a>, and a quadratic polynomial of the
+%     dependent variables returned by the function <a href="matlab:help('depvar')">depvar</a> variables.
 %     Examples can be found in the folder "examples/". The output SOL is a
 %     structure with the following fields:
 %
@@ -33,24 +34,11 @@ function varargout = quinopt(varargin)
 %     Like EXPR, BC must be created using the variables returned  by the
 %     commands <a href="matlab:help('indvar')">indvar</a> and <a href="matlab:help('depvar')">depvar</a>.
 %
-% SOL = QUINOPT(EXPR,BC,OBJ) optimizes the objective function OBJ constrained by
+% SOL = QUINOPT(EXPR,BC,OBJ) minimizes the objective function OBJ constrained by
 %     the integral inequalities specified by EXPR.
 %
-% SOL = QUINOPT(EXPR,BC,OBJ,CNSTR) and SOL = QUINOPT(EXPR,BC,OBJ,CNSTR,PARAMETERS)
-%     optimize the objective function OBJ subjet to the integral
-%     inequalities specified by EXPR and BC, and the additional constraints
-%     given by CNSTR. If CNSTR contains sum-of-square constraints, then
-%     the parameters in the polynomial expressions MUST be specified in
-%     the input vector PARAMETERS. See <a href="matlab:help('@sdpvar/sos')">sos</a>  and  <a href="matlab:help('yalmip/modules/sos/solvesos')">solvesos</a> for more details
-%     on specifying sum-of-squares constraints with YALMIP syntax.
-%
-% SOL = QUINOPT(EXPR,BC,OBJ,CNSTR,PARAMETERS,N) also specifies the number of
-%     Legendre coefficients to use in the relaxation of the integral
-%     inequality.
-%
-% SOL = QUINOPT(EXPR,BC,OBJ,CNSTR,PARAMETERS,N,OPTIONS) overrides the
-%     default options. OPTIONS is a structure containing the following
-%     fields:
+% SOL = QUINOPT(EXPR,BC,OBJ,OPTIONS) overrides the default options. OPTIONS is a
+%     structure containing at least one of the following fields:
 %
 %     - YALMIP: a substructure containing the options for YALMIP, set
 %               with YALMIP's command <a href="matlab:help('sdpsettings')">sdpsettings</a>.
@@ -83,6 +71,15 @@ function varargout = quinopt(varargin)
 %              YALMIP problem structure. In this case, additional outputs to
 %              QUINOPT are required (see below).
 %
+% SOL = QUINOPT(EXPR,BC,OBJ,OPTIONS,CNSTR), and 
+% SOL = QUINOPT(EXPR,BC,OBJ,OPTIONS,CNSTR,PARAMETERS) minimize the objective 
+%     function OBJ subjet to the integral inequalities specified by EXPR and BC,
+%     and the additional constraints given by CNSTR. If CNSTR contains 
+%     sum-of-square constraints, then the parameters in the polynomial 
+%     expressions MUST be specified in the input vector PARAMETERS. See <a href="matlab:help('@sdpvar/sos')">sos</a> and
+%     <a href="matlab:help('yalmip/modules/sos/solvesos')">solvesos</a> for more details on specifying sum-of-squares constraints with 
+%     YALMIP.
+%
 % [SOL,CNSTR,DATA] = QUINOPT(...) also returns the YALMIP constraint object
 %      CNSTR used to solve the optimization problem, and a structure DATA
 %      containing all raw variables used to set up the constraints in CNSTR.
@@ -95,15 +92,12 @@ function varargout = quinopt(varargin)
 %          SDPSETTINGS
 %
 
-% better input ordering: quinopt(expr,bc,obj,options,constraints,parameters),
-% and make N a field of the options.
-
 % ----------------------------------------------------------------------- %
 %        Author:    Giovanni Fantuzzi
 %                   Department of Aeronautics
 %                   Imperial College London
 %       Created:    05/05/2016
-% Last Modified:    18/04/2017
+% Last Modified:    09/05/2017
 % ----------------------------------------------------------------------- %
 
 % Better method to clear model
