@@ -60,10 +60,10 @@ BC = [u(0); u(1); u(0,1); u(1,2)];        % BC on u
 BC = [BC; v(0); v(1); v(0,1); v(1,2)];    % BC on v  
 
 %% Set up the objective function
-% First, we compute the norm of the first derivative of phi. This can be done
-% using the commands "legpolyint()" and "legpolyval()":
-tmp = legpolyint(D1phi^2,y);
-OBJ = 2*legpolyval(phi,1) - (legpolyval(tmp,1)-legpolyval(tmp,0))/G;
+% To set up the objective function, we can use the command "legpolyval()" to
+% compute the boundary value \phi(1), and the command "int()" to compute the
+% integral of the square of \phi'(z):
+OBJ = 2*legpolyval(phi,1) - int(D1phi^2,y,0,1)/G;
 
 %% Solve optimization with integral inequality and additional constraint
 time = tic;

@@ -107,12 +107,11 @@ The integral inequality constraint can be set up, as usual, by defining its inte
     >> BC = [u(0); u(1); u(0,1); u(1,2)];        % boundary conditions on u
     >> BC = [BC; v(0); v(1); v(0,1); v(1,2)];    % boundary conditions on v
 
-The objective function :math:`\mathcal{B}(\varphi)`, to be maximised, can be set up in two steps using the commands ``legpolyint()`` and ``legpolyval()``:
+The objective function :math:`\mathcal{B}(\varphi)`, to be maximised, can be set up using the command ``legpolyint()`` to compute the boundary value :math:`\varphi(1)`, and the command ``int()`` to integrate the square of :math:`\varphi'(y)` over :math:`[0,1]`:
 
 .. code-block:: matlabsession
 
-    >> tmp = legpolyint(D1phi^2,y);                                          % a temporary variable storing the integral of \phi'(y)^2
-    >> OBJ = 2*legpolyval(phi,1) - (legpolyval(tmp,1)-legpolyval(tmp,0))/G;  % the objective function
+    >> OBJ = 2*legpolyval(phi,1) - int(D1phi^2,y,0,1)/G;
 
 
 ------------------------------------------------
