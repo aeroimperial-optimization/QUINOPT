@@ -21,7 +21,7 @@ For more details, see e.g. `Hagstrom & Doering, Phys. Rev. E 81, 047301 (2010) <
 
 The aim of this example is to demonstrate how to solve problems in which unknown boundary values of the dependent variables appear explicitly in the integral inequality constraints. Moreover, we show how QUINOPT can be used to approximate problems with data that is non-polynomial using a truncated Legendre transform.
 
-:download:`Download the MATLAB file for this example <./example07.m>`
+:download:`Download the MATLAB file for this example <./example09.m>`
 
 ----------------------------------
 1. Set up the variables
