@@ -30,10 +30,17 @@ k_max  = 5;
 % Finally, we set the degree of the Legendre expansion used internally by
 % QUINOPT to N=10;
 opts.YALMIP = sdpsettings('verbose',0,'cachesolvers',1);
-opts.N = 10;
+opts.N = 15;
 
 
 %% Loop over wavenumbers
+
+% Display a header to print results
+fprintf('\n================================\n')
+fprintf('|   k    |    LB    |    UB    |\n')
+fprintf('================================\n')
+
+% Loop
 k = 0;
 n = 1;
 while k <= k_max
@@ -64,14 +71,18 @@ while k <= k_max
         quinopt(expr,bc,-G,opts);
         UB(n) = value(G);
         
+        % Print progress
+        fprintf('|  %4.2f  |  %6.2f  |  %6.2f  |\n',k(n),LB(n),UB(n))
+        
         % Update variables for the next iteration. It is convenient to clear the
         % internal variables of QUINOPT and YALMIP to avoid accumulating unused 
         % internal variables that slows down the execution of the next iteration.
         quinopt clear;         % clear QUINOPT's internal variables
         yalmip clear;          % clear YALMIP's internal variables
         n = n+1;
-          
+        
 end
+fprintf('================================\n\n')
 
 %% Plot the results
 plot(k*lambda/2/pi,LB,'.-','displayname','lower bound on critical G'); hold on;
