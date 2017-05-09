@@ -52,5 +52,6 @@ Upper and lower bounds on the largest :math:`\gamma` are found by QUINOPT upon s
 
 
 
+----------------------
 
-`Back to Table of Contents <http://quinopt.readthedocs.io/>`_
+* :doc:`Back to Table of Contents <../index>`

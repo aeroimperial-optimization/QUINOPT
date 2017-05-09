@@ -125,4 +125,6 @@ An example of what :math:`p(x)` might look like is shown below.
     When using ``plot()`` on a Legendre polynomial variable, the values ``xval`` must within the domain of the independent variable ``x`` originally used to define the polynomial. Otherwise, ``plot()`` throws an error. The function ``getDomain()`` can be used to check the domain over which a Legendre polynomial is defined.
 
 
-`Back to Table of Contents <http://quinopt.readthedocs.io/>`_
+----------------------
+
+* :doc:`Back to Table of Contents <../index>`

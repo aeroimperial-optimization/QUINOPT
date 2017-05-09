@@ -176,4 +176,6 @@ The upper and lower bounds obtained with QUINOPT using the lines of code above a
         >> end
 
 
-`Back to Table of Contents <http://quinopt.readthedocs.io/>`_
+----------------------
+
+* :doc:`Back to Table of Contents <../index>`

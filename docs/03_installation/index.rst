@@ -81,4 +81,6 @@ some test problems to make sure everything is working. If you experience any ins
 
 .. _Download: ../01_download/index.html
 
-`Back to Table of Contents <http://quinopt.readthedocs.io/>`_
+----------------------
+
+* :doc:`Back to Table of Contents <../index>`

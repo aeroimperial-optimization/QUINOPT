@@ -93,4 +93,6 @@ In summary, a feasible value :math:`\gamma` such that the integral inequality at
 
 
 
-`Back to Table of Contents <http://quinopt.readthedocs.io/>`_
+----------------------
+
+* :doc:`Back to Table of Contents <../index>`

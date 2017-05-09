@@ -119,4 +119,6 @@ In summary, the maximum Marangoni number :math:`M` for which a sinusoidal pertur
     >> quinopt(EXPR,BC,-M)
     >> value(M)
 
-`Back to Table of Contents <http://quinopt.readthedocs.io/>`_
+----------------------
+
+* :doc:`Back to Table of Contents <../index>`

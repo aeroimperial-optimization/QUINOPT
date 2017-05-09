@@ -199,4 +199,6 @@ We find :math:`U = 4.8797`. The figure below illustrates how the bound, plotted 
 
     Computing both upper and lower bounds is useful to assess how far from "true optimality" the answer returned by QUINOPT is. If needed, the quality of QUINOPT's approximation can be improved as described :doc:`in this previous example <./wirtinger>`. More details regarding inner and outer approximations of the feasible set of integral inequalities can be found in `our paper <https://arxiv.org/pdf/1607.04210.pdf>`_.
 
-`Back to Table of Contents <http://quinopt.readthedocs.io/>`_
+----------------------
+
+* :doc:`Back to Table of Contents <../index>`

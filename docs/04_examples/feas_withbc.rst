@@ -100,4 +100,6 @@ In summary, a feasible value :math:`\gamma` such that the integral inequality at
 	>> value(gamma)                                    % Extract the value of gamma
 
 
-`Back to Table of Contents <http://quinopt.readthedocs.io/>`_
+----------------------
+
+* :doc:`Back to Table of Contents <../index>`

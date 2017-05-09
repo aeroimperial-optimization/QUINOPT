@@ -21,9 +21,9 @@ In order to use QUINOPT, you will need:
 2. A suitable SDP solver. Choices include `SeDuMi <https://github.com/sqlp/sedumi>`_, `SDPT3 <http://www.math.nus.edu.sg/~mattohkc/sdpt3.html>`_, `SDPA <http://sdpa.sourceforge.net/>`_, `Mosek <https://www.mosek.com/>`_ (free for users in academia).
 
 .. warning::
-	QUINOPT has been succesfully tested on MATLAB 7.10  (R2010a) and higher. 
+	QUINOPT has been succesfully tested on MATLAB 7.10  (R2010a) and higher.
 	If you have a different version of MATLAB, use at your own risk!
-	
 
+----------------------
 
-`Back to Table of Contents <http://quinopt.readthedocs.io/>`_
+* :doc:`Back to Table of Contents <../index>`

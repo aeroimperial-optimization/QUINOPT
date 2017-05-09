@@ -99,4 +99,6 @@ In summary, the optimal constant for Poincaré's inequality can be determined wi
 	>> value(gamma)/pi^2
 
 
-`Back to Table of Contents <http://quinopt.readthedocs.io/>`_
+----------------------
+
+* :doc:`Back to Table of Contents <../index>`

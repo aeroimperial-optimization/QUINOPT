@@ -24,4 +24,6 @@ List of examples
    planeCouetteBF.rst
    BenardMarangoniES.rst
 
+----------------------
+
 * :doc:`Back to Table of Contents <../index>`

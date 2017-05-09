@@ -147,4 +147,6 @@ This produces the figure below; note that the boundary conditions :math:`\varphi
 .. image:: shearflowBF.png
 
 
-`Back to Table of Contents <http://quinopt.readthedocs.io/>`_
+----------------------
+
+* :doc:`Back to Table of Contents <../index>`
