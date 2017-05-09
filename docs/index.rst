@@ -18,5 +18,6 @@ Welcome to QUINOPT's documentation!
    02_download/index
    03_installation/index
    04_examples/index
+   05_functions/index
    how_to_cite/index
    support/index
