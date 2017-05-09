@@ -2,14 +2,15 @@ function plot(varargin)
 
 % @legpoly/PLOT.m  Plot legendre polynomials
 %
-% PLOT(X,P) plots the Legendre polynomial P at the points specified by the
-%         vector X. All points in X must be within the domain of definition
-%         [a,b] of the Legendre polynomial
+% PLOT(X,P) plots the polynomial P in the Legendre basis (class <a href="matlab:help('legpoly')">legpoly</a>) at the 
+%         points specified by the vector X. All points in X must be within the 
+%         domain of definition [a,b] of the Legendre polynomial, as returned by 
+%         calling "getDomain(P)".
 %
 % PLOT(X,P,LINESPEC) and PLOT(P,LINESPEC) apply the formatting specified by
 %         LINESPEC, as in the normal plot command.
 %
-% See also LEGPOLY, INDVAR, PLOT
+% See also LEGPOLY, INDVAR, PLOT, GETDOMAIN
 %
 
 if nargin<2; error('Not enough inputs.'); end
