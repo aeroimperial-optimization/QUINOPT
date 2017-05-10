@@ -114,7 +114,7 @@ if isa(detected,'cell') && ~isempty(detected)
             'it will be slower. To resolve the issue, make sure that\n',...
             'a supported compiler is installed and re-run the installer.'];
         wrn =  warning('query','all');
-        warning('off','all');
+        warning('on','all');
         warning('installQUINOPT:mex',str)
         warning(wrn);
     end
