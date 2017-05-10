@@ -100,8 +100,6 @@ SOL = quinopt(EXPR,bc);
 % defined with "legpoly()".
 fprintf('\nExample 6:\n')
 fprintf('=================================================================\n')
-fprintf('Solution report:\n')
-fprintf('----------------\n')
 if SOL.FeasCode==0
     ttot = SOL.solutionTime+SOL.setupTime;
     fprintf('A feasible p(x) was found in %4.2f seconds:\n',ttot);

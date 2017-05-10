@@ -86,7 +86,6 @@ ylabel('$\phi''(y)$','interpreter','latex');
 %% Display results
 fprintf('\nExample 8:\n')
 fprintf('====================================================\n')
-disp('QUINOPT example 3: SOLUTION INFO');
 disp(['Solution time:  ',num2str(time),' seconds'])
 disp(['Upper bound on dissipation coefficient = ',num2str(UB)])
 fprintf('====================================================\n') 
