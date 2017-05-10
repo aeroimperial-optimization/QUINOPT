@@ -1,12 +1,18 @@
 # QUINOPT (QUadratic INtegral OPTimisation)
 An open-source add-on for YALMIP to solve optimisation problems with polynomial quadratic integral inequality constraints. Below is a quick guide to QUINOPT, but details, examples, and much more can be found in the [full online documentation](http://quinopt.readthedocs.io/).
 
-**Latest release:** 1.4  
-**Release date:** 02 March 2017  
-**Known bugs in version 1.4:** No known bugs (yet!)
+**Latest release:** 2.0.0  
+**Release date:** XX May 2017  
+**Release notes:**
+- Added support for complete quadratic inequalities
+- Fixed major bug in the Legendre expansion of boundary values
+- Added support for symmetry assumptions on the dependent variables
+- Added new functions to manipulate polynomials in the Legendre basis (class legpoly): integrate, raise to an integer power, plot, etc.
+**Known bugs in version 2.0.0:** No known bugs (yet!)
 
 ## Contents
 - [System requirements](#Requirements)
+- [License](#License)
 - [Installation](#Install)
 - [Getting started](#GettingStarted)
 - [How to cite](#Cite)
@@ -20,13 +26,23 @@ In order to use QUINOPT, you will need:
 2. A suitable SDP solver. Choices include [SeDuMi](https://github.com/sqlp/sedumi), [SDPT3](http://www.math.nus.edu.sg/~mattohkc/sdpt3.html), [SDPA](http://sdpa.sourceforge.net/), [Mosek](https://www.mosek.com/) (free for
     users in academia).
 
-QUINOPT has been succesfully tested on MATLAB 7.10  (R2010a) and higher. If you have a different version of MATLAB, use at your own risk!
+QUINOPT has been successfully tested on MATLAB 7.10  (R2010a) and higher. If you have a different version of MATLAB, use at your own risk!
+
+## License<a name="License"></a>
+
+QUINOPT is distributed under the [Apache 2.0 licence](http://www.apache.org/licenses/LICENSE-2.0):
+
+Copyright 2016, G. Fantuzzi, A. Wynn, P. Goulart, A. Papachristodoulou
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 ## Installation<a name="Install"></a>
 
 To install QUINOPT:
 
-1. [Download](https://yalmip.github.io/download/) and [install](https://yalmip.github.io/tutorial/installation/) YALMIP 
+1. [Download](https://yalmip.github.io/download/) and [install](https://yalmip.github.io/tutorial/installation/) YALMIP
 2. Install a semidefinite programming (SDP) solver compatible with YALMIP. [Click here for a complete list of YALMIP-compatible SDP solvers](https://yalmip.github.io/allsolvers/).  
 3. Install QUINOPT by running the MATLAB installer:
 
@@ -37,17 +53,17 @@ To install QUINOPT:
 The installer should add the required folders to the MATLAB path and run some test problems to make sure everything is working.
 Please report any installation problems to Giovanni Fantuzzi (gf910[at]ic.ac.uk).
 
-_**NOTE:** QUINOPT has been tested with [SeDuMi](https://github.com/sqlp/sedumi), 
-  [SDPT3](http://www.math.nus.edu.sg/~mattohkc/sdpt3.html), 
-  [SDPA](http://sdpa.sourceforge.net/) and 
-  [Mosek](https://www.mosek.com/) (free for users in academia). 
+_**NOTE:** QUINOPT has been tested with [SeDuMi](https://github.com/sqlp/sedumi),
+  [SDPT3](http://www.math.nus.edu.sg/~mattohkc/sdpt3.html),
+  [SDPA](http://sdpa.sourceforge.net/) and
+  [Mosek](https://www.mosek.com/) (free for users in academia).
   Any other YALMIP-compatible SDP solver should work, but use at your own risk!_
-  
+
 ## Getting started<a name="GettingStarted"></a>
 
-To get started with QUINOPT, please look at the sample scripts provided the folder "./examples/". A description of the problems being solved can be found in the document "examples.pdf".
+To get started with QUINOPT, please look at the sample scripts provided the folder "./examples/". A step-by-step description of the examples can be found in the [online documentation](http://quinopt.readthedocs.io/04_examples/index.html).
 
-For more information on the main functions in QUINOPT, type
+For more information on the main functions in QUINOPT, please consult the documentation or type
 
 ```Matlab
 >> help quinopt
@@ -56,18 +72,18 @@ For more information on the main functions in QUINOPT, type
 >> help parameters
 ```
 
-at the MATLAB command prompt.
+at MATLAB's command prompt.
 
 
 ## How to cite<a name="Cite"></a>
-  
+
 If you find QUINOPT useful, or have used it in your own work, please reference
 it by citing the following papers:
 
 * G. Fantuzzi, A. Wynn, _Semidefinite relaxation of a class of quadratic
  integral inequalities_, [55th IEEE Conference on Decision and Control, 2016]
  (http://dx.doi.org/10.1109/CDC.2016.7799221).
- 
+
  ```
 @inproceedings{FW2016CDC,
     address = {Las Vegas, USA},
@@ -82,10 +98,9 @@ it by citing the following papers:
     year = {2016}
 	}
  ```
- 
-* G. Fantuzzi, A. Wynn, P. Goulart, A. Papachristodoulou, _Optimization 
-with affine homogeneous quadratic integral inequality constraints_,
-[arXiv:1607.04210 [math.OC]](https://arxiv.org/abs/1607.04210#).
+
+* G. Fantuzzi, A. Wynn, P. Goulart, A. Papachristodoulou, _Optimization
+with affine homogeneous quadratic integral inequality constraints_, Trans. Autom. Control, 2017 (in press). (See the arXiv version [here](https://arxiv.org/abs/1607.04210#)).
 
  ```
  @article{FWGP2016,
@@ -98,14 +113,13 @@ with affine homogeneous quadratic integral inequality constraints_,
  ```
 
 A selection of BibTex styles that support arXiv preprints can be found [here](http://arxiv.org/hypertex/bibstyles/).
-Should you wish to cite the code directly, please use the following BibTeX entry:
+Should you wish to cite the code directly, please use the following BibTeX entry, replacing ``X.X.X`` with the appropriate version of QUINOPT:
 
 ```
-@misc{QUINOPTv1.4,
+@misc{QUINOPTv2.0.0,
     author       = {Fantuzzi, Giovanni and Wynn, Andrew and Goulart, Paul and Papachristodoulou, Antonis},
-    title        = {{QUINOPT}, version 1.4},
+    title        = {{QUINOPT}, version X.X.X},
     howpublished = {\url{https://github.com/aeroimperial-optimization/QUINOPT}},
-    month        = Mar,
     year         = 2017
     }
 ```
