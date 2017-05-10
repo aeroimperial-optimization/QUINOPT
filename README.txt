@@ -165,11 +165,11 @@ http://arxiv.org/hypertex/bibstyles/
 Should you wish to cite the code directly, please use the following BibTeX
 entry, replacing X.X.X with the appropriate version of QUINOPT:
 
-@misc{CDCS,
-    author       = {Fantuzzi, Giovanni and Wynn, Andrew and Goulart, Paul and Papachristodoulou, Antonis},
-    title        = {{QUINOPT}, version X.X.X},
+@misc{QUINOPTvX.X.X,
+    author = {Fantuzzi, Giovanni and Wynn, Andrew and Goulart, Paul and Papachristodoulou, Antonis},
+    title = {{QUINOPT}, version X.X.X},
     howpublished = {\url{https://github.com/aeroimperial-optimization/QUINOPT}},
-    year         = 2017
+    year = 2017
     }
 
 
