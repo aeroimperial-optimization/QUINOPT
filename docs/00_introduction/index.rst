@@ -19,7 +19,7 @@ by constructing SDP-representable inner and outer approximations of its feasible
 In the problem above, :math:`Q_{\gamma}(x,u(x),u'(x),...,u^k(x))` is
 
 * a quadratic polynomial in :math:`u(x),u'(x),...,u^k(x)`;
-* a polynomial in in :math:`x`;
+* a polynomial in :math:`x`;
 * an affine function of the optimization variable :math:`\gamma`.
 
 Moreover, :math:`\mathcal{H}` is the subspace of functions that satisfy :math:`m` homogeneous boundary conditions,  i.e.

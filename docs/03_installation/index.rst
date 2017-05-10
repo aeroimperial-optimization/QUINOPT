@@ -54,7 +54,7 @@ Step 3: Install QUINOPT
 -----------------------
 
 If you have successfully installed YALMIP and a compatible SDP solver, you are ready to install QUINOPT. First, `download QUINOPT's latest stable version`_
-(for the latest bleeding-edge version, or previous versions, visit the `Download`_ page).
+(for the "developer" version or previous versions, visit the `Download`_ page).
 
 After unzipping the downloaded folder, navigate to it in MATLAB and simply run the installer:
 
@@ -64,6 +64,8 @@ After unzipping the downloaded folder, navigate to it in MATLAB and simply run t
 
 The installer should add the required folders to the MATLAB path and run
 some test problems to make sure everything is working. If you experience any installation problems, please `contact us`_ or file an issue issues via the `Github issue tracker <https://github.com/aeroimperial-optimization/QUINOPT/issues>`_.
+
+.. Define links (ignore syntax highlighting in Atom?):
 
 .. _contact us: mailto:giovanni.fantuzzi10@imperial.ac.uk?Subject=QUINOPT%20installation%20issue
 
