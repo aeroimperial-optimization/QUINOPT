@@ -87,9 +87,9 @@ if isa(detected,'cell') && ~isempty(detected)
     % Add new version - platform dependent
     % Also try to remove .git folder by default (disable warnings first, then
     % enable them again to avoid long list of warnings when .git not on path)
-    addpath(allversions{1});
     addpath(genpath([allversions{1},filesep,'classes']));
     addpath(genpath([allversions{1},filesep,'utils']));
+    addpath(allversions{1});
     %     rmpath(genpath([allversions{1},filesep,'examples']));
     %     rmpath(genpath([allversions{1},filesep,'docs']));
     %     rmpath(genpath([allversions{1},filesep,'papers']));
