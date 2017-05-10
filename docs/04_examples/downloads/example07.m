@@ -1,4 +1,4 @@
-%% example06.m
+%% example07.m
 %
 % Compute the maximum Grashoff number G such that a two-dimensional layer of
 % fluid, driven by a surface shear stress, is stable using energy as the

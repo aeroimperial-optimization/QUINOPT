@@ -38,7 +38,7 @@ for all functions :math:`u(v)` and :math:`v(y)` that satisfy the boundary condit
 
 This example shows how QUINOPT can be used to determine the maximum Grashoff number :math:`G` such that, for a given value of :math:`k_n`, the above stability condition is satisfied. The aim of the example is to illustrate how to define and use multiple dependent variables, and some good practices to solve optimization problems with QUINOPT using a loop.
 
-:download:`Download the MATLAB file for this example <./example06.m>`
+:download:`Download the MATLAB file for this example <./downloads/example07.m>`
 
 ----------------------------------------------
 1. Define some problem parameters and options
@@ -140,10 +140,10 @@ We now turn our attention to computing the maximum Grashoff number that satisfie
 
 The upper and lower bounds obtained with QUINOPT using the lines of code above are plotted below.
 
-.. image:: ./shearflowES.png
+.. image:: ./img/shearflowES.png
 
 .. important::
-    When the number of iterations in the loop is large the build-up of internal variables in YALMIP and QUINOPT due to repeated calls to ``quinopt()`` could result in significant loss of computational performance. To avoid this, it may be better to clear YALMIP's and QUINOPT's variables after each iteration, and re-initialize them every time. For example, the ``while`` loop above would be replaced by:
+    When the number of iterations in the loop is large the build-up of internal variables in YALMIP and QUINOPT due to repeated calls to ``quinopt()`` could result in significant loss of computational performance. To avoid this, it may be better to clear YALMIP's and QUINOPT's variables after each iteration, and re-initialize them every time. For example, the ``while`` loop above could be replaced by:
 
     .. code-block:: matlabsession
 

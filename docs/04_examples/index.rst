@@ -18,6 +18,7 @@ List of examples
    feas_withbc.rst
    poincare.rst
    wirtinger.rst
+   poincare_odd_periodic.rst
    pde_L2_stability.rst
    shearflowES.rst
    shearflowBF.rst

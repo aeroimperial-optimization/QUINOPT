@@ -21,7 +21,7 @@ For more details, see e.g. `Hagstrom & Doering, Phys. Rev. E 81, 047301 (2010) <
 
 The aim of this example is to demonstrate how to solve problems in which unknown boundary values of the dependent variables appear explicitly in the integral inequality constraints. Moreover, we show how QUINOPT can be used to approximate problems with data that is non-polynomial using a truncated Legendre transform.
 
-:download:`Download the MATLAB file for this example <./example09.m>`
+:download:`Download the MATLAB file for this example <./downloads/example10.m>`
 
 ----------------------------------
 1. Set up the variables
@@ -66,7 +66,7 @@ We can easily plot both :math:`F_k(z)` and its polynomial approximation using th
     >> legend('F_k(z)','Polynomial approximation','Location','southwest');
     >> axis([0 1 -0.2 0]);
 
-.. image:: BenardMarangoniES.png
+.. image:: ./img/BenardMarangoniES.png
 
 .. note::
 

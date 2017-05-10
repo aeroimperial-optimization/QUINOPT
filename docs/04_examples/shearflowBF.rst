@@ -53,7 +53,7 @@ This example shows how QUINOPT can be used to construt a polynomial background f
 
 and thereby minimize the bound on the time-averaged bulk energy dissipation, when :math:`G=1000` and :math:`\Lambda=2`. For simplicity, we assume that it suffices to check the integral inequality constraint for :math:`k_1=2\pi/\Lambda=\pi`. The aim of the example is to illustrate how constraints on the optimization variables can be specified in addition to integral inequality constraints.
 
-:download:`Download the MATLAB file for this example <./example07.m>`
+:download:`Download the MATLAB file for this example <./downloads/example08.m>`
 
 ----------------------------------------------
 1. Define the problem variables
@@ -144,7 +144,7 @@ to find :math:`C_\varepsilon \leq 7.48\times 10^{-3}` approximately. Finally, we
 
 This produces the figure below; note that the boundary conditions :math:`\varphi(0)=0` and :math:`\varphi'(1)=G\,(=1000)` are indeed satisfied.
 
-.. image:: shearflowBF.png
+.. image:: ./img/shearflowBF.png
 
 
 ----------------------

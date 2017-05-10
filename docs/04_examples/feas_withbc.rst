@@ -18,7 +18,7 @@ for all differentiable functions :math:`u(x)` that satisfy the boundary conditio
 
 	u'(0) = 0, \quad \text{and} \quad u(1)=0.
 
-:download:`Download the MATLAB file for this example <./example02.m>`
+:download:`Download the MATLAB file for this example <./downloads/example02.m>`
 
 ---------------------------
 1. Clear the workspace

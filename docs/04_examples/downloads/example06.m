@@ -1,4 +1,4 @@
-%% example05.m
+%% example06.m
 % 
 % We establish the nonlinear stability of a linear PDE
 %

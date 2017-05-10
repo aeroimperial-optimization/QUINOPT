@@ -14,7 +14,7 @@ One of the most basic applications of QUINOPT is to find one value of an optimiz
 
 for all differentiable functions :math:`u(x)`. Clearly, possible choices are :math:`\gamma=0`, and :math:`\gamma=-2` or :math:`\gamma=2` (when the integrand is a perfect square).
 
-:download:`Download the MATLAB file for this example <./example01.m>`
+:download:`Download the MATLAB file for this example <./downloads/example01.m>`
 
 --------------------------
 1. Create the variables

@@ -4,7 +4,7 @@ Bounds on energy dissipation for plane Couette flow
 
 In this example we will compute bounds on the infinite-time-and-volume-averaged energy dissipation for plane Couette flow using the *indefinite storage functional method* with a quadratic storage functional.
 
-:download:`Download the MATLAB file for this example <./example08.m>`
+:download:`Download the MATLAB file for this example <./downloads/example09.m>`
 
 .. warning::
 
@@ -185,7 +185,7 @@ Finally, we can solve the problem using the command ``quinopt()``. We will use t
 
 We find :math:`U = 4.8797`. The figure below illustrates how the bound, plotted in terms of the usual friction coefficient :math:`{\it Re}^{-1}\times U`, varies with the reynolds number :math:`{\it Re}`. The blue curve replicates the results presented in Figure 2 of `Plasting & Kerswell, J. Fluid Mech. 477, 363–379 (2003) <https://dx.doi.org/10.1017/S0022112002003361>`_. Note also that the bound coincides with the laminar dissipation value (indicated by the dot-dashed line in the figure below) up to the well-known energy stability boundary :math:`{\it Re}\approx 82.7`.
 
-.. image:: planeCouette.png
+.. image:: ./img/planeCouette.png
 
 
 .. note::

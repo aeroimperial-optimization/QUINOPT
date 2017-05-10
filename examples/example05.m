@@ -1,117 +1,91 @@
 %% example05.m
-% 
-% We establish the nonlinear stability of a linear PDE
 %
-% u_t = u_xx+ (15 - 24*x + 24*x^2)*u,  
+% Find the minimum constant nu for which the Poincare inequality
 %
-% with boundary conditions
+% /1
+% |
+% |  u_x^2 - nu*u^2 dx  >= 0
+% |
+% /-1
 %
-% u(-1)=u(1)=0
-%
-% by looking for a Lyapunov function of the form
-%    
-%        /1
-%        |
-% V(u) = | p(x)*u(x)^2 dx
-%        |
-%        /0
-%
-% The polynomial p(x) should be chosen such  that V is positive definite, and
-% such that the time derivative of V is negative semidefinite.
-%
-% This example was taken from: 
-% [1] Valmorbida, Ahmadi, Papachristodoulou, "Semi-definite programming and 
-% functional inequalities for Distributed Parameter Systems", 53rd IEEE 
-% Conference on Decision and Control, 2014.
+% holds for all functions u(x) subject that are odd and satisfy the periodicity
+% condition u(-1)=u(1). The analytical answer is nu = pi^2.
 
 % ----------------------------------------------------------------------- %
 %        Author:    Giovanni Fantuzzi
 %                   Department of Aeronautics
 %                   Imperial College London
-%       Created:    08/04/2016
-% Last Modified:    28/04/2017
+%       Created:    10/05/2017
+% Last Modified:    10/05/2017
 % ----------------------------------------------------------------------- %
 
-%% Clear previous model and variables
-clear;             % clean workspace 
-yalmip clear;      % clear YALMIP's internal variables
-quinopt clear;     % clear QUINOPT's internal variables
+%% CODE
 
-%% Define the problem variables
-% We define the integration variable, the dependent variable, its boundary
-% condition
-x = indvar(0,1);
+%% Create the variables
+% 
+% As usual, we start by cleaning the workspace and the internal variables in
+% QUINOPT and YALMIP:
+clear
+yalmip clear
+quinopt clear
+
+% Then we create the integration variable x, the dependent variable u(x), and
+% the optimization variable nu:
+x = indvar(-1,1);
 u = depvar(x);
-bc = [u(0); u(1)];
+parameters nu
 
-% We then define the right-hand side of the PDE:
-k = 15;
-u_t = u(x,2) + (k-24*x+24*x^2)*u(x);
+%% Set up the inequality
+% 
+% The first step to define the inequality constraint is to construct the
+% integrand of the inequality:
+expr = u(x,1)^2 - nu*u(x)^2;
 
-% Finally, we define the polynomial kernel of the Lyapunov function. We use a
-% polynomial in the Legendre basis, which is how QUINOPT represents the
-% variables internally.
-p = legpoly(x,4);      
+% Then, we set the boundary and symmetry conditions on u(x). The periodic 
+% boundary conditions is enforced as u(-1)-u(1)=0, while the symmetry condition
+% can be enforced using the command "assume()":
+bc = [ u(-1)-u(1) ];
+assume(u,'odd')
 
-%% Define Lyapunov's inequalities
-% We want to check if
-%
-%       /1
-% V(u)= |  0.5*p(x)*u^2 dx 
-%       /-1
-%
-% as a Lyapunov function. Lyapunov's theorem tells us that the PDE is stable
-% around the zero zolution if there exists a constant c>0 such that
-%
-% 1) V(u) >= c*||u||^2
-% 2) V_t(u) = \int_{-1}^{1} p(x)*u*u_t dx <= 0.
-%
-% Since both expressions are homogeneous in p(x), we may take c=1 without loss 
-% of generality.
-%
-% To set up the inequalities in QUINOPT, we specify their integrands as the
-% elements of a vector EXPR
-EXPR = [ (p-1)*u(x)^2; ...                % V(u) - ||u||^2 >= 0
-        -p*u(x)*u_t];                     % -V_t(u) >=0.
-%
-% Note the minus sign in the second integrand.
+%% Solve in a loop for different SDP approximation degrees
+% 
+% We compute upper and lower bounds on the optimal nu using QUINOPT's inner and
+% outer approximation methods, using different Legendre expansion degrees 
+% (OPTIONS.N) in a loop. To speed up the loop and run YALMIP in silent mode, we
+% set some YALMIP options:
+OPTIONS.YALMIP = sdpsettings('verbose',0,'cachesolvers',1);
+
+% Then we display a header to tabulate the results
+fprintf('================================\n')
+fprintf('  N  |  UB/pi^2   |  LB/pi^2   |\n')
+fprintf('================================\n')
+
+% Finally we loop:
+for N = 1:10
     
-%% Solve for p(x)
-% To solve for p(x), we use the command quinopt() with one output argument:
-SOL = quinopt(EXPR,bc);
-%
-% The output SOL contains some information about the solution. In particular,
-% the field SOL.FeasCode helps veryfying that the problem was successfully
-% solved (in this case, SOL.FeasCode==0). Run 
-%
-%   >> help quinopt
-%   >> quinoptFeasCode 
-%
-% for more information on QUINOPT's outputs, and the meaning of feasibility 
-% codes (these are the same ones used by YALMIP).
-%
-% Try changing the value of k: for which value does a suitable p(x) stop
-% existing?
+    % Compute upper bound (using OPTIONS.method = 'outer' since we maximize nu)
+    OPTIONS.method = 'outer';
+    OPTIONS.N = N;
+    quinopt(expr,bc,-nu,OPTIONS);
+    UB = value(nu)/pi^2;
+    
+    % When N is too small, the outer approximation may be unbounded, implying an
+    % infinite upper bound!
+    if  isnan(UB); UB = +inf; end
 
-%% Plot and display p(x) if successful
-% Plot a polynomial defined using the command "legpoly()" is simple, because the
-% usual plotting function "plot()" is overloaded. To display it, we use YALMIP's
-% commands "value()" and "sdisplay()", which are overloaded on polynomials
-% defined with "legpoly()".
-fprintf('\n=================================================================\n')
-fprintf('Solution report:\n')
-fprintf('----------------\n')
-if SOL.FeasCode==0
-    ttot = SOL.solutionTime+SOL.setupTime;
-    fprintf('A feasible p(x) was found in %4.2f seconds:\n',ttot);
-    s = sdisplay(value(p));
-    fprintf('p(x) = %s\n',s{1});
-    clf
-    plot(0:0.01:1,p)
-    xlabel('x'); ylabel('p(x)')
-else
-    fprintf('A feasible p(x) could not be found (FeasCode = %2i).\n',SOL.FeasCode)
+    % Compute lower bound (using OPTIONS.method = 'inner' since we maximize nu).
+    % First we reset the value of nu stored by YALMIP to be able to detect
+    % unboundedness/infeasibility.
+    assign(nu,NaN);                         
+    OPTIONS.method = 'inner';
+    sol = quinopt(expr,bc,-nu,OPTIONS);
+    LB = value(nu)/pi^2;
+    if  isnan(LB); LB = -inf; end
+    
+    % Finally print the results to screen
+    fprintf(' %2i  |  %8.6f  |  %8.6f  |\n',N,UB,LB)
+    
 end
-fprintf('=================================================================\n\n')
+fprintf('================================\n')
 
 %% END CODE

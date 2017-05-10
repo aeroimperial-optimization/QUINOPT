@@ -1,4 +1,4 @@
-%% example07.m
+%% example08.m
 %
 % In this example, we compute an upper bound on the energy dissipation for a 2D 
 % flow driven by a non-dinemsional surface stress of magnitude G=1000 using the 

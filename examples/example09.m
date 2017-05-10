@@ -1,117 +1,98 @@
 %% example09.m
 %
-% In this example we compute the energy stability boundary of perturbation of 
-% wavenumber k to the conduction state of Benard-Marangoni convection problem.
-% This amounts to solving the optimization problem
+% Compute bounds on energy dissipation for 3D plane Couette flow using the
+% indefinite storage functional method (this is equivalent to the usual
+% background method formulation of the problem, see e.g. Plasting & Kerswell, J.
+% Fluid Mech. 477, 363–379, 2003).
 %
-%   maximize M
-%               /1
-%               |
-%   subject to  | [ T'(z)^2 + k^2*T(z)^2 + M*Fk(z)*T(z)*T(1) ] dz >=0, T(0)=0=T'(1)
-%               |
-%               /0
-%
-% where
-%
-%         k sinh(k) (sinh(k z) + z sinh(k z) (k coth(k) - 1) - k z cosh(k z))
-% Fk(z) = -------------------------------------------------------------------
-%                           2 k - 2 cosh(k) sinh(k)
-%
-%
-% This example demonstrates how to solve problems in which the unknown boundary 
-% value of the dependent variables appear explicitly in the integral constraint.
-% Moreover, it shows how QUINOPT can be used to approximate problems with data 
-% that is non-polynomials using a truncated Legendre transform.
-
-% ----------------------------------------------------------------------- %
-%        Author:    Giovanni Fantuzzi
-%                   Department of Aeronautics
-%                   Imperial College London
-%       Created:    08/04/2016
-% Last Modified:    09/05/2017
-% ----------------------------------------------------------------------- %
+% A full description of the problem can be found online at
+% http://quinopt.readthedocs.io/05_advanced_examples/planeCouetteBF.html
 
 %% Initialization
-% First, we clean up the workspace
-clear;             
-yalmip clear;      
-quinopt clear;  
+%
+% First, we remove any existing variables to avoid unexpected dependencies, and
+% clear YALMIP's and QUINOPT's internals
+clear;
+yalmip clear;
+quinopt clear;
 
-% Then we set some YALMIP options (cache the list of solvers, and run silently)
-opts.YALMIP = sdpsettings('cachesolvers',1,'verbose',0); 
+% Then,we set some problem parameters: the Reynolds number, the period Lambda_y
+% in the y direction, the degree of the linear term PHI in the storage
+% functional, and the maximum horizontal wavenumber to test:
+Re       = 200;
+Lambda_y = 4*pi;
+PHI_DEG  = 15;
+k_max    = 5;
 
-%% Set up the variables
-% Then we set up the variables: the independent variable z in [0,1], the
-% dependent variable T(z), and the Marangoni number M:
-z = indvar(0,1);            
-T = depvar(z);             
-parameters M
+% Finally, we define the integration variables, the flow variables, and the
+% boundary conditions
+z = indvar(0,1);
+[u,w] = depvar(z);
+BC = [u(0); u(1); w(0); w(1); w(0,1); w(1,1)];
 
-% We also set up the boundary conditions, T(0)=0 and T'(1)=0:
-BC = [T(0); T(1,1)];
+%% Setting up the optimization variables
+% The optimization variables are:
+% 1) a, a scalar known in the literature as "balance parameter"
+% 2) U, the upper bound on the time-average bulk dissipation
+% 3) PHI, a polynomial of degree PHI_DEG satisfying the conditions PHI(0)=0 and
+%    PHI(1)=0. We set up PHI as a polynomial in the Legendre basis, which is how
+%    QUINOPT represents variable internally.
+parameters a U
+PHI = legpoly(z,PHI_DEG);
 
-%% Loop over wavenumbers
-% To compute the maximum Marangoni number for stability at different wavenumbers
-% k, we use a for loop. Before entering it, we define some useful variables:
-% 1) k_val : the wavenumbers to consider in the loop
-% 2) z_plot: coordinates for plotting
-% 3) M_OPT : a vector to contain the optimal Marangoni numbers
-% 4) Fk_deg: the polynomial degree to approximate the function Fk(z). Using
-%            Fk_deg=10 is good enough accurate up to k=5.
-k_val  = 1:0.25:5;                 
-z_plot = 0:0.01:1;                 
-M_OPT  = zeros(size(k_val));   
-Fk_deg = 10; 
+% The boundary conditions on PHI are specified in a vector, using the command
+% legpoly() to compute the boundary values of PHI.
+PHI_BC = [legpolyval(PHI,0)==0; legpolyval(PHI,1)==0];
 
-% Then we loop over each value of k, but first we display a header to print the
-% results.
-fprintf('\n=======================\n')
-fprintf('|    k   |    M_OPT   |\n')
-fprintf('=======================\n')
-for i = 1:length(k_val)
-    
-    % First, extract the wavenumber for convenience:
-    k = k_val(i);
-    
-    % The first step is to approximate the function Fk(z) with a polynomial
-    % approximation, since QUINOPT only works on inequalities with polynomial
-    % data. To do so, we define Fk(z) as a function handle, we compute its first
-    % Fk_deg+1 Legendre expansion coefficients using the command "flt()" (Fast 
-    % Legendre transform), and build a polynomial approximation FkPoly of degree
-    %  Fk_deg using the command "legpoly()".
-    Fk = @(z)k*sinh(k)/(sinh(2*k)-2*k).*(k*z.*cosh(k*z)-sinh(k*z)+(1-k*coth(k))*z.*sinh(k*z));
-    leg_coef = flt(Fk,Fk_deg+1,[0,1]);            
-    FkPoly = legpoly(z,Fk_deg,leg_coef);
-    
-    % We can easily plot the polynomial approximation vs the exact function
-    % using the function "plot()", which is overloaded on polynomials built
-    % using "legpoly()": 
-    plot(z_plot,Fk(z_plot),'Linewidth',1.5); hold on
-    plot(z_plot,FkPoly,'.','MarkerSize',12);
-    xlabel('$z$','interpreter','latex','fontsize',12); 
-    ylabel('$F_k(z)$','interpreter','latex','fontsize',12); 
-    title(['F_k for k=',num2str(k)]);
-    legend('Exact f_k(x)','Legendre series approximation','Location','southwest'); 
-    axis([0 1 -0.2 0]); 
-    drawnow; 
-    hold off;
-    
-    % Having checked that the approximation is satisfactory, we can define the
-    % integrand of the integral inequality and maximize M. 
-    EXPR = T(z,1)^2 + k^2*T(z)^2 + M*FkPoly*T(z)*T(1);
-    quinopt(EXPR,BC,-M,opts);
-    M_OPT(i) = value(M);
-    
-    % Finally, we display the results
-    fprintf('|  %4.2f  |  %8.4f  |\n',k,M_OPT(i))
-    
+% Finally, we will need the first two derivatives of PHI. These can be computed
+% using the function jacobian().
+D1PHI = jacobian(PHI,z);
+D2PHI = jacobian(D1PHI,z);
+
+%% Setting up the inequality constraints
+% To set up the integral inequality constraints, we construct a vector EXPR 
+% containing the integrand of each inequality.
+n = 0;
+k = 0;
+EXPR(1) = (a-1)*u(z,1)^2 + D2PHI*u(z) + U-1;
+while k<k_max
+    n = n+1;
+    k = 2*pi*n/Lambda_y;
+    EXPR(end+1) = (a-1)*( u(z,1)^2 + k^2*u(z)^2 ) ...
+                 +(a-1)*( w(z,2)^2/k^2 + 2*w(z,1)^2 + k^2*w(z)^2 ) ...
+                 + Re*( a+D1PHI )*u(z)*w(z);
 end
-fprintf('=======================\n\n')
 
-%% Plot the results
-clf; 
-plot(k_val,M_OPT,'.-','linewidth',1,'markersize',12); 
-xlabel('$k$','interpreter','latex','fontsize',12); 
-ylabel('$M$','interpreter','latex','fontsize',12);
+%% Solve the problem
+% The aim of the optimization is to minimize the upper bound U on the energy
+% dissipation. To specify the extra constraints on the optimization variables,
+% we use the command quinopt() with five inputs: EXPR and BC to specify the
+% integral inequalities, U as the objective, an options structure (empty) and
+% the additional constraints PHI_BC.
+quinopt(EXPR,BC,U,[],PHI_BC);
+U_OPT = value(U);
+
+% Print some solution info
+fprintf('\n==============================\n')
+fprintf('Reynolds number: %g\n',Re)
+fprintf('Period Lambda_y: %g*pi\n',Lambda_y/pi)
+fprintf('Optimal bound U: %g\n',U_OPT)
+fprintf('==============================\n\n')
+
+%% Inspecting the solution
+% As a final step, we can inspect the solution to see what the optimal choice of
+% the polynomial PHI is. To do so, we use the command plot(), which is
+% overloaded on Legendre polynomials.
+subplot(2,1,1)
+plot(0:0.01:1,PHI)
+xlabel('z'); ylabel('\phi(z)')
+
+% In fact, to compare the optimization results obtained with QUINOPT to those in
+% Plasting & Kerswell, J. Fluid Mech. 477, 363–379 (2003) it is convenient to
+% use PHI and the balance parameter a to plot the usual "background field",
+% given by a^{-1}*PHI(z) + z   
+subplot(2,1,2)
+plot(0:0.01:1,PHI/value(a)+z)
+xlabel('z'); ylabel('a^{-1}\phi(z)+z')
 
 %% END CODE

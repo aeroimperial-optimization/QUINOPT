@@ -17,7 +17,7 @@ there exists a constant :math:`C` such that
 
 In this example, we verify that the smallest possible constant is :math:`C = 1`. We do so by computing a sequence of convergent upper and lower bounds on the smallest :math:`C` with QUINOPT. The objective of this example is to demonstrate how to override the default options in QUINOPT.
 
-:download:`Download the MATLAB file for this example <./example04.m>`
+:download:`Download the MATLAB file for this example <./downloads/example04.m>`
 
 --------------------------------
 1. Reformulate the problem

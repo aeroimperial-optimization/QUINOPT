@@ -1,4 +1,4 @@
-%% example09.m
+%% example10.m
 %
 % In this example we compute the energy stability boundary of perturbation of 
 % wavenumber k to the conduction state of Benard-Marangoni convection problem.

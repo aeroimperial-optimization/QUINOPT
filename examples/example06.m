@@ -1,10 +1,28 @@
 %% example06.m
+% 
+% We establish the nonlinear stability of a linear PDE
 %
-% Compute the maximum Grashoff number G such that a two-dimensional layer of
-% fluid, driven by a surface shear stress, is stable using energy as the
-% candidate Lyapunov function.
+% u_t = u_xx+ (15 - 24*x + 24*x^2)*u,  
 %
-% This example introduces the use of multiple dependent variables.
+% with boundary conditions
+%
+% u(-1)=u(1)=0
+%
+% by looking for a Lyapunov function of the form
+%    
+%        /1
+%        |
+% V(u) = | p(x)*u(x)^2 dx
+%        |
+%        /0
+%
+% The polynomial p(x) should be chosen such  that V is positive definite, and
+% such that the time derivative of V is negative semidefinite.
+%
+% This example was taken from: 
+% [1] Valmorbida, Ahmadi, Papachristodoulou, "Semi-definite programming and 
+% functional inequalities for Distributed Parameter Systems", 53rd IEEE 
+% Conference on Decision and Control, 2014.
 
 % ----------------------------------------------------------------------- %
 %        Author:    Giovanni Fantuzzi
@@ -14,81 +32,86 @@
 % Last Modified:    28/04/2017
 % ----------------------------------------------------------------------- %
 
-%% Initialization
-% First, we clean up
-clear;          
-yalmip clear;   
-quinopt clear;
+%% Clear previous model and variables
+clear;             % clean workspace 
+yalmip clear;      % clear YALMIP's internal variables
+quinopt clear;     % clear QUINOPT's internal variables
 
-% Then, we set some problem variables: the horizontal period Lambda, the largest
-% wavenumber to test.
-lambda = 6*pi;
-k_max  = 5; 
+%% Define the problem variables
+% We define the integration variable, the dependent variable, its boundary
+% condition
+x = indvar(0,1);
+u = depvar(x);
+bc = [u(0); u(1)];
 
-% To run in silent mode, we set YALMIP's option 'verbose' to 0. Also, we
-% speed up the iterations by settin YALMIP's 'cachesolvers' option to 1.
-% Finally, we set the degree of the Legendre expansion used internally by
-% QUINOPT to N=10;
-opts.YALMIP = sdpsettings('verbose',0,'cachesolvers',1);
-opts.N = 15;
+% We then define the right-hand side of the PDE:
+k = 15;
+u_t = u(x,2) + (k-24*x+24*x^2)*u(x);
 
+% Finally, we define the polynomial kernel of the Lyapunov function. We use a
+% polynomial in the Legendre basis, which is how QUINOPT represents the
+% variables internally.
+p = legpoly(x,4);      
 
-%% Loop over wavenumbers
-
-% Display a header to print results
-fprintf('\n================================\n')
-fprintf('|   k    |    LB    |    UB    |\n')
-fprintf('================================\n')
-
-% Loop
-k = 0;
-n = 1;
-while k <= k_max
+%% Define Lyapunov's inequalities
+% We want to check if
+%
+%       /1
+% V(u)= |  0.5*p(x)*u^2 dx 
+%       /-1
+%
+% as a Lyapunov function. Lyapunov's theorem tells us that the PDE is stable
+% around the zero zolution if there exists a constant c>0 such that
+%
+% 1) V(u) >= c*||u||^2
+% 2) V_t(u) = \int_{-1}^{1} p(x)*u*u_t dx <= 0.
+%
+% Since both expressions are homogeneous in p(x), we may take c=1 without loss 
+% of generality.
+%
+% To set up the inequalities in QUINOPT, we specify their integrands as the
+% elements of a vector EXPR
+EXPR = [ (p-1)*u(x)^2; ...                % V(u) - ||u||^2 >= 0
+        -p*u(x)*u_t];                     % -V_t(u) >=0.
+%
+% Note the minus sign in the second integrand.
     
-        % Setup the variables
-        y = indvar(0,1);   % define variable of integration over [0,1]
-        [u,v] = depvar(y);  % define two dependent variables u and v
-        parameters G        % define the optimization variable
-        
-        % Setup the inequality & the boundary conditions
-        k(n) = 2*pi*n/lambda;
-        expr = ( u(y,2)^2+v(y,2)^2 )/k(n)^2 ...
-              +2*( u(y,1)^2+v(y,1)^2 ) ...
-              +k(n)^2*( u(y)^2+v(y)^2 )  ...
-              - G/k(n)*( u(y)*v(y,1) - u(y,1)*v(y) );
-        bc = [u(0); u(1); u(0,1); u(1,2); ...        % BC on u
-              v(0); v(1); v(0,1); v(1,2)];           % BC on v
-        
-        % Maximize G using an inner approximation of the integral inequality 
-        % (we minimize -G, so we obtain a lower bound on the "true" optimal G)
-        opts.method = 'inner';
-        quinopt(expr,bc,-G,opts);
-        LB(n) = value(G);
-        
-        % Maximize G using an outer approximation of the integral inequality 
-        % (we minimize -G, so we obtain an upper bound on the "true" optimal G)
-        opts.method = 'outer';
-        quinopt(expr,bc,-G,opts);
-        UB(n) = value(G);
-        
-        % Print progress
-        fprintf('|  %4.2f  |  %6.2f  |  %6.2f  |\n',k(n),LB(n),UB(n))
-        
-        % Update variables for the next iteration. It is convenient to clear the
-        % internal variables of QUINOPT and YALMIP to avoid accumulating unused 
-        % internal variables that slows down the execution of the next iteration.
-        quinopt clear;         % clear QUINOPT's internal variables
-        yalmip clear;          % clear YALMIP's internal variables
-        n = n+1;
-        
-end
-fprintf('================================\n\n')
+%% Solve for p(x)
+% To solve for p(x), we use the command quinopt() with one output argument:
+SOL = quinopt(EXPR,bc);
+%
+% The output SOL contains some information about the solution. In particular,
+% the field SOL.FeasCode helps veryfying that the problem was successfully
+% solved (in this case, SOL.FeasCode==0). Run 
+%
+%   >> help quinopt
+%   >> quinoptFeasCode 
+%
+% for more information on QUINOPT's outputs, and the meaning of feasibility 
+% codes (these are the same ones used by YALMIP).
+%
+% Try changing the value of k: for which value does a suitable p(x) stop
+% existing?
 
-%% Plot the results
-plot(k*lambda/2/pi,LB,'.-','displayname','lower bound on critical G'); hold on;
-plot(k*lambda/2/pi,UB,'x-','displayname','upper bound on critical G'); hold off;
-xlim([0, k_max*lambda/2/pi])
-legend toggle
-xlabel('k'); ylabel('UB and LB on optimal G');
+%% Plot and display p(x) if successful
+% Plot a polynomial defined using the command "legpoly()" is simple, because the
+% usual plotting function "plot()" is overloaded. To display it, we use YALMIP's
+% commands "value()" and "sdisplay()", which are overloaded on polynomials
+% defined with "legpoly()".
+fprintf('\n=================================================================\n')
+fprintf('Solution report:\n')
+fprintf('----------------\n')
+if SOL.FeasCode==0
+    ttot = SOL.solutionTime+SOL.setupTime;
+    fprintf('A feasible p(x) was found in %4.2f seconds:\n',ttot);
+    s = sdisplay(value(p));
+    fprintf('p(x) = %s\n',s{1});
+    clf
+    plot(0:0.01:1,p)
+    xlabel('x'); ylabel('p(x)')
+else
+    fprintf('A feasible p(x) could not be found (FeasCode = %2i).\n',SOL.FeasCode)
+end
+fprintf('=================================================================\n\n')
 
 %% END CODE

@@ -1,93 +1,94 @@
 %% example07.m
 %
-% In this example, we compute an upper bound on the energy dissipation for a 2D 
-% flow driven by a non-dinemsional surface stress of magnitude G=1000 using the 
-% background field method with only one wavenumber k. 
+% Compute the maximum Grashoff number G such that a two-dimensional layer of
+% fluid, driven by a surface shear stress, is stable using energy as the
+% candidate Lyapunov function.
 %
-% This example illustrates how to specify constraints on the optimization 
-% variables in addition to integral inequality constraints.
+% This example introduces the use of multiple dependent variables.
 
 % ----------------------------------------------------------------------- %
 %        Author:    Giovanni Fantuzzi
 %                   Department of Aeronautics
 %                   Imperial College London
 %       Created:    08/04/2016
-% Last Modified:    08/05/2017
+% Last Modified:    28/04/2017
 % ----------------------------------------------------------------------- %
 
-%% CODE
 %% Initialization
 % First, we clean up
 clear;          
 yalmip clear;   
 quinopt clear;
 
-% Then, we set some problem variables:the horizontal period lambda, the degree
-% of the poynomial background field, the Grashoff number G, and the value of the
-% first wavenumber.
-lambda = 2;  
-deg_phi = 20;       
-G = 1000;    
-k = 2*pi/lambda;
+% Then, we set some problem variables: the horizontal period Lambda, the largest
+% wavenumber to test.
+lambda = 6*pi;
+k_max  = 5; 
+
+% To run in silent mode, we set YALMIP's option 'verbose' to 0. Also, we
+% speed up the iterations by settin YALMIP's 'cachesolvers' option to 1.
+% Finally, we set the degree of the Legendre expansion used internally by
+% QUINOPT to N=10;
+opts.YALMIP = sdpsettings('verbose',0,'cachesolvers',1);
+opts.N = 15;
 
 
-%% Set up the problem variables
-% The independent and dependent variables are set up with the usual commands
-y = indvar(0,1);               
-[u,v] = depvar(y);              
+%% Loop over wavenumbers
 
-% Then, we construct the polynomial background field phi. Since QUINOPT
-% represents polynomials in the Legendre basis internally, we define phi in the
-% Legendre basis directly using the command "legpoly()":
-phi = legpoly(y,deg_phi);
+% Display a header to print results
+fprintf('\n================================\n')
+fprintf('|   k    |    LB    |    UB    |\n')
+fprintf('================================\n')
 
-% To set up the integral inequality constraint, moreover, we need the first
-% derivative of phi. This is easily found using the function "jacobian()":
-D1phi = jacobian(phi,y);
+% Loop
+k = 0;
+n = 1;
+while k <= k_max
+    
+        % Setup the variables
+        y = indvar(0,1);   % define variable of integration over [0,1]
+        [u,v] = depvar(y);  % define two dependent variables u and v
+        parameters G        % define the optimization variable
+        
+        % Setup the inequality & the boundary conditions
+        k(n) = 2*pi*n/lambda;
+        expr = ( u(y,2)^2+v(y,2)^2 )/k(n)^2 ...
+              +2*( u(y,1)^2+v(y,1)^2 ) ...
+              +k(n)^2*( u(y)^2+v(y)^2 )  ...
+              - G/k(n)*( u(y)*v(y,1) - u(y,1)*v(y) );
+        bc = [u(0); u(1); u(0,1); u(1,2); ...        % BC on u
+              v(0); v(1); v(0,1); v(1,2)];           % BC on v
+        
+        % Maximize G using an inner approximation of the integral inequality 
+        % (we minimize -G, so we obtain a lower bound on the "true" optimal G)
+        opts.method = 'inner';
+        quinopt(expr,bc,-G,opts);
+        LB(n) = value(G);
+        
+        % Maximize G using an outer approximation of the integral inequality 
+        % (we minimize -G, so we obtain an upper bound on the "true" optimal G)
+        opts.method = 'outer';
+        quinopt(expr,bc,-G,opts);
+        UB(n) = value(G);
+        
+        % Print progress
+        fprintf('|  %4.2f  |  %6.2f  |  %6.2f  |\n',k(n),LB(n),UB(n))
+        
+        % Update variables for the next iteration. It is convenient to clear the
+        % internal variables of QUINOPT and YALMIP to avoid accumulating unused 
+        % internal variables that slows down the execution of the next iteration.
+        quinopt clear;         % clear QUINOPT's internal variables
+        yalmip clear;          % clear YALMIP's internal variables
+        n = n+1;
+        
+end
+fprintf('================================\n\n')
 
-% Finally, we need to specify the boundary conditions on phi, that are,
-% \phi(0)=0 and \phi'(1)=G. The boundary values of phi and its derivatives can
-% be computed using the function "legpolyval()":
-BC_phi = [legpolyval(phi,0)==0; ...                     % \phi(0)=0
-          legpolyval(D1phi,1)==G];                      % \phi'(1)=G
+%% Plot the results
+plot(k*lambda/2/pi,LB,'.-','displayname','lower bound on critical G'); hold on;
+plot(k*lambda/2/pi,UB,'x-','displayname','upper bound on critical G'); hold off;
+xlim([0, k_max*lambda/2/pi])
+legend toggle
+xlabel('k'); ylabel('UB and LB on optimal G');
 
-%% Set up the integral inequality constraint
-% The integral inequality constraint is set up by specifying the integrand and
-% the boundary conditions on the dependent variables u and v:
-EXPR = ( u(y,2)^2+v(y,2)^2 )/k^2 + 2*( u(y,1)^2+v(y,1)^2 ) + ...
-       k^2*( u(y)^2+v(y)^2 )  - 2*D1phi/k*( u(y)*v(y,1) - u(y,1)*v(y) );
-BC = [u(0); u(1); u(0,1); u(1,2)];        % BC on u
-BC = [BC; v(0); v(1); v(0,1); v(1,2)];    % BC on v  
-
-%% Set up the objective function
-% To set up the objective function, we can use the command "legpolyval()" to
-% compute the boundary value \phi(1), and the command "int()" to compute the
-% integral of the square of \phi'(z):
-OBJ = 2*legpolyval(phi,1) - int(D1phi^2,y,0,1)/G;
-
-%% Solve optimization with integral inequality and additional constraint
-time = tic;
-quinopt(EXPR,BC,-OBJ,[],BC_phi);
-UB = G/(value(OBJ))^2;
-time = toc(time);
-
-%% Plot the optimal background field
-% Plot the background field and its derivarive using the command "plot()":
-subplot(2,1,1)
-plot(0:0.01:1,phi,'-','LineWidth',1.5); 
-xlabel('$y$','interpreter','latex');
-ylabel('$\phi(y)$','interpreter','latex'); 
-subplot(2,1,2)
-plot(0:0.01:1,D1phi,'-','LineWidth',1.5); 
-xlabel('$y$','interpreter','latex');
-ylabel('$\phi''(y)$','interpreter','latex');
-
-
-%% Display results
-disp('++++++++++++++++++++++++++++++++++++++++++++++++++++')
-disp('QUINOPT example 3: SOLUTION INFO');
-disp(['Solution time:  ',num2str(time),' seconds'])
-disp(['Upper bound on dissipation coefficient = ',num2str(UB)])
-disp('++++++++++++++++++++++++++++++++++++++++++++++++++++'); disp(' ')
-
-%% END CODE 
+%% END CODE

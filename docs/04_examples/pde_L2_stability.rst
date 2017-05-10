@@ -29,7 +29,7 @@ is a Lyapunov function proving the global stability of the zero solution :math:`
 
 Note that since both inequalities are homogeneous in :math:`p(x)`, we may without loss of generality take :math:`c=1`.
 
-:download:`Download the MATLAB file for this example <./example05.m>`
+:download:`Download the MATLAB file for this example <./downloads/example06.m>`
 
 ------------------------------
 1. Set up the variables
@@ -117,7 +117,7 @@ Once a feasible polynomial :math:`p(x)` is found, as is the case when :math:`k=1
 
 An example of what :math:`p(x)` might look like is shown below.
 
-.. image:: feasible_p.png
+.. image:: ./img/feasible_p.png
 
 
 .. important::

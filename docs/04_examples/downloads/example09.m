@@ -1,4 +1,4 @@
-%% example11.m
+%% example09.m
 %
 % Compute bounds on energy dissipation for 3D plane Couette flow using the
 % indefinite storage functional method (this is equivalent to the usual
