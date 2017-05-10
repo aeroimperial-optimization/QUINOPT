@@ -93,14 +93,22 @@ if isa(detected,'cell') && ~isempty(detected)
     warning(wrn);
     savepath;
     
-    % Compile mex files
+    % Compile mex files (try, and issue warning if call to mex fails)
     cd('utils/LegendreExpansion/private/')
     if (~isempty (strfind (computer, '64')))
         mexcmd = 'mex -largeArrayDims -silent' ;
     else
         mexcmd = 'mex -silent' ;
     end
-    eval([mexcmd, ' computeTripleProducts.c']);
+    try
+        eval([mexcmd, ' computeTripleProducts.c']);
+    catch
+        str = ['Compilation of mex files by installQUINOPT failed.\n',...
+               'QUINOPT will still work without compiled mex files, but\n',... 
+               'it will be slower. To resolve the issue, make sure that\n',...
+               'a supported compiler is installed and re-run the installer.'];
+        warning('installQUINOPT:mex',str)
+    end
     cd(currDir)
     
 else
