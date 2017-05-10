@@ -73,11 +73,12 @@ quinopt(EXPR,BC,U,[],PHI_BC);
 U_OPT = value(U);
 
 % Print some solution info
-fprintf('\n==============================\n')
+fprintf('\nExample 9:\n')
+fprintf('==============================\n')
 fprintf('Reynolds number: %g\n',Re)
 fprintf('Period Lambda_y: %g*pi\n',Lambda_y/pi)
 fprintf('Optimal bound U: %g\n',U_OPT)
-fprintf('==============================\n\n')
+fprintf('==============================\n')
 
 %% Inspecting the solution
 % As a final step, we can inspect the solution to see what the optimal choice of

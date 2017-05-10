@@ -65,7 +65,8 @@ Fk_deg = 10;
 
 % Then we loop over each value of k, but first we display a header to print the
 % results.
-fprintf('\n=======================\n')
+fprintf('\nExample 10:\n')
+fprintf('=======================\n')
 fprintf('|    k   |    M_OPT   |\n')
 fprintf('=======================\n')
 for i = 1:length(k_val)
@@ -86,6 +87,7 @@ for i = 1:length(k_val)
     % We can easily plot the polynomial approximation vs the exact function
     % using the function "plot()", which is overloaded on polynomials built
     % using "legpoly()": 
+    clf;
     plot(z_plot,Fk(z_plot),'Linewidth',1.5); hold on
     plot(z_plot,FkPoly,'.','MarkerSize',12);
     xlabel('$z$','interpreter','latex','fontsize',12); 

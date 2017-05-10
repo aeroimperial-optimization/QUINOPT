@@ -56,6 +56,7 @@ assume(u,'odd')
 OPTIONS.YALMIP = sdpsettings('verbose',0,'cachesolvers',1);
 
 % Then we display a header to tabulate the results
+fprintf('\nExample 5:\n')
 fprintf('================================\n')
 fprintf('  N  |  UB/pi^2   |  LB/pi^2   |\n')
 fprintf('================================\n')

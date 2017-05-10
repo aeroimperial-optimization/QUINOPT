@@ -59,10 +59,11 @@ gamma_opt = value(gamma);
 error = gamma_opt - pi^2;
     
 %% Display results
-fprintf('\n======================================\n')
+fprintf('\nExample 3:\n')
+fprintf('======================================\n')
 fprintf('Analytical optimum  : gamma = %f\n',pi^2)
 fprintf('Optimum from QUINOPT: gamma = %f\n',gamma_opt)
 fprintf('Percentage error    : %6.4f %%\n',error/pi^2*100)
-fprintf('======================================\n\n')
+fprintf('======================================\n')
 
 %% END CODE

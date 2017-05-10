@@ -36,7 +36,8 @@ opts.N = 15;
 %% Loop over wavenumbers
 
 % Display a header to print results
-fprintf('\n================================\n')
+fprintf('\nExample 7:\n')
+fprintf('================================\n')
 fprintf('|   k    |    LB    |    UB    |\n')
 fprintf('================================\n')
 
@@ -82,7 +83,7 @@ while k <= k_max
         n = n+1;
         
 end
-fprintf('================================\n\n')
+fprintf('================================\n')
 
 %% Plot the results
 plot(k*lambda/2/pi,LB,'.-','displayname','lower bound on critical G'); hold on;

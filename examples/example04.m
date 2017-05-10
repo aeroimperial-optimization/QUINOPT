@@ -65,7 +65,8 @@ quinopt(expr,bc,C,options);
 UB = value(C);                      % extract the upper bound on the optimal C
 
 %% Display
-fprintf('\n=================================================================\n')
+fprintf('\nExample 4:\n')
+fprintf('=================================================================\n')
 fprintf('|        N        |       LB      |      UB      |  GAP (UB-LB) |\n')
 fprintf('=================================================================\n')
 fprintf('|   2 (default)   |   %8.6f    |   %8.6f   |   %8.6f   |\n',LB,UB,UB-LB)

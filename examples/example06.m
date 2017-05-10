@@ -98,7 +98,8 @@ SOL = quinopt(EXPR,bc);
 % usual plotting function "plot()" is overloaded. To display it, we use YALMIP's
 % commands "value()" and "sdisplay()", which are overloaded on polynomials
 % defined with "legpoly()".
-fprintf('\n=================================================================\n')
+fprintf('\nExample 6:\n')
+fprintf('=================================================================\n')
 fprintf('Solution report:\n')
 fprintf('----------------\n')
 if SOL.FeasCode==0
@@ -112,6 +113,6 @@ if SOL.FeasCode==0
 else
     fprintf('A feasible p(x) could not be found (FeasCode = %2i).\n',SOL.FeasCode)
 end
-fprintf('=================================================================\n\n')
+fprintf('=================================================================\n')
 
 %% END CODE

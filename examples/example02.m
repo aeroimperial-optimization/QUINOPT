@@ -55,6 +55,9 @@ quinopt(EXPR,BC);                            % Solve the problem
 gamma_feas = value(gamma);                   % Extract the value of gamma
 
 %% Display
-fprintf('\nFeasible value: gamma = %g\n\n',gamma_feas)
+fprintf('\nExample 2:\n')
+fprintf('=================================\n')
+fprintf('Feasible value: gamma = %g\n',gamma_feas)
+fprintf('=================================\n')
 
 %% END CODE
