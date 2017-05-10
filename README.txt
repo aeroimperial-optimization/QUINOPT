@@ -124,9 +124,16 @@ Please report any installation issues to Giovanni Fantuzzi (gf910[at]ic.ac.uk).
 
 IMPORTANT NOTES
 ---------------
-1. If you receive an error message regarding the compilation of mex files in
-   MATLAB, you probably need to install a supported compiler. You can find a
-   list of supported compilers for MATLAB's latest version at
+1. During installation, you may receive the following warning:
+
+        "Warning: Compilation of mex files by installQUINOPT failed.
+         QUINOPT will still work without compiled mex files, but
+         it will be slower. To resolve the issue, make sure that
+         a supported compiler is installed and re-run the installer."
+
+   QUINOPT should still work, but you may wish to resolve the issue with the
+   mex file compilation. You can find a list of supported compilers for
+   MATLAB's latest version at
 
    https://uk.mathworks.com/support/compilers.html
 
@@ -137,6 +144,8 @@ IMPORTANT NOTES
 2. QUINOPT has been tested with the following SDP solvers: SeDuMi, SDPT3, SDPA,
    and Mosek (free for users in academia). Any other YALMIP-compatible SDP
    solver should work, but use them at your own risk!
+
+
 
 % ======================================================================= %
                         (5) HOW TO USE QUINOPT

@@ -56,7 +56,16 @@ The installer should compile the required files, add the required folders to the
 Please report any installation problems to Giovanni Fantuzzi (gf910[at]ic.ac.uk).
 
 **NOTES:**
-1. If you receive an error message regarding the compilation of mex files in MATLAB, you probably need to install a supported compiler. You can find a list of supported compilers for MATLAB's latest version [here](https://uk.mathworks.com/support/compilers.html); for all other versions of MATLAB please [look at this page](https://uk.mathworks.com/support/sysreq/previous_releases.html).
+1. During installation, you may receive the following warning:
+	_Warning: Compilation of mex files by installQUINOPT failed.
+	QUINOPT will still work without compiled mex files, but
+	it will be slower. To resolve the issue, make sure that
+	a supported compiler is installed and re-run the installer._
+	QUINOPT should still work, but you may wish to resolve the issue with the
+	mex file compilation. You can find a list of supported compilers for
+	MATLAB's latest version
+	[here](https://uk.mathworks.com/support/compilers.html); for all other
+	versions of MATLAB please [look at this page](https://uk.mathworks.com/support/sysreq/previous_releases.html).
 2. QUINOPT has been tested with
   [SeDuMi](https://github.com/sqlp/sedumi),
   [SDPT3](http://www.math.nus.edu.sg/~mattohkc/sdpt3.html),

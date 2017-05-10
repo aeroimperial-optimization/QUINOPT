@@ -20,6 +20,8 @@ In order to use QUINOPT, you will need:
 1. A working version of `YALMIP <https://yalmip.github.io/>`_, the MATLAB optimization modelling software by J. Löfberg. See the installation instructions for more details on how to download and install YALMIP.
 2. A suitable SDP solver. Choices include `SeDuMi <https://github.com/sqlp/sedumi>`_, `SDPT3 <http://www.math.nus.edu.sg/~mattohkc/sdpt3.html>`_, `SDPA <http://sdpa.sourceforge.net/>`_, `Mosek <https://www.mosek.com/>`_ (free for users in academia).
 
+Instructions on how to obtain YALMIP and a suitable SDP solver are given in the :doc:`installation guide <../03_installation/index>`.
+
 .. warning::
 	QUINOPT has been succesfully tested on MATLAB 7.10  (R2010a) and higher.
 	If you have a different version of MATLAB, use at your own risk!

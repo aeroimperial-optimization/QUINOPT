@@ -58,12 +58,26 @@ If you have successfully installed YALMIP and a compatible SDP solver, you are r
 
 After unzipping the downloaded folder, navigate to it in MATLAB and simply run the installer:
 
+
+
 .. code-block:: matlabsession
 
    >> installQUINOPT
 
-The installer should add the required folders to the MATLAB path and run
-some test problems to make sure everything is working. If you experience any installation problems, please `contact us`_ or file an issue issues via the `Github issue tracker <https://github.com/aeroimperial-optimization/QUINOPT/issues>`_.
+The installer should compile the required files, add the required folders to the MATLAB path, and run some test problems to make sure everything is working. If you experience any installation problems, please `contact us`_ or file an issue issues via the `GitHub issue tracker <https://github.com/aeroimperial-optimization/QUINOPT/issues>`_.
+
+.. warning::
+
+    During installation, you may receive the following warning:
+
+    .. code-block:: matlabsession
+
+        Warning: Compilation of mex files by installQUINOPT failed.
+        QUINOPT will still work without compiled mex files, but
+        it will be slower. To resolve the issue, make sure that
+        a supported compiler is installed and re-run the installer.
+
+    QUINOPT should still work, but you may wish to resolve the issue with the mex file compilation. You can find a list of supported compilers for MATLAB's latest version `on this webpage <https://uk.mathworks.com/support/compilers.html>`_; for all other versions of MATLAB please `look at this webpage <https://uk.mathworks.com/support/sysreq/previous_releases.html>`_.
 
 .. Define links (ignore syntax highlighting in Atom?):
 
