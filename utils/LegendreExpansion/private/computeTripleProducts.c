@@ -3,7 +3,7 @@
  *
  * Compute triple products of Legendre polynomials.
  * Could be improved further.
- * /******************************************************************************/
+ ******************************************************************************/
 
 #include <mex.h>
 #include <math.h>
