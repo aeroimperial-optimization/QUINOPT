@@ -43,7 +43,7 @@ function [P,C] = legpoly(varargin)
 % >> C = coefficients(P);   % recover the variable coefficients of P.
 % >> sdisplay(P);           % print P to screen (in monomial basis).
 %
-% See also INDVAR, @LEGPOLY/COEFFICIENTS, @LEGPOLY/SDISPLAY
+% See also INDVAR, @LEGPOLY/COEFFICIENTS, @LEGPOLY/GETDOMAIN, @LEGPOLY/SDISPLAY
 
 
 % ----------------------------------------------------------------------- %

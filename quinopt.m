@@ -8,13 +8,12 @@ function varargout = quinopt(varargin)
 %     \int_{a}^{b} EXPR(i) dx >=0, i = 1, ..., q
 %
 %     are feasible using a finite dimensional relaxation based on semidefinite
-%     programming. As shown in the expression above, EXPR is a vector whose
-%     i-th entry specifies the integrand of the i-th integral inequality.
-%     Each entry of EXPR must be a polynomial of the integration variable
-%     returned by the function <a href="matlab:help('indvar')">indvar</a>, and a quadratic polynomial of the
-%     dependent variables returned by the function <a href="matlab:help('depvar')">depvar</a> variables.
-%     Examples can be found in the folder "examples/". The output SOL is a
-%     structure with the following fields:
+%     programming. As shown in the expression above, EXPR is a vector whose i-th
+%     entry specifies the integrand of the i-th integral inequality. Each entry 
+%     of EXPR must be a polynomial of the integration variable returned by the 
+%     function <a href="matlab:help('indvar')">indvar</a>, and a quadratic polynomial of the dependent variables 
+%     returned by the function <a href="matlab:help('depvar')">depvar</a> variables. Examples can be found in the 
+%     folder "examples/". The output SOL is a structure with the following fields:
 %
 %     - setupTime: the time taken to set up the problem
 %     - solutionTime: the time taken by YALMIP to solve the problem
@@ -24,15 +23,14 @@ function varargout = quinopt(varargin)
 %                * 2: infeasible relaxation
 %     - FeasCode: code for the feasibility of the solution returned by YALMIP.
 %                 See <a href="matlab:help('quinoptFeasCode')">quinoptFeasCode</a> for a complete list.
-%     - YALMIP: the solution structure returned by YALMIP. See <a href="matlab:help('optimize')">optimize</a>
-%               and <a href="matlab:help('yalmip/modules/sos/solvesos')">solvesos</a> for more details.
+%     - YALMIP: the solution structure returned by YALMIP. See <a href="matlab:help('optimize')">optimize</a> and 
+%               <a href="matlab:help('yalmip/modules/sos/solvesos')">solvesos</a> for more details.
 %
-% SOL = QUINOPT(EXPR,BC) determines whether the integral inequalities
-%     specified by EXPR are feasible over the set defined by the homogeneous
-%     boundary conditions specified by the vector BC. Specifically, BC is
-%     interpreted as the list of boundary conditions BC(1)=0, ..., BC(end)=0.
-%     Like EXPR, BC must be created using the variables returned  by the
-%     commands <a href="matlab:help('indvar')">indvar</a> and <a href="matlab:help('depvar')">depvar</a>.
+% SOL = QUINOPT(EXPR,BC) determines whether the integral inequalities specified 
+%     by EXPR are feasible over the set defined by the homogeneous boundary 
+%     conditions specified by the vector BC. Specifically, BC is interpreted as 
+%     the list of boundary conditions BC(1)=0, ..., BC(end)=0. Like EXPR, BC must
+%     be created using the variables returned  by the commands <a href="matlab:help('indvar')">indvar</a> and <a href="matlab:help('depvar')">depvar</a>.
 %
 % SOL = QUINOPT(EXPR,BC,OBJ) minimizes the objective function OBJ constrained by
 %     the integral inequalities specified by EXPR.
@@ -44,8 +42,8 @@ function varargout = quinopt(varargin)
 %               with YALMIP's command <a href="matlab:help('sdpsettings')">sdpsettings</a>.
 %
 %     - N: an integer specifying the number of Legendre coefficients to use in
-%          the expansion of the dependent variable to obtain an
-%          SDP-representable relaxation of the quadratic integral inequality.
+%          the expansion of the dependent variable to obtain an SDP-representable
+%          relaxation of the quadratic integral inequality.
 %
 %     - method: if set to 'inner' (default), QUINOPT generates an inner
 %               approximation of the feasible set of the integral inequalities
@@ -55,42 +53,39 @@ function varargout = quinopt(varargin)
 %               weaker constraint. (NOTE: OPTIONS.method replaces the deprecated
 %               option OPTIONS.rigorous).
 %
-%     - BCprojectorBasis: string specifying which basis to use for the
-%               projection on the boundary conditions. If set to 'rref'
-%               (default), use a "rational" basis. If set to 'orth', use an
-%               orthonormal basis. The orthonormal basis may be preferable
-%               numerically, but it may destroy sparsity of the data.
+%     - BCprojectorBasis: string specifying which basis to use for the projection
+%               on the boundary conditions. If set to 'rref' (default), use a 
+%               "rational" basis. If set to 'orth', use an orthonormal basis. The
+%               orthonormal basis may be preferable numerically, but it may 
+%               destroy sparsity of the data.
 %
 %     - sosdeg: the degree of the sum-of-squares polynomials used in the
 %               S-procedure to localize SOS constraints from the integral
 %               inequality to the integration domain. Default value: 6.
 %
 %     - solve: if set to 'true' (default), QUINOPT calls the solver specified by
-%              the YALMIP options (or YALMIP's default solver). If set to
-%              'false', QUINOPT does not call the solver, but simply sets up the
-%              YALMIP problem structure. In this case, additional outputs to
-%              QUINOPT are required (see below).
+%              the YALMIP options (or YALMIP's default solver). If set to 'false',
+%              QUINOPT does not call the solver, but simply sets up the YALMIP 
+%              problem structure. In this case, additional outputs to QUINOPT are
+%              required (see below).
 %
 % SOL = QUINOPT(EXPR,BC,OBJ,OPTIONS,CNSTR), and 
 % SOL = QUINOPT(EXPR,BC,OBJ,OPTIONS,CNSTR,PARAMETERS) minimize the objective 
 %     function OBJ subjet to the integral inequalities specified by EXPR and BC,
 %     and the additional constraints given by CNSTR. If CNSTR contains 
-%     sum-of-square constraints, then the parameters in the polynomial 
-%     expressions MUST be specified in the input vector PARAMETERS. See <a href="matlab:help('@sdpvar/sos')">sos</a> and
-%     <a href="matlab:help('yalmip/modules/sos/solvesos')">solvesos</a> for more details on specifying sum-of-squares constraints with 
-%     YALMIP.
+%     sum-of-square constraints, then the parameters in the polynomial expressions
+%     must be specified in the input vector PARAMETERS. See <a href="matlab:help('@sdpvar/sos')">sos</a> and <a href="matlab:help('yalmip/modules/sos/solvesos')">solvesos</a> 
+%     for more details on specifying sum-of-squares constraints with YALMIP.
 %
 % [SOL,CNSTR,DATA] = QUINOPT(...) also returns the YALMIP constraint object
 %      CNSTR used to solve the optimization problem, and a structure DATA
 %      containing all raw variables used to set up the constraints in CNSTR.
 %
-% Unused inputs can be left empty; for example, QUINOPT(EXPR,BC,[],CNSTR)
-% determines whether the integral inequality and the constraints in CNSTR
-% are feasible without optimizing an objective function.
+% Unused inputs can be left empty; for example, QUINOPT(EXPR,BC,[],OPTIONS)
+% determines whether the integral inequality is feasible without optimizing any 
+% objective function, but using OPTIONS to override the default options.
 %
-% See also INDVAR, DEPVAR, QUINOPTFEASCODE, OPTIMIZE, @SDPVAR/VALUE,
-%          SDPSETTINGS
-%
+% See also INDVAR, DEPVAR, QUINOPTFEASCODE, OPTIMIZE, @SDPVAR/VALUE, SDPSETTINGS
 
 % ----------------------------------------------------------------------- %
 %        Author:    Giovanni Fantuzzi

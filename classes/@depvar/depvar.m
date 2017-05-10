@@ -43,7 +43,7 @@ function varargout = depvar(x)
 %       independent variable x on which they depend is cleared from the
 %       workspace, but are not deleted.
 %
-% See also INDVAR, QUINOPT, SETQUADINTINEQ, QIIMODEL, DVARPOLY
+% See also INDVAR, QUINOPT, @DEPVAR/ASSUME
 
 % ----------------------------------------------------------------------- %
 %        Author:    Giovanni Fantuzzi

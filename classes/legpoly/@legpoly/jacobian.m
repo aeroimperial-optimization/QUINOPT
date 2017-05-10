@@ -5,9 +5,9 @@ function J = jacobian(P,~)
 % J = JACOBIAN(P,x) computes the derivative of each entry of the matrix P of
 %   polynomials in the Legendre basis (class <a
 %   href="matlab:help('legpoly')">legpoly</a>) with respect to the
-%   independent variable x (class <a href="matlab:help('indvar')">indvar</a>)
+%   independent variable x (class <a href="matlab:help('indvar')">indvar</a>).
 %
-% See also legpoly, indvar, legpoly/int
+% See also LEGPOLY, INDVAR, @LEGPOLY/INT, @LEGPOLY/LEGPOLYINT
 
 % ----------------------------------------------------------------------- %
 %        Author:    Giovanni Fantuzzi

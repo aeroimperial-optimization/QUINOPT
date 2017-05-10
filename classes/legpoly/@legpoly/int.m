@@ -11,7 +11,7 @@ function Q = int(varargin)
 %       limits a and b must be contained within the domain of definition of the
 %       polynomial p, as returned by calling "getDomain(p)".
 %
-% See also legpolyint
+% See also LEGPOLY, LEGPOLYINT, @LEGPOLY/JACOBIAN, @LEGPOLY/GETDOMAIN
 
 % ----------------------------------------------------------------------- %
 %        Author:    Giovanni Fantuzzi

@@ -11,8 +11,7 @@ function x = indvar(a,b)
 %       allowed. However, one independent variable can be used to define
 %       multiple integral inequalities.
 %
-% See also @INDVAR/GETDOMAIN, @INDVAR/SETDOMAIN, DEPVAR, CLEARMODEL, QUINOPT,
-%          SETQUADINTINEQ
+% See also @INDVAR/GETDOMAIN, @INDVAR/SETDOMAIN, DEPVAR, QUINOPT
 
 % Subclass of sdpvar with additional properties:
 %   - indvarID     : the unique identifier of this indvar

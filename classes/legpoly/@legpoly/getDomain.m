@@ -2,8 +2,11 @@ function DOMAIN = getDomain(P)
 
 %% GETDOMAIN.m Get domain of legpoly
 %
-% DOMAIN = GETDOMAIN(P) returns the domain of independent variable of a 
-%   legpoly object. Domain [0,0] is reserved to constants (polynomials of degree 0).
+% DOMAIN = GETDOMAIN(P) returns the domain of the independent variable of a 
+%   polynomial in the Legendre basis (class <a href="matlab:help('legpoly')">legpoly</a>). The domain [0,0] is 
+%   reserved to constants (polynomials of degree 0).
+%
+% See also INDVAR, LEGPOLY
 
 % ----------------------------------------------------------------------- %
 %        Author:    Giovanni Fantuzzi
