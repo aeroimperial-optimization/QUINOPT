@@ -2,9 +2,7 @@
 An open-source add-on for YALMIP to solve optimisation problems with polynomial quadratic integral inequality constraints. Below is a quick guide to QUINOPT, but details, examples, and much more can be found in the [full online documentation](http://quinopt.readthedocs.io/).
 
 **Latest release:** 2.0.0
-
 **Release date:** XX May 2017  
-
 **Release notes:**
 - Added support for complete quadratic inequalities
 - Fixed major bug in the Legendre expansion of boundary values
