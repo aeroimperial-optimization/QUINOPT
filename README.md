@@ -1,7 +1,7 @@
 # QUINOPT (QUadratic INtegral OPTimisation)
 An open-source add-on for YALMIP to solve optimisation problems with polynomial quadratic integral inequality constraints. Below is a quick guide to QUINOPT, but details, examples, and much more can be found in the [full online documentation](http://quinopt.readthedocs.io/).
 
-* **Latest release:** 2.0.0 
+* **Latest release:** 2.0.0
 * **Release date:** XX May 2017  
 * **Release notes:**
 	- Added support for complete quadratic inequalities
@@ -26,7 +26,9 @@ In order to use QUINOPT, you will need:
 2. A suitable SDP solver. Choices include [SeDuMi](https://github.com/sqlp/sedumi), [SDPT3](http://www.math.nus.edu.sg/~mattohkc/sdpt3.html), [SDPA](http://sdpa.sourceforge.net/), [Mosek](https://www.mosek.com/) (free for
     users in academia).
 
-QUINOPT has been successfully tested on MATLAB 7.10  (R2010a) and higher. If you have a different version of MATLAB, use at your own risk!
+Instructions on how to obtain YALMIP and an SDP solver are given in the [Installation](#Installation) section below.
+
+**Note:** QUINOPT has been successfully tested on MATLAB 7.10  (R2010a) and higher. If you have a different version of MATLAB, use at your own risk!
 
 ## License<a name="License"></a>
 
@@ -50,14 +52,15 @@ To install QUINOPT:
 >> installQUINOPT
 ```
 
-The installer should add the required folders to the MATLAB path and run some test problems to make sure everything is working.
+The installer should compile the required files, add the required folders to the MATLAB path, and run some test problems to make sure everything is working.
 Please report any installation problems to Giovanni Fantuzzi (gf910[at]ic.ac.uk).
 
-_**NOTE:** QUINOPT has been tested with [SeDuMi](https://github.com/sqlp/sedumi),
+**NOTES:**
+1. If you receive an error message regarding the compilation of mex files in MATLAB, you probably need to install a supported compiler. You can find a list of supported compilers for MATLAB's latest version [here](https://uk.mathworks.com/support/compilers.html); for all other versions of MATLAB please [look at this page](https://uk.mathworks.com/support/sysreq/previous_releases.html).
+2. QUINOPT has been tested with
+  [SeDuMi](https://github.com/sqlp/sedumi),
   [SDPT3](http://www.math.nus.edu.sg/~mattohkc/sdpt3.html),
-  [SDPA](http://sdpa.sourceforge.net/) and
-  [Mosek](https://www.mosek.com/) (free for users in academia).
-  Any other YALMIP-compatible SDP solver should work, but use at your own risk!_
+  [SDPA](http://sdpa.sourceforge.net/) and [Mosek](https://www.mosek.com/) (free for users in academia). Any other YALMIP-compatible SDP solver should work, but use them at your own risk!
 
 ## Getting started<a name="GettingStarted"></a>
 

@@ -51,6 +51,9 @@ In order to use QUINOPT, you will need:
 
 2. A YALMIP-compatible SDP solver.
 
+Instructions on how to obtain YALMIP and an SDP solver are given in Section (4)
+of this README file.
+
 QUINOPT has been succesfully tested on MATLAB 7.10 (R2010a) and higher with
 the following common SDP solvers:
 
@@ -115,11 +118,25 @@ To install QUINOPT:
 	>> installQUINOPT
 
 
-The installer should add the required folders to the MATLAB path and run
-some test problems to make sure everything is working. Please report any
-installation problems to Giovanni Fantuzzi (gf910[at]ic.ac.uk).
+The installer should compile the required files, add the required folders to the
+MATLAB path, and run some test problems to make sure everything is working.
+Please report any installation issues to Giovanni Fantuzzi (gf910[at]ic.ac.uk).
 
+IMPORTANT NOTES
+---------------
+1. If you receive an error message regarding the compilation of mex files in
+   MATLAB, you probably need to install a supported compiler. You can find a
+   list of supported compilers for MATLAB's latest version at
 
+   https://uk.mathworks.com/support/compilers.html
+
+   For all other versions of MATLAB please consult
+
+   https://uk.mathworks.com/support/sysreq/previous_releases.html
+
+2. QUINOPT has been tested with the following SDP solvers: SeDuMi, SDPT3, SDPA,
+   and Mosek (free for users in academia). Any other YALMIP-compatible SDP
+   solver should work, but use them at your own risk!
 
 % ======================================================================= %
                         (5) HOW TO USE QUINOPT
