@@ -14,8 +14,8 @@ function options = setQUINOPTOptions(userOpts)
 % ----------------------------------------------------------------------- %
 
 % A useful persistent variable
-persistent added_rigorous
-if isempty(added_rigorous); added_rigorous = false; end
+% persistent added_rigorous
+% if isempty(added_rigorous); added_rigorous = false; end
 
 % Default options
 options.YALMIP           = struct([]);  % YALMIP options
@@ -56,8 +56,10 @@ else
                 % Get user option
                 boo = userOpts.(fnames{n});
                 boocls = class(boo);
-                if any(strcmpi( boocls,opcls.(fnames{n}) ))
-                    options.(fnames{n}) = boo;
+                if any(strcmpi( boocls,opcls.(fnames{n}) )) 
+                    if ~isempty(boo)
+                        options.(fnames{n}) = boo;
+                    end
                 else
                     error('Wrong class for field %s in OPTIONS.',fnames{n})
                 end
