@@ -11,7 +11,7 @@ If you find QUINOPT useful, please cite at least one of the following papers:
 	| [2] G. Fantuzzi, A. Wynn, *Semidefinite relaxation of a class of quadratic integral inequalities*, Proceedings of the 55th IEEE Conference on Decision and Control, 2016.
 	| (`DOI <http://dx.doi.org/10.1109/CDC.2016.7799221>`_ - :download:`BibTex <./FW2016.bib>`).
 
-In addition, you are welcome to cite the source code for the latest stable release as
+In addition, you are welcome to cite the source code for the latest stable release (version |stable|) as
 
 	| [3] G. Fantuzzi, A. Wynn, P. Goulart, A. Papachristodoulou, *QUINOPT version* \ |stable|\ , 2017. Available from: https://github.com/aeroimperial-optimization/QUINOPT.
 	| (:download:`BibTex <./QUINOPTsrc.bib>`)
