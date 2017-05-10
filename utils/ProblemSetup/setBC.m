@@ -69,9 +69,11 @@ for i=1:length(BCEXPR)
     
 end
 
-% Remove linearly dependent BCs
-litol = 1e-10;
-INEQ.BC = lirows(INEQ.BC,litol);
+% Remove linearly dependent BCs if more than one
+if size(INEQ.BC,1)>1
+    litol = 1e-10;
+    INEQ.BC = lirows(INEQ.BC,litol);
+end
 
 
 % ----------------------------------------------------------------------- %
@@ -98,7 +100,7 @@ INEQ.BC = lirows(INEQ.BC,litol);
             return
         end
         
-        if nargin<2,
+        if nargin<2
             tol=1e-10;
         end
         

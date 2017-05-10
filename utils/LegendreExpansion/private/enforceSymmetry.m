@@ -109,8 +109,10 @@ for i = varsID
 end
 
 % Remove linearly dependent BCs
-litol = 1e-10;
-INEQ.BC = lirowsBC(INEQ.BC,litol);
+if size(INEQ.BC{1},1)>1
+    litol = 1e-10;
+    INEQ.BC = lirowsBC(INEQ.BC,litol);
+end
 
 % END FUNCTION
 end
@@ -139,15 +141,15 @@ function BC = addSymmetyBCs(DVAR,DERORD,MAXDER,BC,SYMM)
     % Find extra conditions
     ncond = MAXDER(DVAR)+1;
     rowsA = (nA+1:nA+DERORD(DVAR)).';
-    VA = [VA; ones(DERORD(DVAR),1); (-1).^( (1:DERORD(DVAR)).' + SYMM)];
-    IA = [IA; rowsA; rowsA];
-    JA = [JA; (PlwA(DVAR):2:PupA(DVAR)).'; (PlwA(DVAR)+1:2:PupA(DVAR)).'];
+    VA = [VA(:); ones(DERORD(DVAR),1); (-1).^( (1:DERORD(DVAR)).' + SYMM)];
+    IA = [IA(:); rowsA; rowsA];
+    JA = [JA(:); (PlwA(DVAR):2:PupA(DVAR)).'; (PlwA(DVAR)+1:2:PupA(DVAR)).'];
 
     ncondB = MAXDER(DVAR)-DERORD(DVAR)+1;
     rowsB = (nB+DERORD(DVAR)+1:nB+DERORD(DVAR)+ncondB).';
-    VB = [VB; ones(ncondB,1); (-1).^( (DERORD(DVAR):MAXDER(DVAR)).' + SYMM+1)];
-    IB = [IB; rowsB; rowsB];
-    JB = [JB; (PlwB(DVAR):2:PupB(DVAR)).'; (PlwB(DVAR)+1:2:PupB(DVAR)).'];
+    VB = [VB(:); ones(ncondB,1); (-1).^( (DERORD(DVAR):MAXDER(DVAR)).' + SYMM+1)];
+    IB = [IB(:); rowsB; rowsB];
+    JB = [JB(:); (PlwB(DVAR):2:PupB(DVAR)).'; (PlwB(DVAR)+1:2:PupB(DVAR)).'];
 
     % Set output
     BC = {sparse(IA,JA,VA,nA+ncond,mA); sparse(IB,JB,VB,nB+ncond,mB)};
