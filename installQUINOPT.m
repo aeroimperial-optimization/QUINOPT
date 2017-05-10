@@ -90,13 +90,6 @@ if isa(detected,'cell') && ~isempty(detected)
     addpath(genpath([allversions{1},filesep,'classes']));
     addpath(genpath([allversions{1},filesep,'utils']));
     addpath(allversions{1});
-    %     rmpath(genpath([allversions{1},filesep,'examples']));
-    %     rmpath(genpath([allversions{1},filesep,'docs']));
-    %     rmpath(genpath([allversions{1},filesep,'papers']));
-    %     wrn =  warning('query','all');
-    %     warning('off','all');
-    %     rmpath(genpath([allversions{1},filesep,'.git']));
-    %     warning(wrn);
     savepath;
     
     % Compile mex files (try, and issue warning if call to mex fails)
