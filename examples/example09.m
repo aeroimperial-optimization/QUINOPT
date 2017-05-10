@@ -88,7 +88,6 @@ for i = 1:length(k_val)
     % using "legpoly()": 
     plot(z_plot,Fk(z_plot),'Linewidth',1.5); hold on
     plot(z_plot,FkPoly,'.','MarkerSize',12);
-    set(gca,'TickLabelInterpreter','latex','FontSize',10);
     xlabel('$z$','interpreter','latex','fontsize',12); 
     ylabel('$F_k(z)$','interpreter','latex','fontsize',12); 
     title(['F_k for k=',num2str(k)]);
@@ -112,7 +111,6 @@ fprintf('=======================\n\n')
 %% Plot the results
 clf; 
 plot(k_val,M_OPT,'.-','linewidth',1,'markersize',12); 
-set(gca,'TickLabelInterpreter','latex','FontSize',10);
 xlabel('$k$','interpreter','latex','fontsize',12); 
 ylabel('$M$','interpreter','latex','fontsize',12);
 
