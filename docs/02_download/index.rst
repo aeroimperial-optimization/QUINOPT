@@ -8,18 +8,21 @@ Download
 Stable release
 ---------------
 
-QUINOPT's latest stable version is v. |stable|.
+QUINOPT's latest stable version is v. |version|.
 
 * `Download .zip <https://github.com/aeroimperial-optimization/QUINOPT/archive/master.zip>`_
 * `Download .tar.gz <https://github.com/aeroimperial-optimization/QUINOPT/archive/master.tar.gz>`_
 * `See on GitHub <https://github.com/aeroimperial-optimization/QUINOPT/>`_
 
+.. important::
 
-------------------------
-Latest developer release
-------------------------
+	Although the stable releases are tested on a range of examples and on different platforms, QUINOPT is a research code and may contain (sometimes serious) bugs. We recommend that you regularly check `QUINOPT's GitHub page <https://github.com/aeroimperial-optimization/QUINOPT/>`_ for updates.
 
-The bleeding-edge version of QUINOPT (including all brand new features, up-to-date bug fixes and experimental code) is v. |latest|.
+--------------------------------
+Latest release (for developers)
+--------------------------------
+
+The developer version of QUINOPT, including all latest features, up-to-date bug fixes, and experimental code, can also be downloaded.
 
 * `Download .zip <https://github.com/aeroimperial-optimization/QUINOPT/archive/developer.zip>`_
 * `Download .tar.gz <https://github.com/aeroimperial-optimization/QUINOPT/archive/developer.tar.gz>`_
@@ -27,8 +30,7 @@ The bleeding-edge version of QUINOPT (including all brand new features, up-to-da
 
 .. warning::
 
-	The developer version is not well tested, and might contain serious bugs.
-	Use at your own risk!
+	The developer version is not normally well tested, and might contain serious bugs, incomplete documentation, etc. Use it at your own risk!
 
 
 ------------------------

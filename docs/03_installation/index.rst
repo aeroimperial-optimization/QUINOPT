@@ -46,14 +46,7 @@ To be able to use QUINOPT, you need to install a semidefinite programming (SDP) 
 
 .. warning::
 
-   QUINOPT has been tested with `SeDuMI`_, `SDPT3`_, `SDPA`_, and `Mosek`_
-   (free for users in academia). Any other YALMIP-compatible SDP solver should
-   work, but use at your own risk!
-
-   .. _SeDuMi: https://github.com/sqlp/sedumi
-   .. _SDPT3: http://www.math.nus.edu.sg/~mattohkc/sdpt3.html
-   .. _SDPA: http://sdpa.sourceforge.net/
-   .. _Mosek: https://www.mosek.com/
+   QUINOPT has been tested with `SeDuMi <https://github.com/sqlp/sedumi>`_, `SDPT3 <http://www.math.nus.edu.sg/~mattohkc/sdpt3.html>`_, `SDPA <http://sdpa.sourceforge.net/>`_, and `Mosek <https://www.mosek.com/>`_ (free for users in academia). Other suitable YALMIP-compatible SDP solver should work, but use them at your own risk!
 
 
 -----------------------
@@ -62,9 +55,6 @@ Step 3: Install QUINOPT
 
 If you have successfully installed YALMIP and a compatible SDP solver, you are ready to install QUINOPT. First, `download QUINOPT's latest stable version`_
 (for the latest bleeding-edge version, or previous versions, visit the `Download`_ page).
-
-.. (v.|stable|, you can `find it on GitHub <https://github.com/aeroimperial-optimization/QUINOPT/releases>`_ or simply `click here to download`_).
-
 
 After unzipping the downloaded folder, navigate to it in MATLAB and simply run the installer:
 
