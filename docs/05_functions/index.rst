@@ -11,6 +11,7 @@ The main functions needed to work with QUINOPT, which have been used in the exam
 
    indvar.rst
    depvar.rst
+   assume.rst
    parameters.rst
    quinopt.rst
    legpoly.rst

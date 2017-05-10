@@ -15,8 +15,9 @@ function varargout = assume(varargin)
 %               >> assume(U,'none');    assumes that U has no symmetry. Use this
 %                                       command to remove previous assumptions.
 %
-% ASSUME(U1,STR1,U2,STR2,...) adds multiple assumptions on multiple dependent
-%               variables U1, U2, ...
+% ASSUME(U1,STR1,U2,STR2,...) adds the assumptions specified by the character 
+%               strings STR1, STR2, ..., on the dependent variables U1, U2, ...,
+%               as if set by the commands assume(U1,STR1), assume(U2,STR2), ...
 %
 % See also DEPVAR, INDVAR
 
