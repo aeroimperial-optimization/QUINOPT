@@ -91,5 +91,6 @@ plot(k*lambda/2/pi,UB,'x-','displayname','upper bound on critical G'); hold off;
 xlim([0, k_max*lambda/2/pi])
 legend toggle
 xlabel('k'); ylabel('UB and LB on optimal G');
+drawnow;
 
 %% END CODE

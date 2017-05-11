@@ -95,5 +95,6 @@ xlabel('z'); ylabel('\phi(z)')
 subplot(2,1,2)
 plot(0:0.01:1,PHI/value(a)+z)
 xlabel('z'); ylabel('a^{-1}\phi(z)+z')
+drawnow;
 
 %% END CODE

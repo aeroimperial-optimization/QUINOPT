@@ -115,5 +115,6 @@ clf;
 plot(k_val,M_OPT,'.-','linewidth',1,'markersize',12); 
 xlabel('$k$','interpreter','latex','fontsize',12); 
 ylabel('$M$','interpreter','latex','fontsize',12);
+drawnow;
 
 %% END CODE

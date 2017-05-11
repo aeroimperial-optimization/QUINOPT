@@ -81,7 +81,7 @@ subplot(2,1,2)
 plot(0:0.01:1,D1phi,'-','LineWidth',1.5); 
 xlabel('$y$','interpreter','latex');
 ylabel('$\phi''(y)$','interpreter','latex');
-
+drawnow;
 
 %% Display results
 fprintf('\nExample 8:\n')

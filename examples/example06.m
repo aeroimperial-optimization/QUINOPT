@@ -106,8 +106,9 @@ if SOL.FeasCode==0
     s = sdisplay(value(p));
     fprintf('p(x) = %s\n',s{1});
     clf
-    plot(0:0.01:1,p)
+    plot(0:0.01:1,p);
     xlabel('x'); ylabel('p(x)')
+    drawnow;
 else
     fprintf('A feasible p(x) could not be found (FeasCode = %2i).\n',SOL.FeasCode)
 end
