@@ -93,7 +93,7 @@ if isa(detected,'cell') && ~isempty(detected)
     savepath;
     
     % Compile mex files (try, and issue warning if call to mex fails)
-    cd('utils/LegendreExpansion/private/')
+    cd([allversions{1},filesep,'utils',filesep,'LegendreExpansion',filesep,'private'])
     if (~isempty (strfind (computer, '64')))
         mexcmd = 'mex -largeArrayDims -silent' ;
     else
@@ -122,7 +122,7 @@ end
 % RUN ALL DEMOS
 % ----------------------------------------------------------------------- %
 if isavailable
-    cd('examples/')
+    cd([allversions{1},filesep,'examples'])
     % Get example names
     d=dir('example*.m');
     demotime = zeros(length(d),1);
