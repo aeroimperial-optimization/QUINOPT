@@ -129,8 +129,20 @@ SOL.YALMIP       = [];
 % Check on inputs
 if ~isempty(EXPR) && ~isa(EXPR,'dvarpoly')
     error('Class of EXPR must be "dvarpoly". Please use the commands INDVAR and DEPVAR to create your problem variables.')
-elseif ~isempty(BC) && ~isa(BC,'dvarpoly')
-    error('Class of BC must be "dvarpoly". Please use the commands INDVAR and DEPVAR to create your problem variables.')
+% elseif ~isempty(BC) && ~isa(BC,'dvarpoly')
+%     error('Class of BC must be "dvarpoly". Please use the commands INDVAR and DEPVAR to create your problem variables.')
+elseif ~isempty(BC)
+    isCellBC = 0;
+    if iscell(BC)
+        isCellBC = 1;
+        if numel(BC)~=numel(EXPR)
+            error('When BC is a cell, its length must match that of EXPR.')
+        elseif ~all( cellfun('isclass',BC,'dvarpoly') )
+            error('When BC is a cell, its length must match that of EXPR.')   
+        end
+    elseif ~isa(BC,'dvarpoly')
+        error('Class of BC must be "dvarpoly". Please use the commands INDVAR and DEPVAR to create your problem variables.')
+    end
 elseif ~isempty(OBJ) && ( numel(OBJ)>1 || ( ~( isa(OBJ,'sdpvar') || isnumeric(OBJ) ) ) )
     error('Objective function should be a scalar expression.')
 end
@@ -142,7 +154,14 @@ OPTIONS = setQUINOPTOptions(OPTIONS);
 time = tic;
 for i = length(EXPR):-1:1
     
-    [QIICNSTR,DATA(i),FLAG] = setQuadIntIneq(EXPR(i),BC,N,OPTIONS);
+    % Call depending on BCs
+    if isCellBC
+        [QIICNSTR,DATA(i),FLAG] = setQuadIntIneq(EXPR(i),BC{i},N,OPTIONS);
+    else
+        [QIICNSTR,DATA(i),FLAG] = setQuadIntIneq(EXPR(i),BC,N,OPTIONS);
+    end
+    
+    % Check for errors
     if FLAG==0
         % No problem, add constraints to list
         CNSTR = [QIICNSTR; CNSTR];

@@ -80,7 +80,8 @@ function M = bcProjMat(BC,G,H,opts)
             % Second projection
             if ~isempty(P2) && ~isZero(Bbar)
                 % First projection had non-trivial null space
-                P1 = null( null(full(Bbar*P2),projtype)'*Abar, projtype);
+                % P1 = null( null(full(Bbar*P2),projtype)'*Abar, projtype); % 09 Jun 2017: missing transpose here? 
+                P1 = null( null(full((Bbar*P2).'),projtype)'*Abar, projtype);
             elseif ~isempty(P2)
                 P1 = null(full(Abar), projtype);
             else
