@@ -52,16 +52,20 @@ if length(depends(IVAR)) > 1
 end
 
 % Set inequality model
-INEQ.IVAR = IVAR(1);
-INEQ.DOMAIN = mod.INDVARMODEL.DOMAIN(mod.INDVARMODEL.IVARID==depends(IVAR),:);
-INEQ.MAXDER = mod.DEPVARMODEL.MAXDER(isUsed);
-INEQ.DERORD = INEQ.MAXDER;
-INEQ.DVAR = mod.DEPVARMODEL.DVAR(ismember(dvarID,dvarNewID));
-INEQ.BVAL = mod.DEPVARMODEL.BVAL(ismember(bvalID,bvalNewID));
-INEQ.F.Fi = [];
-INEQ.F.Fm = [];
-INEQ.F.Fb = [];
-INEQ.BC = [];
+INEQ.IVAR      = IVAR(1);
+INEQ.DOMAIN    = mod.INDVARMODEL.DOMAIN(mod.INDVARMODEL.IVARID==depends(IVAR),:);
+INEQ.MAXDER    = mod.DEPVARMODEL.MAXDER(isUsed);
+INEQ.DERORD    = INEQ.MAXDER;
+INEQ.DVAR      = mod.DEPVARMODEL.DVAR(ismember(dvarID,dvarNewID));
+INEQ.BVAL      = mod.DEPVARMODEL.BVAL(ismember(bvalID,bvalNewID));
+INEQ.DVAR_SYMM = mod.DEPVARMODEL.SYMMETRY(isUsed);
+INEQ.F.Fi      = [];
+INEQ.F.Fm      = [];
+INEQ.F.Fb      = [];
+INEQ.L.Li      = [];
+INEQ.L.Lb      = [];
+INEQ.C         = [];
+INEQ.BC        = [];
 
 % Set fields F and BC using dedicated functions
 INEQ = setIntegrand(INEQ,EXPR);            

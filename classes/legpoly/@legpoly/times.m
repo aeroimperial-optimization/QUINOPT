@@ -22,10 +22,33 @@ if numel(X)~=1 && numel(Y)~=1 && (m~=my || n~=ny)
     error('Size mismatch.')
 end
 
+% Any zero inputs for some reason? Need to maintain class :legpoly input =>
+% legpoly output
+if isZero(X) && ~isnumeric(X)
+    s = Y.*0;
+    if ~isa(s,'legpoly')
+        s = legpoly(s);
+    end
+    return
+    
+elseif isZero(Y) && ~isnumeric(Y)
+    s = X.*0;
+    if ~isa(s,'legpoly')
+        s = legpoly(s);
+    end
+    return
+    
+end
+
 % ----------------------------------------------------------------------- %
 % LEGPOLY x NUMERIC
 % ----------------------------------------------------------------------- %
 if isa(X,'legpoly') && isnumeric(Y)
+    
+    % Make full if sparse
+    if issparse(Y) 
+        Y = full(Y); 
+    end
     
     if size(X)==size(Y)
         % Define element-wise multiplication
@@ -156,8 +179,8 @@ elseif isa(X,'legpoly') && isa (Y,'legpoly')
         error(['Legendre polynomials have different independent variables. '...
             'Only operations between polynomials with the same independent variable are supported.'])
         
-    elseif any(domX-domY)
-        error('Cannot add Legendre polynomials defined over different intervals.')
+    elseif any(domX-domY) && any(domX) && any(domY)
+        error('Cannot multiply Legendre polynomials defined over different intervals.')
         
     elseif ~any(size(X)-size(Y)) %size(X)==size(Y)
         % Define element-wise product of a legpolys
@@ -168,16 +191,19 @@ elseif isa(X,'legpoly') && isa (Y,'legpoly')
             index = find(ivarX);
             % ivar = num2cell(ivarX(index(1)).*any(ivarX+ivarY));
             ivar = ivarX(index(1));
+            ivar_domn = domX;
         elseif degY ~=0
             index = find(ivarY);
             % ivar = num2cell(ivarY(index(1)).*any(ivarX+ivarY));
             ivar = ivarY(index(1));
+            ivar_domn = domY;
         else
             % ivar = {0};
             ivar = 0;
         end
         
         % UGLY CODE
+        s(m,n) = struct('ivar',[],'coef',[],'domn',[]);
         for i = 1:m
             for j = 1:n
                 
@@ -195,7 +221,7 @@ elseif isa(X,'legpoly') && isa (Y,'legpoly')
                     % X.coef or Y.coef is a scalar
                     s(i,j).ivar = ivar;
                     s(i,j).coef = X(i,j).coef.*Y(i,j).coef;
-                    s(i,j).domn = domX;
+                    s(i,j).domn = ivar_domn;
                     
                 else
                     % OLD: convert to sdpvar, multiply and convert back
@@ -205,6 +231,62 @@ elseif isa(X,'legpoly') && isa (Y,'legpoly')
                     % NEW, 17/06/2016: multiplication in legendre basis
                     s(i,j).ivar = ivar;
                     s(i,j).coef = legProd(X(i,j).coef,Y(i,j).coef);
+                    s(i,j).domn = ivar_domn;
+                    
+                end
+                
+            end
+        end
+        
+        % Assign class
+        s = legpoly(s);
+        return
+        
+    elseif numel(X)==1
+        % Product by a scalar
+        
+        % Find cumulative independent variables
+        % "find" for sdpvar cannot return only first index
+        if degX ~=0
+            index = find(ivarX);
+            % ivar = num2cell(ivarX(index(1)).*any(ivarX+ivarY));
+            ivar = ivarX(index(1));
+        elseif degY ~=0
+            index = find(ivarY);
+            % ivar = num2cell(ivarY(index(1)).*any(ivarX+ivarY));
+            ivar = ivarY(index(1));
+        else
+            % ivar = {0};
+            ivar = 0;
+        end
+        
+        % UGLY CODE
+        s(my,ny) = struct('ivar',[],'coef',[],'domn',[]);
+        for i = 1:my
+            for j = 1:ny
+                degy = degree(Y(i,j));
+                newdeg = degX+degy;
+                if newdeg==0
+                    % Easy case - constants!
+                    s(i,j).ivar = 0;
+                    s(i,j).coef = X.coef.*Y(i,j).coef;
+                    s(i,j).domn = [0,0];
+                    
+                elseif degX==0 || degy==0
+                    % Easy case - multiply polynomial by a constants!
+                    % X.coef or Y.coef is a scalar
+                    s(i,j).ivar = ivar;
+                    s(i,j).coef = X.coef.*Y(i,j).coef;
+                    s(i,j).domn = domX;
+                    
+                else
+                    % OLD: convert to sdpvar, multiply and convert back
+%                     px = sdpvar(X(i,j));
+%                     py = sdpvar(Y(i,j));
+%                     q = legpoly(domX,ivar,px*py);
+                    % NEW, 17/06/2016: multiplication in legendre basis
+                    s(i,j).ivar = ivar;
+                    s(i,j).coef = legProd(X.coef,Y(i,j).coef);
                     s(i,j).domn = domX;
                     
                 end
@@ -215,6 +297,16 @@ elseif isa(X,'legpoly') && isa (Y,'legpoly')
         % Assign class
         s = legpoly(s);
         return
+        
+        
+        
+    elseif numel(Y)==1
+        % Reuse previous case (minimum overhead)
+        s = Y.*X;
+        return
+        
+    else
+        error('Input size mismatch')
     end
     
 % ----------------------------------------------------------------------- %

@@ -46,6 +46,7 @@ end
 % Permute data
 if ~isempty(INEQ.F.Fb); INEQ.F.Fb = INEQ.F.Fb([I,J],[I,J]); end
 if ~isempty(INEQ.F.Fm); INEQ.F.Fm = INEQ.F.Fm([I,J],:); end
+if ~isempty(INEQ.L.Lb); INEQ.L.Lb = INEQ.L.Lb([I,J]); end
 if ~isempty(INEQ.BC);   INEQ.BC = {INEQ.BC(:,I); INEQ.BC(:,J)}; end
 
 % END FUNCTION

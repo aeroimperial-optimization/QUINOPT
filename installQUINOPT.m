@@ -74,23 +74,44 @@ if isa(detected,'cell') && ~isempty(detected)
     onPath = ~cellfun(@isempty,allversions); % 1 if folder is on path
     
     % Remove old versions (if any) to avoid conflicts
-    for i=2:length(allversions)
+    wrn =  warning('query','all');
+    warning('off','all');
+    for i=1:length(allversions)
         if onPath(i)
             rmpath(genpath(allversions{i})); % remove current version from path
         end
     end
+    warning(wrn);
+    
     
     % Add new version - platform dependent
     % Also try to remove .git folder by default (disable warnings first, then
     % enable them again to avoid long list of warnings when .git not on path)
-    addpath(genpath(allversions{1}));
-    rmpath(genpath([allversions{1},filesep,'examples']));
-    rmpath(genpath([allversions{1},filesep,'doc']));
-    wrn =  warning('query','all');
-    warning('off','all');
-    rmpath(genpath([allversions{1},filesep,'.git'])); 
-    warning(wrn);
+    addpath(genpath([allversions{1},filesep,'classes']));
+    addpath(genpath([allversions{1},filesep,'utils']));
+    addpath(allversions{1});
     savepath;
+    
+    % Compile mex files (try, and issue warning if call to mex fails)
+    cd([allversions{1},filesep,'utils',filesep,'LegendreExpansion',filesep,'private'])
+    if (~isempty (strfind (computer, '64')))
+        mexcmd = 'mex -largeArrayDims -silent' ;
+    else
+        mexcmd = 'mex -silent' ;
+    end
+    try
+        eval([mexcmd, ' computeTripleProducts.c']);
+    catch
+        str = ['Compilation of mex files by installQUINOPT failed.\n',...
+            'QUINOPT will still work without compiled mex files, but\n',...
+            'it will be slower. To resolve the issue, make sure that\n',...
+            'a supported compiler is installed and re-run the installer.'];
+        wrn =  warning('query','all');
+        warning('on','all');
+        warning('installQUINOPT:mex',str)
+        warning(wrn);
+    end
+    cd(currDir)
     
 else
     error(['A working version of YALMIP is required. '...
@@ -101,7 +122,7 @@ end
 % RUN ALL DEMOS
 % ----------------------------------------------------------------------- %
 if isavailable
-    cd('examples/')
+    cd([allversions{1},filesep,'examples'])
     % Get example names
     d=dir('example*.m');
     demotime = zeros(length(d),1);

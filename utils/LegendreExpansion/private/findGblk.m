@@ -1,4 +1,4 @@
-function Gblk = findGblk(N,M,alpha,beta,k,rigorous)
+function Gblk = findGblk(N,M,alpha,beta,k,rigorous,SYMM)
 
 % FINDGBLK
 %
@@ -10,13 +10,34 @@ function Gblk = findGblk(N,M,alpha,beta,k,rigorous)
 %
 % NOTE: ALPHA,BETA < k!
 
-if max(alpha,beta)>=k
+if max(alpha,beta)>k
     error('Inputs alpha and beta must be <= k-1')
 elseif alpha>beta
     % swap around
     tmp = alpha;
     alpha = beta;
     beta = tmp;
+end
+
+% If beta==k, have no boundary values to represent, but need to take into
+% account the expansion coefficient: need Gblk to be a matrix with 0 rows, but
+% the correct number of columns!
+if beta==k
+    Gblk = sparse(0,N+M+2*k+1);
+    return
+end
+
+if nargin<7
+    SYMM=0;
+end
+
+% Get symmetry of k-th derivative
+if SYMM==0
+    K_DER_SYMM = 0;
+elseif SYMM==1 || SYMM==2
+    K_DER_SYMM = (-1)^(k + SYMM);
+else
+    error('Error in LegendreDiff2.m: invalid input SYMM (0, 1, or 2 allowed).')
 end
 
 % Initialise vectors for nonzero entries of G and their indices
@@ -35,7 +56,7 @@ rt2 = sqrt(2);
 
 for der = alpha:min(beta,k-2)
     e = II(der+1,:);
-    [D,B] = legendreDiff(N,M,der+1,k);
+    [D,B] = legendreDiff(N,M,der+1,k,[],SYMM);
     [Itmp,Jtmp,Stmp] = find([e, z; e+rt2.*B(1,:), rt2.*D(1,:)]);
     nInd = length(Itmp);                                        % how many nonzeros
     I(count+1:count+nInd) = Itmp + 2*(der-alpha);         % shift row indices
@@ -46,11 +67,23 @@ end
 
 if beta==k-1
     % Derivative k-1
-    [Itmp,Jtmp,Stmp] = find([II(k,:), z; II(k,:), rt2, z(2:end)]);
-    I(count+1:end) = Itmp + 2*(k-alpha) - 2;                 % shift row indices by 2*ALPHA-2
-    J(count+1:end) = Jtmp;
-    S(count+1:end) = Stmp;
+    e = II(k,:);
+    w = 1;
+    if K_DER_SYMM == -1
+        w = 0;
+    end
+    [Itmp,Jtmp,Stmp] = find([e, z; e, rt2.*w, z(2:end)]);
+    nInd = length(Itmp);
+    I(count+1:count+nInd) = Itmp + 2*(k-alpha) - 2;                 % shift row indices by 2*ALPHA-2
+    J(count+1:count+nInd) = Jtmp;
+    S(count+1:count+nInd) = Stmp;
 end
+
+% Remove potential zero indices
+ind = ( (I.*J) > 0 );
+I = I(ind);
+J = J(ind);
+S = S(ind);
 
 % If not rigorous, set to zero entries with columns > N+1 (model fact that 
 % the coefficient of monomials of order larger than N-k can be set to zero)

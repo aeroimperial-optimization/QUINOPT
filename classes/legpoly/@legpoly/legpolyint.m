@@ -13,6 +13,8 @@ function P = legpolyint(p,x,BC)
 % P = LEGPOLYINT(p,x,BC) computes the integration constant such that P(a)=BC.
 %       If p is an M-by-N polynomial, BC is either a scalar or an M-by-N
 %       matrix.
+%
+% See also legpoly/int
 
 % ----------------------------------------------------------------------- %
 %        Author:    Giovanni Fantuzzi

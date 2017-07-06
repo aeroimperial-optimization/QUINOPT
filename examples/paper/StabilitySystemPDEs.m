@@ -23,11 +23,12 @@
 %                   Department of Aeronautics
 %                   Imperial College London
 %       Created:    11/04/2016
-% Last Modified:    12/05/2016
+% Last Modified:    17/04/2017
 % ----------------------------------------------------------------------- %
 
 %% Initialization
-clear; clearModel;
+clear; 
+quinopt clear;
 a=1; b=1.5; c=5; d=0.2;  % problem variables
 
 %% Linear stability - find critical value with bisection method
@@ -90,7 +91,8 @@ opts.YALMIP = sdpsettings('verbose',0,'cachesolvers',1);
 
 % Inner approximation
 time = tic;
-quinopt(expr,bc,gamma,[],[],10,opts);       % require positivity of -V_t(u)!
+opts.N = 10;
+quinopt(expr,bc,gamma,opts);       % require positivity of -V_t(u)!
 time = toc(time);
 
 % Display
@@ -98,9 +100,9 @@ gamma_en = value(gamma);
 fprintf('| 0(P=I) |   %8.6f   |  %8.4f  |    ------    | (inner approx.)\n',gamma_en,time)
 
 % Outer approximation
-opts.rigorous = 0;
+opts.method = 'outer';
 time = tic;
-quinopt(expr,bc,gamma,[],[],10,opts);       % require positivity of -V_t(u)!
+quinopt(expr,bc,gamma,opts);       % require positivity of -V_t(u)!
 time = toc(time);
 
 % Display
@@ -116,7 +118,11 @@ for degp = 0:2:6;
     for rig = [1,0]
         % 1 = inner approx.
         % 0 = outer approx.
-        opts.rigorous = rig;
+        if rig
+            opts.method = 'inner';
+        else
+            opts.method = 'outer';
+        end
         
         gamma1 = 0.4;                   % surely feasible (larger than gamma_en)
         gamma2 = 0.34;                  % surely infeasible (smaller than gamma_lin)
@@ -124,11 +130,11 @@ for degp = 0:2:6;
         
         time = tic;
         itAverageTime = 0;
-        while gamma1-gamma2 > 1e-6
+        while gamma1-gamma2 > 1e-3
             % Clear internal variables of QUINOPT and YALMIP to avoid buildup of
             % unused variables that slows down the execution of the next iteration.
-            clearModel;     % clear QUINOPT's internal variables
-            yalmip clear;    % clear YALMIP's internal variables
+            yalmip clear;      % clear YALMIP's internal variables
+            quinopt clear;     % clear QUINOPT's internal variables
             
             % Problem variables
             x = indvar(0,1);
@@ -147,8 +153,9 @@ for degp = 0:2:6;
             bc = [u(0); u(1); v(0); v(1)];                 % boundary conditions
             
             % Solve the feasibility problem with N=10
+            opts.N = 10;
             chron = tic;
-            sol = quinopt(expr,bc,[],[],[],10,opts);
+            sol = quinopt(expr,bc,[],opts);
             itAverageTime = (itAverageTime + toc(chron))/2;
             
             % Check if problem was successfully solved and update gamma_cr

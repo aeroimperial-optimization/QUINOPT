@@ -12,6 +12,10 @@ function display(x)
 
 [m,n] = size(x);
 deg = degree(x);
-vars = unique([x.ivars]);
+try
+    vars = unique(horzcat(x.ivars));
+catch
+    vars = unique(vertcat(x.ivars));
+end
 classification = sprintf('%ix%i dvarpoly (%i variables, degree %i)',m,n,length(vars),deg);
 disp([classification])

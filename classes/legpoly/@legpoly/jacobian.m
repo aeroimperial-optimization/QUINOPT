@@ -1,9 +1,13 @@
 function J = jacobian(P,~)
 
-%% OVERLOADED: @LEGPOLY/JACOBIAN.m derivarive of a legpoly. 
-
-% NOTE: The second input x is added to have the same calling syntax as 
-% sdpvar polynomials, but is not used.
+%% JACOBIAN.m   Differentiate a polynomial in the Legendre basis (class legpoly). 
+%
+% J = JACOBIAN(P,x) computes the derivative of each entry of the matrix P of
+%   polynomials in the Legendre basis (class <a
+%   href="matlab:help('legpoly')">legpoly</a>) with respect to the
+%   independent variable x (class <a href="matlab:help('indvar')">indvar</a>).
+%
+% See also LEGPOLY, INDVAR, @LEGPOLY/INT, @LEGPOLY/LEGPOLYINT
 
 % ----------------------------------------------------------------------- %
 %        Author:    Giovanni Fantuzzi

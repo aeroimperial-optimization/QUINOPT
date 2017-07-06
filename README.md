@@ -1,24 +1,22 @@
 # QUINOPT (QUadratic INtegral OPTimisation)
-An open-source add-on for YALMIP to solve optimisation problems with polynomial quadratic integral inequality constraints.
+An open-source add-on for YALMIP to solve optimisation problems with polynomial quadratic integral inequality constraints. Below is a quick guide to QUINOPT, but details, examples, and much more can be found in the [full online documentation](http://quinopt.readthedocs.io/).
 
-- [Latest release](#LatestRelease)
-- [Copyright](#Copyright)
+* **Latest release:** 2.0.0
+* **Release date:** XX May 2017  
+* **Release notes:**
+	- Added support for complete quadratic inequalities
+	- Fixed major bug in the Legendre expansion of boundary values
+	- Added support for symmetry assumptions on the dependent variables
+	- Added new functions to manipulate polynomials in the Legendre basis (class legpoly): integrate, raise to an integer power, plot, etc.
+* **Known bugs in version 2.0.0:** No known bugs (yet!)
+
+## Contents
 - [System requirements](#Requirements)
+- [License](#License)
 - [Installation](#Install)
 - [Getting started](#GettingStarted)
 - [How to cite](#Cite)
-
-## Latest release<a name="LatestRelease"></a>
-**Version:** 1.4  
-**Release date:** 02 March 2017  
-**Known bugs in version 1.4:**
-- No known bugs (yet!).
-
-## Copyright<a name="Copyright"></a>
-- Giovanni Fantuzzi (Department of Aeronautics, Imperial College London, UK. Email: gf910[at]ic.ac.uk)  
-- Andrew Wynn (Department of Aeronautics, Imperial College London, UK. Email: a.wynn[at]imperial.ac.uk)
-- Paul Goulart (Department of Engineering Science, University of Oxford, UK. Email: paul.goulart[at]eng.ox.ac.uk)
-- Antonis Papachristodoulou (Department of Engineering Science, University of Oxford, UK. Email: antonis[at]eng.ox.ac.uk)
+- [Copyright](#Copyright)
 
 ## System requirements<a name="Requirements"></a>
 
@@ -28,13 +26,25 @@ In order to use QUINOPT, you will need:
 2. A suitable SDP solver. Choices include [SeDuMi](https://github.com/sqlp/sedumi), [SDPT3](http://www.math.nus.edu.sg/~mattohkc/sdpt3.html), [SDPA](http://sdpa.sourceforge.net/), [Mosek](https://www.mosek.com/) (free for
     users in academia).
 
-QUINOPT has been succesfully tested on MATLAB 7.10  (R2010a) and higher. If you have a different version of MATLAB, use at your own risk!
+Instructions on how to obtain YALMIP and an SDP solver are given in the [Installation](#Installation) section below.
+
+**Note:** QUINOPT has been successfully tested on MATLAB 7.10  (R2010a) and higher. If you have a different version of MATLAB, use at your own risk!
+
+## License<a name="License"></a>
+
+QUINOPT is distributed under the [Apache 2.0 licence](http://www.apache.org/licenses/LICENSE-2.0):
+
+Copyright 2016, G. Fantuzzi, A. Wynn, P. Goulart, A. Papachristodoulou
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 ## Installation<a name="Install"></a>
 
 To install QUINOPT:
 
-1. [Download](https://yalmip.github.io/download/) and [install](https://yalmip.github.io/tutorial/installation/) YALMIP 
+1. [Download](https://yalmip.github.io/download/) and [install](https://yalmip.github.io/tutorial/installation/) YALMIP
 2. Install a semidefinite programming (SDP) solver compatible with YALMIP. [Click here for a complete list of YALMIP-compatible SDP solvers](https://yalmip.github.io/allsolvers/).  
 3. Install QUINOPT by running the MATLAB installer:
 
@@ -42,20 +52,30 @@ To install QUINOPT:
 >> installQUINOPT
 ```
 
-The installer should add the required folders to the MATLAB path and run some test problems to make sure everything is working.
+The installer should compile the required files, add the required folders to the MATLAB path, and run some test problems to make sure everything is working.
 Please report any installation problems to Giovanni Fantuzzi (gf910[at]ic.ac.uk).
 
-_**NOTE:** QUINOPT has been tested with [SeDuMi](https://github.com/sqlp/sedumi), 
-  [SDPT3](http://www.math.nus.edu.sg/~mattohkc/sdpt3.html), 
-  [SDPA](http://sdpa.sourceforge.net/) and 
-  [Mosek](https://www.mosek.com/) (free for users in academia). 
-  Any other YALMIP-compatible SDP solver should work, but use at your own risk!_
-  
+**NOTES:**
+1. During installation, you may receive the following warning:
+	_Warning: Compilation of mex files by installQUINOPT failed.
+	QUINOPT will still work without compiled mex files, but
+	it will be slower. To resolve the issue, make sure that
+	a supported compiler is installed and re-run the installer._
+	QUINOPT should still work, but you may wish to resolve the issue with the
+	mex file compilation. You can find a list of supported compilers for
+	MATLAB's latest version
+	[here](https://uk.mathworks.com/support/compilers.html); for all other
+	versions of MATLAB please [look at this page](https://uk.mathworks.com/support/sysreq/previous_releases.html).
+2. QUINOPT has been tested with
+  [SeDuMi](https://github.com/sqlp/sedumi),
+  [SDPT3](http://www.math.nus.edu.sg/~mattohkc/sdpt3.html),
+  [SDPA](http://sdpa.sourceforge.net/) and [Mosek](https://www.mosek.com/) (free for users in academia). Any other YALMIP-compatible SDP solver should work, but use them at your own risk!
+
 ## Getting started<a name="GettingStarted"></a>
 
-To get started with QUINOPT, please look at the sample scripts provided the folder "./examples/". A description of the problems being solved can be found in the document "examples.pdf".
+To get started with QUINOPT, please look at the sample scripts provided the folder "./examples/". A step-by-step description of the examples can be found in the [online documentation](http://quinopt.readthedocs.io/04_examples/index.html).
 
-For more information on the main functions in QUINOPT, type
+For more information on the main functions in QUINOPT, please consult the documentation or type
 
 ```Matlab
 >> help quinopt
@@ -64,18 +84,18 @@ For more information on the main functions in QUINOPT, type
 >> help parameters
 ```
 
-at the MATLAB command prompt.
+at MATLAB's command prompt.
 
 
 ## How to cite<a name="Cite"></a>
-  
+
 If you find QUINOPT useful, or have used it in your own work, please reference
 it by citing the following papers:
 
 * G. Fantuzzi, A. Wynn, _Semidefinite relaxation of a class of quadratic
  integral inequalities_, [55th IEEE Conference on Decision and Control, 2016]
  (http://dx.doi.org/10.1109/CDC.2016.7799221).
- 
+
  ```
 @inproceedings{FW2016CDC,
     address = {Las Vegas, USA},
@@ -90,10 +110,9 @@ it by citing the following papers:
     year = {2016}
 	}
  ```
- 
-* G. Fantuzzi, A. Wynn, P. Goulart, A. Papachristodoulou, _Optimization 
-with affine homogeneous quadratic integral inequality constraints_,
-[arXiv:1607.04210 [math.OC]](https://arxiv.org/abs/1607.04210#).
+
+* G. Fantuzzi, A. Wynn, P. Goulart, A. Papachristodoulou, _Optimization
+with affine homogeneous quadratic integral inequality constraints_, Trans. Autom. Control, 2017 (in press). (See the arXiv version [here](https://arxiv.org/abs/1607.04210#)).
 
  ```
  @article{FWGP2016,
@@ -106,14 +125,19 @@ with affine homogeneous quadratic integral inequality constraints_,
  ```
 
 A selection of BibTex styles that support arXiv preprints can be found [here](http://arxiv.org/hypertex/bibstyles/).
-Should you wish to cite the code directly, please use the following BibTeX entry:
+Should you wish to cite the code directly, please use the following BibTeX entry, replacing ``X.X.X`` with the appropriate version of QUINOPT:
 
 ```
-@misc{CDCS,
+@misc{QUINOPTvX.X.X,
     author       = {Fantuzzi, Giovanni and Wynn, Andrew and Goulart, Paul and Papachristodoulou, Antonis},
-    title        = {{QUINOPT}, version 1.4},
+    title        = {{QUINOPT}, version X.X.X},
     howpublished = {\url{https://github.com/aeroimperial-optimization/QUINOPT}},
-    month        = Mar,
     year         = 2017
     }
 ```
+
+## Copyright<a name="Copyright"></a>
+- Giovanni Fantuzzi (Department of Aeronautics, Imperial College London, UK. Email: gf910[at]ic.ac.uk)  
+- Andrew Wynn (Department of Aeronautics, Imperial College London, UK. Email: a.wynn[at]imperial.ac.uk)
+- Paul Goulart (Department of Engineering Science, University of Oxford, UK. Email: paul.goulart[at]eng.ox.ac.uk)
+- Antonis Papachristodoulou (Department of Engineering Science, University of Oxford, UK. Email: antonis[at]eng.ox.ac.uk)

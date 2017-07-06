@@ -14,7 +14,7 @@ dimbnd = INEQ.dimbnd;
 Q(dimint,dimint) = INEQ.IVAR;  % initialize, fake dependence on IVAR
 if isFi
     [Q,S,slacks,MatrixInequalities,AuxVars] = ...
-        expandFi(Q,Nleg,Mleg,INEQ.F.Fi,INEQ.IVAR,INEQ.DERORD,opts);
+        expandFi(Q,Nleg,Mleg,INEQ.F.Fi,INEQ.IVAR,INEQ.DERORD,INEQ.DVAR_SYMM,opts);
 end
 Q = replace(Q,INEQ.IVAR,0); % remove fake dependence on IVAR
 if opts.rigorous
@@ -27,7 +27,7 @@ end
 % Expand boundary term (need to make symmetric) - distinction between rigorous
 % and non-rigorous expansion already taken into account by matrix P.
 if isFb
-    Qbnd = P'*( (INEQ.F.Fb + INEQ.F.Fb.')./2 )*P;
+    Qbnd = P.'*( (INEQ.F.Fb + INEQ.F.Fb.')./2 )*P;
     Q = Q + Qbnd;
 end
 
@@ -35,8 +35,8 @@ end
 % Expand mixed term - distinction between rigorous and non-rigorous expansion 
 % taken into account by matrix P and when building Qmix by setting entries to 0.
 if isFm
-    Qmix = expandFm(Nleg,Mleg,INEQ.F.Fm,INEQ.IVAR,INEQ.DERORD,opts.rigorous);
-    Qmix = P'*Qmix;
+    Qmix = expandFm(Nleg,Mleg,INEQ.F.Fm,INEQ.IVAR,INEQ.DERORD,INEQ.DVAR_SYMM,opts.rigorous);
+    Qmix = P.'*Qmix;
     if opts.rigorous
         Qmix = [Qmix, sparse(dimint+dimbnd,dimbnd)];
     else

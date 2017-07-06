@@ -24,7 +24,12 @@ if nargin < 2
 elseif strcmpi(flag,'stable')
 %     x = [A.ivars];
 %     [C,IA,IC] = unique(x,'first');
-    x = vertcat(A.ivars);
+%    x = vertcat(A.ivars);
+    try 
+        x = vertcat(A.ivars);
+    catch
+        x = [A.ivars];
+    end
     [C,IA,IC] = unique(x,'first');
     C = x(sort(IA)).';
     

@@ -1,4 +1,4 @@
-function [T,S,LMI,auxVars] = addQterm(T,S,LMI,auxVars,Nleg,Mleg,degp,pcoef,nnzIdx,dvar,ALPHA,BETA,DERORD)
+function [T,S,LMI,auxVars] = addQterm(T,S,LMI,auxVars,Nleg,Mleg,degp,pcoef,nnzIdx,dvar,ALPHA,BETA,DERORD,DVAR_SYMM)
 
 %% addQterm.m
 %
@@ -55,9 +55,18 @@ if ALPHA==Ka && BETA==Kb && degp > 0
         auxVars = [auxVars; {R; Sigma}];
         
         % Set
-        S(dvar(1),dvar(2)) = S(dvar(1),dvar(2)) - Sigma;
+        if isa(S,'sdpvar') || isa(Sigma,'sdpvar')
+            S = sdpvarAddInPlace(S,-Sigma,dvar(1),dvar(2));
+        else
+            S(dvar(1),dvar(2)) = S(dvar(1),dvar(2)) - Sigma;
+        end
+        
         ind = row(Ka+Nk+2-degp:end);
-        T(ind,ind) = T(ind,ind) - R;
+        if isa(T,'sdpvar') || isa(R,'sdpvar')
+            T = sdpvarAddInPlace(T,-R,ind,ind);
+        else
+            T(ind,ind) = T(ind,ind) - R;
+        end
         return
         
         
@@ -89,9 +98,18 @@ if ALPHA==Ka && BETA==Kb && degp > 0
         auxVars = [auxVars; {R; Sigma}];
         
         % Set (use indices of dvar(2) for T)
-        S(dvar(1),dvar(1)) = S(dvar(1),dvar(1)) - Sigma;
+        if isa(S,'sdpvar') || isa(Sigma,'sdpvar')
+            S = sdpvarAddInPlace(S,-Sigma,dvar(1),dvar(1));
+        else
+            S(dvar(1),dvar(1)) = S(dvar(1),dvar(1)) - Sigma;
+        end
+        
         ind = col(Kb+Nleg+Mleg+Ka+2-degp:end);
-        T(ind,ind) = T(ind,ind) - R;
+        if isa(T,'sdpvar') || isa(R,'sdpvar')
+            T = sdpvarAddInPlace(T,-R,ind,ind);
+        else
+            T(ind,ind) = T(ind,ind) - R;
+        end
         return
         
         
@@ -125,9 +143,18 @@ if ALPHA==Ka && BETA==Kb && degp > 0
         
         
         % Set (use indices of dvar(1) for T)
-        S(dvar(2),dvar(2)) = S(dvar(2),dvar(2)) - Sigma;
+        if isa(S,'sdpvar') || isa(Sigma,'sdpvar')
+            S = sdpvarAddInPlace(S,-Sigma,dvar(2),dvar(2));
+        else
+            S(dvar(2),dvar(2)) = S(dvar(2),dvar(2)) - Sigma;
+        end
+        
         ind = row(Kb+Nleg+Mleg+Ka+2-degp:end);
-        T(ind,ind) = T(ind,ind) - R;
+        if isa(T,'sdpvar') || isa(R,'sdpvar')
+            T = sdpvarAddInPlace(T,-R,ind,ind);
+        else
+            T(ind,ind) = T(ind,ind) - R;
+        end
         return
         
         
@@ -170,10 +197,20 @@ if ALPHA==Ka && BETA==Kb && degp > 0
         auxVars = [auxVars; {R; Sigma}];
         
         % Set outputs
-        S(dvar,dvar) = S(dvar,dvar) - Sigma;
+        if isa(S,'sdpvar') || isa(Sigma,'sdpvar')
+            S = sdpvarAddInPlace(S,-Sigma,dvar,dvar);
+        else
+            S(dvar,dvar) = S(dvar,dvar) - Sigma;
+        end
+        
         ind1 = row(Kb+Nleg+Mleg+Ka+2-degp:end); % indices of u (first dvar)
         ind2 = col(Ka+Nleg+Mleg+Kb+2-degp:end); % indices of v (second dvar)
-        T([ind1,ind2],[ind1,ind2]) = T([ind1,ind2],[ind1,ind2]) - R;
+        ind = [ind1,ind2];
+        if isa(T,'sdpvar') || isa(R,'sdpvar')
+            T = sdpvarAddInPlace(T,-R,ind,ind);
+        else
+            T(ind,ind) = T(ind,ind) - R;
+        end
         return
     end
     
@@ -186,6 +223,7 @@ else
     
     DerPairs = [ALPHA, BETA; BETA, ALPHA];
     HighDer = [Ka, Kb; Kb, Ka];
+    Symm = [DVAR_SYMM([dvar(1) dvar(2)]); DVAR_SYMM([dvar(2) dvar(1)])];
     Q = cell(2,1);
     
     for i=1:2
@@ -194,6 +232,8 @@ else
         BETA = DerPairs(i,2);   % derivative order of the infinite dimensional term
         Ka = HighDer(i,1);
         Kb = HighDer(i,2);
+        SYMM_ALPHA = Symm(i,1);
+        SYMM_BETA = Symm(i,2);
         
         % Limits for integration matrices
         % NOTE: since have chosen Nleg >= Lp+max(Ka,Kb)-1, always have 
@@ -206,15 +246,17 @@ else
         if ( nMax>=nMin ) && ( mMax>=mMin ) 
             
             % if all limits are sorted, then must compute            
-            [Da,Ba] = legendreDiff(Nleg,Mleg,ALPHA,Ka,[nMin,nMax]);
-            [Db,Bb] = legendreDiff(Nleg,Mleg,BETA,Kb,[mMin, mMax]);
+            [Da,Ba] = legendreDiff(Nleg,Mleg,ALPHA,Ka,[nMin,nMax],SYMM_ALPHA);
+            [Db,Bb] = legendreDiff(Nleg,Mleg,BETA,Kb,[mMin, mMax],SYMM_BETA);
             
             % Matrix of integral of triple products of Legendre polynomials
             % Values for l are given by nnzIdx-1
             Y = legendreTripleProduct(nnzIdx-1,nMin,nMax,mMin,mMax);
-            H = pcoef(1).*([Ba';Da']*Y{1}*[Bb, Db]);
+            Ma = [Ba.'; Da.'];
+            Mb = [Bb, Db];
+            H = pcoef(1).*(Ma*Y{1}*Mb);
             for j = 2:length(pcoef)
-                H = H + pcoef(j).*([Ba';Da']*Y{j}*[Bb, Db]);
+                H = H + pcoef(j).*(Ma*Y{j}*Mb);
             end
             
             % Set matrix Q
@@ -233,7 +275,13 @@ else
     end
     
     % Set outputs
-    T(row,col) = T(row,col) + Q{1} + Q{2}';
+    M = Q{1} + Q{2}';
+    if isa(T,'sdpvar') || isa(M,'sdpvar')
+        T = sdpvarAddInPlace(T,M,row,col);
+    else
+        T(row,col) = T(row,col) + M;
+    end
+    
     
 end
 

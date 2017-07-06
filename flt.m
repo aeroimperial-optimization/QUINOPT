@@ -2,24 +2,24 @@ function C = flt(FUN,n,DOMAIN)
 
 % FLT.m Fast Legendre transform (part of QUINOPT)
 %
-% C = FLT(FUN,n,[a,b]) computes the first n Legendre coefficients of the
-% expansion of the function FUN defined over the domain [a,b]. 
-% Inputs:
+% C = FLT(FUN,N,DOMAIN) computes the first n Legendre coefficients of the 
+%       expansion of the function FUN defined over the bounded domain DOMAIN. 
+%       FUN is a function handle to the function to be projected onto the first 
+%       N Legendre polynomials, N is a non-negative integer, and DOMAIN is a 
+%       vector with two numeric entries, i.e. DOMAIN = [a,b] with a<b (both a
+%       and b must be bounded).
 %
-%     FUN: a function handle to the function to be projected onto the
-%          Legendre polynomials.
-%       n: a positive integer.
-%   [a,b]: a 2-by-1 real row vector, i.e. DOMAIN = [a,b] with a<b.
+% NOTES: FLT implements Algorithm 2 from "A fast and simple algorithm for the 
+% computation of Legendre coefficients" by Iserles, Numer. Math.(2010).
 %
-% This function implements Algorithm 2 from "A fast and simple algorithm 
-% for the computation of Legendre coefficients", Iserles, Numer. Math.(2010)
+% See also legpoly
 
 % ----------------------------------------------------------------------- %
 %        Author:    Giovanni Fantuzzi
 %                   Department of Aeronautics
 %                   Imperial College London
 %       Created:    05/05/2016
-% Last Modified:    05/05/2016
+% Last Modified:    10/05/2017
 % ----------------------------------------------------------------------- %
 
 if ~isa(FUN,'function_handle')

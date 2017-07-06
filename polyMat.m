@@ -16,7 +16,7 @@ function [P,C,V] = polyMat(x,DEG,SIZE,FLAG)
 %       entries of P in the cell matrix C, and a monomial basis V, such
 %       that C{i,j}=coefficients(P(i,j),x) and P(i,j)=C{i,j}'*V.
 %
-% See also @SDPVAR/POLYNOMIAL, @SDPVAR/COEFFICIENTS
+% See also @SDPVAR/POLYNOMIAL, YALMIP/extras/COEFFICIENTS
 
 % ----------------------------------------------------------------------- %
 %        Author:    Giovanni Fantuzzi

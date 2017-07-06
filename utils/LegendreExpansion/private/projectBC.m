@@ -15,7 +15,8 @@ function [Q,M] = projectBC(Q,BC,G,H,opts)
 %% CODE
 
 M = bcProjMat(BC,G,H,opts);
-Q = M'*(Q*M);
+M = spblkdiag(1,M);
+Q = M.'*(Q*M);
 Q = (Q+Q.')./2;             % symmetrize again!
 
 
@@ -41,8 +42,10 @@ function M = bcProjMat(BC,G,H,opts)
     % Set type of null space projection
     if strcmpi(opts.BCprojectorBasis,'orth')
         projtype=[];
+        cleanTol = 0;
     else
         projtype='r';
+        cleanTol = 1e-16;
     end
 
     % Compute projector
@@ -77,7 +80,8 @@ function M = bcProjMat(BC,G,H,opts)
             % Second projection
             if ~isempty(P2) && ~isZero(Bbar)
                 % First projection had non-trivial null space
-                P1 = null( null(full(Bbar*P2),projtype)'*Abar, projtype);
+                % P1 = null( null(full(Bbar*P2),projtype)'*Abar, projtype); % 09 Jun 2017: missing transpose here? 
+                P1 = null( null(full((Bbar*P2).'),projtype)'*Abar, projtype);
             elseif ~isempty(P2)
                 P1 = null(full(Abar), projtype);
             else
@@ -94,14 +98,21 @@ function M = bcProjMat(BC,G,H,opts)
 
         end
 
-    else
+    elseif ~opts.rigorous
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Simpler projection if not rigorous!
         % Does not care about zero columns...
         M = A + B;
-        M = null(full(M), projtype);
+        M = sparse(null(full(M), projtype));
 
+    else
+        M = sparse(null(full([A,B]), projtype));
+        
     end
 
+%     % Clean
+%     M(abs(M)<=cleanTol) = 0;
+    
+    
 % END FUNCTION
 end

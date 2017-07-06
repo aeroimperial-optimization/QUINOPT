@@ -66,6 +66,7 @@ function varargout = setQuadIntIneq(EXPR,BC,N,OPTIONS)
 % Initialize output
 varargout = cell(nargout,1);
 
+
 % ----------------------------------------------------------------------- %
 % Set default inputs
 % ----------------------------------------------------------------------- %
@@ -98,6 +99,8 @@ INEQ = setInequalityModel(EXPR,BC);
 if FLAG==1
     fprintf(['\nWARNING: Integration by parts produced an infeasible constraint.',...
             'Your problem is infeasible!\n\n']);
+    varargout{1} = NaN;
+    varargout{2} = NaN;
     varargout{3} = FLAG;
     return
 end
@@ -108,27 +111,61 @@ end
 if ~any(INEQ.DERORD)
     % Simply set a SOS constraint, no expansion needed
     Q = 1;                                  % just set to 1 for simplicity
-    S = [0.5*INEQ.F.Fb, INEQ.F.Fm; ...      % Divide Fb by 2 to "bring it inside the integral"
-        zeros(size(INEQ.F.Fm))', INEQ.F.Fi];
+    
+    % Quadratic terms
+    % Divide Fb by 2 to "bring it inside the integral"
+    S = [0.5*INEQ.F.Fb, INEQ.F.Fm; ...      
+        zeros(size(INEQ.F.Fm)).', INEQ.F.Fi];
+    
+    % Linear terms and constant
+    % Divide Fb by 2 to "bring it inside the integral"
+    % NOTE: for the linear terms INEQ.C and INEQ.L.Lb one might need to replace 
+    % the constant values with tunable polynomials that integrate to those
+    % constants. At the moment this is not done.
+    vLin = [INEQ.L.Lb/2; INEQ.L.Li];
+    S = [INEQ.C/2, vLin.'; zeros(size(vLin)), S];
+    
+    % Make symmetric
     S = (S+S')/2;
+    
+    % Is S a legpoly? convert to SDPVAR
+    if isa(S,'legpoly')
+        S = sdpvar(S);
+    end
+    % Project on BCs
     if ~isempty(INEQ.BC)&&~isZero(INEQ.BC)
-        M = null(full(INEQ.BC));
+        if strcmpi(OPTIONS.BCprojectorBasis,'rref')
+            M = null(full(INEQ.BC),'r');
+        else
+            M = null(full(INEQ.BC));
+        end
         M = spblkdiag(M,speye(size(INEQ.F.Fi)));
-        S = M'*S*M;
+        M = spblkdiag(1,M);
+        S = M.'*S*M;
     end
     MatrixInequalities = {};
     slacks.t = []; slacks.pcoef = [];
     AuxVars = {};
+    
 else
     % Compute Legendre series expansion
     [Q,S,slacks,MatrixInequalities,AuxVars] = expandIntegrand(INEQ,N,opts);
+    
 end
 
 % ----------------------------------------------------------------------- %
 % Remove zero rows/cols and try to detect block-diagonal structure
 % ----------------------------------------------------------------------- %
-Q = makeBlkDiag(Q);
+[Q, Equalities, FLAG] = makeBlkDiag(Q,Equalities, FLAG);
 S = makeBlkDiag(S);
+if FLAG==1
+    fprintf(['\nWARNING: Seeking a block-diagonal structure produced an infeasible constraint.\n',...
+            'Your problem is infeasible!\n\n']);
+    varargout{1} = NaN;
+    varargout{2} = NaN;
+    varargout{3} = FLAG;
+    return
+end
 
 % ----------------------------------------------------------------------- %
 % Set constraints 

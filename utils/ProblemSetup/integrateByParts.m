@@ -29,11 +29,12 @@ LFi = [1, UFi(1:end-1)+1];  % lower indices of diagonal blocks in Fi
 UFb = cumsum(2*MAXDER+2);   % upper indices of diagonal blocks in Fb
 LFb = [1, UFb(1:end-1)+1];  % lower indices of diagonal blocks in Fb
 
-
 % ----------------------------------------------------------------------- %
-% CHECK ON Fb AND Fm
+% CHECK ON Fb, Fm AND Lb
 % ----------------------------------------------------------------------- %
 n = size(INEQ.F.Fi,1);
+
+% Check on Fb
 if isempty(INEQ.F.Fb)
     % Reinitialise to sdpvar with dummy entry
     INEQ.F = rmfield(INEQ.F,'Fb');
@@ -44,12 +45,33 @@ elseif isnumeric(INEQ.F.Fb)
     INEQ.F.Fb = A+INEQ.F.Fb;
 end
 
-if ~isempty(INEQ.F.Fm) && ~isZero(INEQ.F.Fm);
+% Check on Fm
+if ~isempty(INEQ.F.Fm) && ~isZero(INEQ.F.Fm)
     intFm = 1;
 else
     % Set Fm to zero sparse matrix
     intFm = 0;
     INEQ.F.Fm = spalloc(size(INEQ.F.Fb,1),n,0);
+end
+
+% Check on Li
+if ~isempty(INEQ.L.Li) && ~isZero(INEQ.L.Li)
+    intLi = 1;
+else
+    % Set Li to zero sparse matrix
+    intLi = 0;
+    INEQ.L.Li = spalloc(n,1,0);
+end
+
+% Check on Lb
+if isempty(INEQ.L.Lb)
+    % Reinitialise to sdpvar with dummy entry
+    INEQ.L = rmfield(INEQ.L,'Lb');
+    INEQ.L.Lb(2*n,1) = x;
+elseif isnumeric(INEQ.L.Lb)
+    % Add to an sdpvar with dummy entry to obtain sdpvar
+    A(2*n,1) = x;
+    INEQ.L.Lb = A+INEQ.L.Lb;
 end
 
 % ----------------------------------------------------------------------- %
@@ -86,6 +108,9 @@ for n = 1:nBlk
     end
     
     % Update list of rows/cols of Fi to keep
+    % Not so good if there is a variable with no derivatives?
+    lastnnz = max([1,lastnnz]);
+    if lastnnz>length(I); lastnnz = length(I); end
     keepFi = [keepFi, I(1):I(lastnnz)];
    
     if lastnnz~=numel(I)
@@ -138,13 +163,99 @@ if ~isempty(rmBlk) && nBlk > 1
 end
 
 
+
+% ----------------------------------------------------------------------- %
+% INTEGRATE BY PARTS LINEAR TERMS
+% ----------------------------------------------------------------------- %
+for n = 1:nBlk
+    
+    I = LFi(n):UFi(n);          % Indices for submatrix of Li
+    J = LFb(n):UFb(n);          % Indices for submatrix of Lb
+    if intLi
+        [INEQ.L.Li(I),INEQ.L.Lb(J)] = integrateByPartsLi(INEQ.L.Li(I),INEQ.L.Lb(J),x);
+    end
+    
+end
+
+
+% ----------------------------------------------------------------------- %
+% GET MAXDER
+% ----------------------------------------------------------------------- %
+% A rubbish but simple loop...
+cnt = 0;
+MAXDER = rmfrom - 2;        % the new highest order derivatives appearing in Fi
+keepFb = [];
+for i = 1:nBlk
+    
+    % Which indices?
+    I = cnt+1:cnt+2*(INEQ.MAXDER(i)+1);
+    
+    % last entry in Fb, which is upper triangular
+    Fb = replace(INEQ.F.Fb(I,I),x,0);
+    if isnumeric(Fb)
+        [R,C] = find(Fb);
+    else
+        % sdpvar or legpoly: use any
+        [R,C] = find(any(Fb));
+    end
+    TMP = max(C);
+    TMP = ceil(TMP/2) -1;
+    MAXDER(i) = max([MAXDER(i); TMP]);
+    
+    % maybe larger in Fm?
+    Fm = INEQ.F.Fm(I,:);
+    if isnumeric(Fm)
+        [R,C] = find(Fm);
+    else
+        % sdpvar or legpoly: use any
+        [R,C] = find(any(Fm));
+    end
+    TMP = max(R);
+    TMP = ceil(TMP/2) -1;
+    MAXDER(i) = max([MAXDER(i); TMP]);
+    
+    % maybe larger in Lb?
+    Lb = replace(INEQ.L.Lb(I),x,0);
+    if isnumeric(Lb)
+        [R] = find(Lb);
+    else
+        % sdpvar or legpoly: use any
+        [R] = find(any(Lb));
+    end
+    TMP = max(R);
+    TMP = ceil(TMP/2) -1;
+    MAXDER(i) = max([MAXDER(i); TMP]);
+    
+    % maybe larger in BC?
+    if ~isempty(INEQ.BC)
+        [R,C] = find(INEQ.BC(:,I));
+        TMP = max(C);
+        TMP = ceil(TMP/2) -1;
+        MAXDER(i) = max([MAXDER(i); TMP]);
+    end
+    
+    % update cnt and keepFb
+    keepFb = [keepFb, cnt+1:cnt+2*(MAXDER(i)+1)];
+    cnt = cnt + 2*(INEQ.MAXDER(i)+1);
+    
+end
+
+
 % ----------------------------------------------------------------------- %
 % SET OUTPUTS
 % ----------------------------------------------------------------------- %
 INEQ.DERORD = rmfrom - 2;        % new highest order derivatives for each block
+INEQ.MAXDER = MAXDER;            % new MAXDER
 INEQ.F.Fi = INEQ.F.Fi(keepFi,keepFi);
-INEQ.F.Fm = INEQ.F.Fm(:,keepFi);
+INEQ.F.Fm = INEQ.F.Fm(keepFb,keepFi);
 INEQ.F.Fb = replace(INEQ.F.Fb,x,0);       % Eliminate fake dependence on x from Fb
+INEQ.F.Fb = INEQ.F.Fb(keepFb,keepFb);     % remove unused entries
+INEQ.L.Li = INEQ.L.Li(keepFi);
+INEQ.L.Lb = replace(INEQ.L.Lb,x,0);       % Eliminate fake dependence on x from Lb
+INEQ.L.Lb = INEQ.L.Lb(keepFb);            % remove unused entries
+if ~isempty(INEQ.BC)
+    INEQ.BC = INEQ.BC(:,keepFb);
+end
 
 
 % END CODE
