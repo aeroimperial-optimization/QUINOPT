@@ -4,7 +4,7 @@
 
 
 Version 2.0.0
-XX May 2017
+06 Jul 2017
 
 Copyright:
 
