@@ -127,12 +127,12 @@ SOL.FeasCode     = [];
 SOL.YALMIP       = [];
 
 % Check on inputs
+isCellBC = 0;
 if ~isempty(EXPR) && ~isa(EXPR,'dvarpoly')
     error('Class of EXPR must be "dvarpoly". Please use the commands INDVAR and DEPVAR to create your problem variables.')
 % elseif ~isempty(BC) && ~isa(BC,'dvarpoly')
 %     error('Class of BC must be "dvarpoly". Please use the commands INDVAR and DEPVAR to create your problem variables.')
 elseif ~isempty(BC)
-    isCellBC = 0;
     if iscell(BC)
         isCellBC = 1;
         if numel(BC)~=numel(EXPR)
