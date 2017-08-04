@@ -9,7 +9,7 @@ function s = plus(X,Y)
 %                   Department of Aeronautics
 %                   Imperial College London
 %       Created:    07/10/2015
-% Last Modified:    08/04/2016
+% Last Modified:    04/08/2017
 % ----------------------------------------------------------------------- %
 
 % CODE
@@ -74,11 +74,11 @@ elseif isa(X,'legpoly') && isa(Y,'legpoly')
         
         % Find cumulative independent variables
         if degX ~=0
-            index = find(ivarX);
-            ivar = num2cell(ivarX(index(1)).*any(ivarX+ivarY));
+            index = find(any(ivarX),1,'first');
+            ivar = num2cell(ivarX(index).*any(ivarX+ivarY));
         elseif degY ~=0
-            index = find(ivarY);
-            ivar = num2cell(ivarY(index(1)).*any(ivarX+ivarY));
+            index = find(any(ivarY),1,'first');
+            ivar = num2cell(ivarY(index).*any(ivarX+ivarY));
         else
             [ivar{1:m,1:n}] = deal(0);
         end

@@ -2,7 +2,7 @@ function [D,B] = legendreDiff(Nleg,Mleg,ALPHA,K,LIMITS,SYMM,options)
 
 %% LEGENDREDIFF.m
 %
-% [D,B] = LEGENDREDIFF(Nleg,Mleg,ALPHA,K,LIMITS,opts) returns the 
+% [D,B] = LEGENDREDIFF(Nleg,Mleg,ALPHA,K,LIMITS,SYMM,opts) returns the 
 %       differentiation matrix that relates the coefficients of the derivative 
 %       ALPHA of a function to those of the derivative K. The truncation of
 %       the primitive function is assumed with coefficients from 0 to Nleg,

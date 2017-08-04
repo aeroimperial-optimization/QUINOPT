@@ -9,7 +9,7 @@ function s = times(X,Y)
 %                   Department of Aeronautics
 %                   Imperial College London
 %       Created:    07/10/2015
-% Last Modified:    08/04/2016
+% Last Modified:    04/08/2017
 %   Description:    Multiply two legpolys.
 % ----------------------------------------------------------------------- %
 
@@ -188,14 +188,14 @@ elseif isa(X,'legpoly') && isa (Y,'legpoly')
         % Find cumulative independent variables
         % "find" for sdpvar cannot return only first index
         if degX ~=0
-            index = find(ivarX);
+            index = find(any(ivarX),1,'first');
             % ivar = num2cell(ivarX(index(1)).*any(ivarX+ivarY));
-            ivar = ivarX(index(1));
+            ivar = ivarX(index);
             ivar_domn = domX;
         elseif degY ~=0
-            index = find(ivarY);
+            index = find(any(ivarY),1,'first');
             % ivar = num2cell(ivarY(index(1)).*any(ivarX+ivarY));
-            ivar = ivarY(index(1));
+            ivar = ivarY(index);
             ivar_domn = domY;
         else
             % ivar = {0};
@@ -248,13 +248,13 @@ elseif isa(X,'legpoly') && isa (Y,'legpoly')
         % Find cumulative independent variables
         % "find" for sdpvar cannot return only first index
         if degX ~=0
-            index = find(ivarX);
+            index = find(any(ivarX),1,'first');
             % ivar = num2cell(ivarX(index(1)).*any(ivarX+ivarY));
-            ivar = ivarX(index(1));
+            ivar = ivarX(index);
         elseif degY ~=0
-            index = find(ivarY);
+            index = find(any(ivarY),1,'first');
             % ivar = num2cell(ivarY(index(1)).*any(ivarX+ivarY));
-            ivar = ivarY(index(1));
+            ivar = ivarY(index);
         else
             % ivar = {0};
             ivar = 0;
