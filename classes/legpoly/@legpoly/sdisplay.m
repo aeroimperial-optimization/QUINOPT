@@ -26,7 +26,7 @@ for i = 1:size(W,1)
         
         % Get the sdpvar variable name
         thevar = evalin('caller',W(i).name);
-        eval([W(i).name,'=thevar;']);
+        eval([W(i).name,'=sdpvar(thevar);']);
         
     end
 end
