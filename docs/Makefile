@@ -1,5 +1,11 @@
 # Minimal makefile for Sphinx documentation
+# To build, first remove existing build:
 #
+# $ rm -r _build/
+#
+# Then make new one:
+#
+# $ make html
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
