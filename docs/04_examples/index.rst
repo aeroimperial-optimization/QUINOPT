@@ -5,7 +5,7 @@ Examples
 
 The best way to get started with QUINOPT is to look at some examples. Below is a list of demo problems of increasing difficulty, each of which introduces a new feature of QUINOPT. The last four examples, in particular, solve non-trivial problems from the field of fluid dynamics.
 
-If you wish to know more about the theory behind QUINOPT, have look at `our paper <https://arxiv.org/pdf/1607.04210.pdf>`_.
+If you wish to know more about the theory behind QUINOPT, have look at `this paper <https://arxiv.org/pdf/1607.04210.pdf>`_.
 
 ------------------
 List of examples

@@ -10,9 +10,9 @@ Add assumption on dependent variables in QUINOPT.
 :Syntax: ``assume(U,STR)``
 :Description: adds the assumption specified by the character string ``STR`` on the dependent variable ``U`` (class ``depvar``). Currently, allowed values for ``STR`` are:
 
-    * ``'even'``: assume that ``U`` is symmetric with respect to the midpoint of the domain :\math:`[a,b]`  in which the dependent variable ``U`` is defined.
+    * ``'even'``: assume that ``U`` is symmetric with respect to the midpoint of the domain :math:`[a,b]`  in which the dependent variable ``U`` is defined.
 
-    * ``'odd'``: assume that ``U`` is anty-symmetric with respect to the midpoint of the domain :\math:`[a,b]`  in which the dependent variable ``U`` is defined.
+    * ``'odd'``: assume that ``U`` is anty-symmetric with respect to the midpoint of the domain :math:`[a,b]`  in which the dependent variable ``U`` is defined.
 
     * ``'none'``: remove all previous assumptions on the dependent variable ``U``.
 

@@ -2,13 +2,13 @@ Bounds on energy dissipation for plane Couette flow
 ====================================================
 
 
-In this example we will compute bounds on the infinite-time-and-volume-averaged energy dissipation for plane Couette flow using the *indefinite storage functional method* with a quadratic storage functional.
+In this example we will compute bounds on the infinite-time-and-volume-averaged energy dissipation for plane Couette flow using the *auxiliary functional method* (see `Chernyshenko et al., Philos. Trans. R. Soc. A 372, 20130350 (2014) <https://doi.org/10.1098/rsta.2013.0350>`_ and `Chernyshenko, arXiv:1704.02475 [physics.flu-dyn] (2017) <https://arxiv.org/abs/1704.02475>`_) with a quadratic storage functional.
 
 :download:`Download the MATLAB file for this example <./downloads/example09.m>`
 
 .. warning::
 
-    This example may take a few minutes to run: it took 53 seconds on a linux machine with a 3.40GHz Intel Core i7-4770 CPU, running MATLAB2016b and using MOSEK as the SDP solver. Please, do not panic if the code seems slow - this is a relatively hard example!
+    This example may take a few minutes to run: it took 53 seconds on a linux machine with a 3.40GHz Intel Core i7-4770 CPU, running MATLAB2016b and using MOSEK as the SDP solver.
 
 ------------------------------
 1. Description of the flow
@@ -47,9 +47,9 @@ The second equality can be easily proven using integration by parts, the boundar
     We consider the equations of motion of the flow relative to the laminar flow to so the dynamic variable :math:`\boldsymbol{v}` satisfies homogeneous boundary conditions. This is done because currently QUINOPT only allows one to specify homogeneous boundary conditions. Inhomogeneous boundary conditions should be "lifted" at the modelling stage in order to use QUINOPT.
 
 ----------------------------------------------
-2. The indefinite storage functional method
+2. The auxiliary functional method
 ----------------------------------------------
-According to the indefinite storage functional method, :math:`U` is an upper bound  on the infinite-time average of :math:`\varepsilon(t)` if there exists a functional :math:`\mathcal{V}(t) = \mathcal{V}[\boldsymbol{v}(t,\cdot)]` that satisfies the bounding inequality
+According to the auxiliary functional method, :math:`U` is an upper bound  on the infinite-time average of :math:`\varepsilon(t)` if there exists a functional :math:`\mathcal{V}(t) = \mathcal{V}[\boldsymbol{v}(t,\cdot)]` that satisfies the bounding inequality
 
 .. math::
 
@@ -64,7 +64,7 @@ Here, we choose
     - \varphi(z)\,\boldsymbol{\hat{k}}\cdot \boldsymbol{v}
     \right]d\Omega.
 
-with :math:`a\in\mathbb{R}` and the function :math:`\varphi(z)` to be determined such that the bounding inequality is satisfied. We also assume that :math:`\varphi(0)=\varphi(1)=0`. The bounds obtained with the indefinite storage funcional method are then the same as those obtained with the *background method* (see e.g. `Plasting & Kerswell, J. Fluid Mech. 477, 363–379 (2003) <https://dx.doi.org/10.1017/S0022112002003361>`_).
+with :math:`a\in\mathbb{R}` and the function :math:`\varphi(z)` to be determined such that the bounding inequality is satisfied. We also assume that :math:`\varphi(0)=\varphi(1)=0`. The bounds obtained with the auxiliary functional method are then the same as those obtained with the *background method* (see e.g. `Plasting & Kerswell, J. Fluid Mech. 477, 363–379 (2003) <https://dx.doi.org/10.1017/S0022112002003361>`_).
 
 With these choices, the bounding inequality can be rearranged into
 
@@ -197,7 +197,7 @@ We find :math:`U = 4.8797`. The figure below illustrates how the bound, plotted 
         >> OPTIONS.method = 'outer';
         >> quinopt(EXPR,BC,U,OPTIONS,PHI_BC);       % Call quinopt() with user-defined options
 
-    Computing both upper and lower bounds is useful to assess how far from "true optimality" the answer returned by QUINOPT is. If needed, the quality of QUINOPT's approximation can be improved as described :doc:`in this previous example <./wirtinger>`. More details regarding inner and outer approximations of the feasible set of integral inequalities can be found in `our paper <https://arxiv.org/pdf/1607.04210.pdf>`_.
+    Computing both upper and lower bounds is useful to assess how far from "true optimality" the answer returned by QUINOPT is. If needed, the quality of QUINOPT's approximation can be improved as described :doc:`in this previous example <./wirtinger>`. More details regarding inner and outer approximations of the feasible set of integral inequalities can be found in `our paper <https://doi.org/10.1109/TAC.2017.2703927>`_.
 
 ----------------------
 
