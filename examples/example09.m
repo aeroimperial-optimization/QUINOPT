@@ -1,12 +1,14 @@
 %% example09.m
 %
 % Compute bounds on energy dissipation for 3D plane Couette flow using the
-% indefinite storage functional method (this is equivalent to the usual
+% auxiliary functional method (see Chernyshenko et al., Philos. Trans. R. Soc. A
+% 372, 20130350, 2014 and Chernyshenko, arXiv:1704.02475 [physics.flu-dyn] 2017)
+% with a quadratic storage functional. This method is equivalent to the usual
 % background method formulation of the problem, see e.g. Plasting & Kerswell, J.
-% Fluid Mech. 477, 363–379, 2003).
+% Fluid Mech. 477, 363-379, 2003).
 %
 % A full description of the problem can be found online at
-% http://quinopt.readthedocs.io/05_advanced_examples/planeCouetteBF.html
+% http://quinopt.readthedocs.io/04_examples/planeCouetteBF.html
 
 %% Initialization
 %
@@ -17,7 +19,7 @@ yalmip clear;
 quinopt clear;
 
 % Then,we set some problem parameters: the Reynolds number, the period Lambda_y
-% in the y direction, the degree of the linear term PHI in the storage
+% in the y direction, the degree of the linear term PHI in the auxiliary
 % functional, and the maximum horizontal wavenumber to test:
 Re       = 200;
 Lambda_y = 4*pi;
