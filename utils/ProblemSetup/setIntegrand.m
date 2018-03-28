@@ -102,20 +102,20 @@ Lb = L(ndvar+1:end);
 % Set outputs if non-zero
 if ~isZero(Fi); INEQ.F.Fi = Fi; end
 if ~isZero(Fm); INEQ.F.Fm = Fm; end
-if ~isZero(Fb);
+if ~isZero(Fb)
     Fb = integrateBoundaryTerm(Fb,INEQ);        % must integrate beforehand!
     if isa(Fb,'legpoly'); Fb = sdpvar(Fb); end  % convert to sdpvar since no dependence on IVAR
     INEQ.F.Fb = Fb;
 end
 
 if ~isZero(Li); INEQ.L.Li = Li; end
-if ~isZero(Lb);
+if ~isZero(Lb)
     Lb = integrateBoundaryTerm(Lb,INEQ);        % must integrate beforehand!
     if isa(Lb,'legpoly'); Lb = sdpvar(Lb); end  % convert to sdpvar since no dependence on IVAR
     INEQ.L.Lb = Lb;
 end
 
-if ~isZero(C);
+if ~isZero(C)
     C = integrateBoundaryTerm(C,INEQ);        % must integrate beforehand!
     if isa(C,'legpoly'); C = sdpvar(C); end  % convert to sdpvar since no dependence on IVAR
     INEQ.C = C;
@@ -150,10 +150,10 @@ function B = integrateBoundaryTerm(B,mod)
         % Size and nonzero entries (B is square)
         [m,n] = size(B);
         [I,J] = find(any(B));
-
+    
         % Loop to compute nonzero entries
-        val = zeros(length(I),1);
-        for k = 1:length(I)
+        % val = zeros(length(I),1);
+        for k = length(I):-1:1
             if degree(B(I(k),J(k))) == 0
                 % Integrate a constant
                 val(k) = 2*coefficients(B(I(k),J(k)));
