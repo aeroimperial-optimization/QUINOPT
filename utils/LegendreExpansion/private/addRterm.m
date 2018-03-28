@@ -55,6 +55,14 @@ else
     % AT MOST ONE HIGHEST ORDER DERIVATIVE
     %^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^%
     
+    % Any action needed? not if pcoef is a positive scalar and ALPHA==BETA and
+    % dvar(1)==dvar(2)!
+    if dvar(1)==dvar(2) && ALPHA==BETA
+        if length(pcoef)==1 && isa(pcoef,'double') && pcoef >= 0
+            return; 
+        end
+    end
+    
     % Find the matrices
     ee = (Nleg+1)^(BETA-ALPHA);
     Za = computeZmatrix(Nleg,Mleg,ALPHA,Ka,SYMM_ALPHA);
