@@ -3,7 +3,7 @@
 Feasibility of an integral inequality
 ================================================
 
-One of the most basic applications of QUINOPT is to find one value of an optimization parameter such that a homogeneous quadratic integral functional is positive. Here, we demonstrate how to use QUINOPT to find a value :math:`\gamma` such that
+One of the most basic applications of QUINOPT is to determine the value of a parameter such that a homogeneous quadratic integral functional is positive. Here, we demonstrate how to use QUINOPT to find a value :math:`\gamma` such that
 
 .. math::
 
@@ -12,7 +12,7 @@ One of the most basic applications of QUINOPT is to find one value of an optimiz
 	\right] {\rm d}x
 	\geq 0
 
-for all differentiable functions :math:`u(x)`. Clearly, possible choices are :math:`\gamma=0`, and :math:`\gamma=-2` or :math:`\gamma=2` (when the integrand is a perfect square).
+for all differentiable functions :math:`u(x)`. Clearly, possible choices are :math:`\gamma=0`, :math:`\gamma=-2`, or :math:`\gamma=2` (in the last two cases the integrand is a perfect square).
 
 :download:`Download the MATLAB file for this example <./downloads/example01.m>`
 
@@ -87,7 +87,7 @@ In summary, a feasible value :math:`\gamma` such that the integral inequality at
 	>> x = indvar(0,1); 					% Create the independent variable with domain [0,1]
 	>> u = depvar(x);					% Create the dependent variable u(x)
 	>> parameters gamma;					% Create the optimization variable gamma
-	>> EXPR = u(x,1)^2 + gamma*u(x,1)*u(x) + u(x)^2;       % Create the integrand
+	>> EXPR = u(x,1)^2 + gamma*u(x,1)*u(x) + u(x)^2;        % Create the integrand
 	>> quinopt(EXPR);					% Solve the problem
 	>> value(gamma) 					% Extract the value of gamma
 

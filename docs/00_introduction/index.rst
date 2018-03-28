@@ -11,14 +11,14 @@ In the simplest form, given a bounded interval :math:`[a,b] \subset \mathbb{R}`,
 
 	\begin{aligned}
 	\min_{\gamma} \quad &c^T \gamma\\
-	\text{subject to} \quad &\int_a^b Q_{\gamma}(x,u(x),u'(x),...,u^k(x))
+	\text{subject to} \quad &\int_a^b Q_{\gamma}(x,u(x),u'(x),...,u^{(k)}(x))
 	\,{\rm d}x \geq 0 \quad \forall u(x) \in \mathcal{H}
 	\end{aligned}
 
 by constructing SDP-representable inner and outer approximations of its feasible set.
-In the problem above, :math:`Q_{\gamma}(x,u(x),u'(x),...,u^k(x))` is
+In the problem above, :math:`Q_{\gamma}(x,u(x),u'(x),...,u^{(k)}(x))` is
 
-* a quadratic polynomial in :math:`u(x),u'(x),...,u^k(x)`;
+* a quadratic polynomial in :math:`u(x),u'(x),...,u^{(k)}(x)`;
 * a polynomial in :math:`x`;
 * an affine function of the optimization variable :math:`\gamma`.
 
@@ -28,7 +28,7 @@ Moreover, :math:`\mathcal{H}` is the subspace of functions that satisfy :math:`m
 
 	\mathcal{H} := \left\{ u \in C^k([a,b],\mathbb{R})
 	\quad
-	a_1 u(a) + a_2 u(b) + a_3 u'(a) + \cdots + a_{2k} u^k(b) = 0\right\},
+	a_1 u(a) + a_2 u(b) + a_3 u'(a) + \cdots + a_{2k} u^{(k)}(b) = 0\right\},
 
 where :math:`a_0,\,\ldots,\,a_{2k} \in \mathbb{R}^m` are known vectors.
 
@@ -47,7 +47,7 @@ A particularly simple example of an optimization problem with an integral inequa
 Upper and lower bounds on the largest :math:`\gamma` are found by QUINOPT upon solving two SDPs.
 
 .. note::
-   QUINOPT can also handle problems with more dependent variables, i.e. :math:`u:[a,b]\to\mathbb{R}^q`, and problems in which the boundary values of the dependent variables and their derivatives appear explicitly in the integrand of the inequality constraint.
+   QUINOPT can also handle problems with more dependent variables, i.e. :math:`u:[a,b]\to\mathbb{R}^q`, and problems in which the boundary values of the dependent variables and their derivatives appear explicitly in the integrand of the inequality constraint. For more details, see `our paper <https://doi.org/10.1109/TAC.2017.2703927>`_ or have a look at the :doc:`examples <../04_examples/index>`.
 
 
 

@@ -13,7 +13,7 @@ Minimize a cost function subject to quadratic integral inequality constraints, o
 ------------
 
 :Syntax: ``quinopt(EXPR)``
-:Description: tests whether a quadratic integral inequality with integrand specified by ``EXPR`` is feasible using a finite dimensional relaxation based on semidefinite programming. ``EXPR`` can be a vector if multiple integral inequalities must be tested simultaneously, the i-th entry specifying the integrand of the i-th integral inequality. Each entry of ``EXPR`` must be a polynomial of the integration variable returned by the command ``indvar()``, and a quadratic polynomial of the dependent variables returned by the function ``depvar()``.
+:Description: tests whether a quadratic integral inequality with integrand specified by ``EXPR`` is feasible using a finite dimensional relaxation based on semidefinite programming. If multiple integral inequalities must be tested simultaneously, ``EXPR`` can be a vector such that the i-th entry specifies the integrand of the i-th integral inequality. Each entry of ``EXPR`` must be a polynomial of the integration variable returned by the command ``indvar()``, and a quadratic polynomial of the dependent variables returned by the function ``depvar()``.
 
 ------------
 
@@ -45,12 +45,12 @@ Minimize a cost function subject to quadratic integral inequality constraints, o
 ------------
 
 :Syntax: ``quinopt(EXPR,BC,OBJ,OPTIONS,CNSTR)`` or ``quinopt(EXPR,BC,OBJ,OPTIONS,CNSTR,PARAMETERS)``
-:Description: minimize the objective function ``OBJ`` subjet to the integral inequalities specified by ``EXPR`` and ``BC``, and the additional constraints given by ``CNSTR``. ``CNSTR`` is a constraint object built with YALMIP. If ``CNSTR`` contains sum-of-square constraints, then the variable parameters in the polynomial expressions **must** be specified in the input vector ``PARAMETERS``, so they can be distinguished from the monomials. See YALMIP's function ``sos()`` and ``solvesos()`` for more details on specifying sum-of-squares constraints with YALMIP.
+:Description: minimizes the objective function ``OBJ`` subjet to the integral inequalities specified by ``EXPR`` and ``BC``, and the additional constraints given by ``CNSTR``. ``CNSTR`` is a constraint object built with YALMIP. If ``CNSTR`` contains sum-of-square constraints, then the variable parameters in the polynomial expressions **must** be specified in the input vector ``PARAMETERS``. See YALMIP's function ``sos()`` and ``solvesos()`` for more details on specifying sum-of-squares constraints with YALMIP.
 
 ------------
 
 :Syntax: ``[SOL,CNSTR,DATA] = quinopt(...)``
-:Description: Returns solution informations in the structure ``SOL``, the set of YALMIP constraint ``CNSTR`` used to solve the optimization problem, and a structure ``DATA`` containing all variables used to set up the constraints in ``CNSTR``. The solution structure ``SOL`` contains the following fields:
+:Description: returns solution informations in the structure ``SOL``, the set of YALMIP constraint ``CNSTR`` used to solve the optimization problem, and a structure ``DATA`` containing all variables used to set up the constraints in ``CNSTR``. The solution structure ``SOL`` contains the following fields:
 
     - ``SOL.setupTime``: the time taken to set up the problem
 

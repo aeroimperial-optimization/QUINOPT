@@ -10,7 +10,7 @@ QUINOPT is easily installed by running the installer ``installQUINOPT.m`` in MAT
 Step 1: Install YALMIP
 -----------------------
 
-QUINOPT is an add-on for YALMIP, the optimization modeling software by J. Löfberg. If you already have YALMIP installed, you cak skip this step. Otherwise, `download YALMIP's latest version <https://yalmip.github.io/download/>`_ and install it by adding the following folders to MATLAB's path:
+QUINOPT is an add-on for YALMIP, the optimization modeling software by J. Löfberg. If you already have YALMIP installed, you cak skip this step. Otherwise, `download YALMIP <https://yalmip.github.io/download/>`_ and install it by adding the following folders to MATLAB's path:
 
 .. code::
 
@@ -37,6 +37,9 @@ at the MATLAB command prompt. More details on how to install or update YALMIP be
 
    The folder names above are the default when YALMIP is downloaded from GitHub. Should you wish to use a different folder name, simply replace ``<YALMIP-master>`` with the appropriate path.
 
+.. warning::
+
+   YALMIP is regularly updated, and changes in YALMIP may sometimes affect the functionality of QUINOPT. If you have downloaded YALMIP's latest version and are experiencing installation problems, please `contact us`_ or file an issue via the `GitHub issue tracker <https://github.com/aeroimperial-optimization/QUINOPT/issues>`_. 
 
 ------------------------------
 Step 2: Install an SDP solver
@@ -64,7 +67,7 @@ After unzipping the downloaded folder, navigate to it in MATLAB and simply run t
 
    >> installQUINOPT
 
-The installer should compile the required files, add the required folders to the MATLAB path, and run some test problems to make sure everything is working. If you experience any installation problems, please `contact us`_ or file an issue issues via the `GitHub issue tracker <https://github.com/aeroimperial-optimization/QUINOPT/issues>`_.
+The installer should compile the required files, add the required folders to the MATLAB path, and run some test problems to make sure everything is working. If you experience any installation problems, please `contact us`_ or file an issue via the `GitHub issue tracker <https://github.com/aeroimperial-optimization/QUINOPT/issues>`_.
 
 .. warning::
 

@@ -1,12 +1,14 @@
 %% example09.m
 %
 % Compute bounds on energy dissipation for 3D plane Couette flow using the
-% indefinite storage functional method (this is equivalent to the usual
+% auxiliary functional method (see Chernyshenko et al., Philos. Trans. R. Soc. A
+% 372, 20130350, 2014 and Chernyshenko, arXiv:1704.02475 [physics.flu-dyn] 2017)
+% with a quadratic storage functional. This method is equivalent to the usual
 % background method formulation of the problem, see e.g. Plasting & Kerswell, J.
-% Fluid Mech. 477, 363–379, 2003).
+% Fluid Mech. 477, 363-379, 2003).
 %
 % A full description of the problem can be found online at
-% http://quinopt.readthedocs.io/05_advanced_examples/planeCouetteBF.html
+% http://quinopt.readthedocs.io/04_examples/planeCouetteBF.html
 
 %% Initialization
 %
@@ -17,12 +19,12 @@ yalmip clear;
 quinopt clear;
 
 % Then,we set some problem parameters: the Reynolds number, the period Lambda_y
-% in the y direction, the degree of the linear term PHI in the storage
+% in the y direction, the degree of the linear term PHI in the auxiliary
 % functional, and the maximum horizontal wavenumber to test:
-Re       = 500;
-Lambda_y = 8*pi;
-PHI_DEG  = 35;
-k_max    = 10;
+Re       = 200;
+Lambda_y = 4*pi;
+PHI_DEG  = 15;
+k_max    = 5;
 
 % Finally, we define the integration variables, the flow variables, and the
 % boundary conditions
@@ -69,17 +71,15 @@ end
 % we use the command quinopt() with five inputs: EXPR and BC to specify the
 % integral inequalities, U as the objective, an options structure (empty) and
 % the additional constraints PHI_BC.
-opts.YALMIP = sdpsettings('solver','mosek');
-opts.method = 'outer';
-quinopt(EXPR,BC,U,opts,PHI_BC);
+quinopt(EXPR,BC,U,[],PHI_BC);
 U_OPT = value(U);
 
 % Print some solution info
-fprintf('\n==============================\n')
+fprintf('==============================\n')
 fprintf('Reynolds number: %g\n',Re)
 fprintf('Period Lambda_y: %g*pi\n',Lambda_y/pi)
 fprintf('Optimal bound U: %g\n',U_OPT)
-fprintf('==============================\n\n')
+fprintf('==============================\n')
 
 %% Inspecting the solution
 % As a final step, we can inspect the solution to see what the optimal choice of
@@ -90,11 +90,12 @@ plot(0:0.01:1,PHI)
 xlabel('z'); ylabel('\phi(z)')
 
 % In fact, to compare the optimization results obtained with QUINOPT to those in
-% Plasting & Kerswell, J. Fluid Mech. 477, 363–379 (2003) it is convenient to
+% Plasting & Kerswell, J. Fluid Mech. 477, 363-379 (2003) it is convenient to
 % use PHI and the balance parameter a to plot the usual "background field",
 % given by a^{-1}*PHI(z) + z   
 subplot(2,1,2)
 plot(0:0.01:1,PHI/value(a)+z)
 xlabel('z'); ylabel('a^{-1}\phi(z)+z')
+drawnow;
 
 %% END CODE
