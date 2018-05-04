@@ -92,7 +92,7 @@ If you find QUINOPT useful, or have used it in your own work, please reference
 it by citing the following papers:
 
 * G. Fantuzzi, A. Wynn, P. Goulart, A. Papachristodoulou (2017). _Optimization
-with affine homogeneous quadratic integral inequality constraints_, Trans. Autom. Control 62(12), 6221-6236 . DOI: [10.1109/TAC.2017.2703927](https://doi.org/10.1109/TAC.2017.2703927).
+with affine homogeneous quadratic integral inequality constraints_. IEEE Transactions on Automatic Control 62(12), 6221-6236 . DOI: [10.1109/TAC.2017.2703927](https://doi.org/10.1109/TAC.2017.2703927).
 
  ```
  @article{FWGP2017TAC,
@@ -109,7 +109,7 @@ with affine homogeneous quadratic integral inequality constraints_, Trans. Autom
  ```
 
 * G. Fantuzzi, A. Wynn (2016). _Semidefinite relaxation of a class of quadratic
- integral inequalities_, [55th IEEE Conference on Decision and Control].
+ integral inequalities_. In: Proceedings of the 55th IEEE Conference on Decision and Control, Las Vegas (USA), 12-14 December 2016.
  DOI: [10.1109/CDC.2016.7799221](https://doi.org/10.1109/CDC.2016.7799221).
 
  ```
