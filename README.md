@@ -6,7 +6,8 @@ An open-source add-on for YALMIP to solve optimisation problems with polynomial 
 * **Release notes:**
 	- Fixed major bug due to new behaviour of "find" for sdpvar objects in the most recent versions of YALMIP.
 	- improved plotting for polynomials in the Legendre basis (class @legpoly)
-* **Known bugs in version 2.1:** No known bugs (yet!)
+* **Known bugs in version 2.1:**
+	- Problems with inhomogeneous inequalities will return an error message. This has been fixed in the developer version.
 
 ## Contents
 - [System requirements](#Requirements)
@@ -90,9 +91,26 @@ at MATLAB's command prompt.
 If you find QUINOPT useful, or have used it in your own work, please reference
 it by citing the following papers:
 
-* G. Fantuzzi, A. Wynn, _Semidefinite relaxation of a class of quadratic
- integral inequalities_, [55th IEEE Conference on Decision and Control, 2016]
- (http://dx.doi.org/10.1109/CDC.2016.7799221).
+* G. Fantuzzi, A. Wynn, P. Goulart, A. Papachristodoulou (2017). _Optimization
+with affine homogeneous quadratic integral inequality constraints_, Trans. Autom. Control 62(12), 6221-6236 . DOI: [10.1109/TAC.2017.2703927](https://doi.org/10.1109/TAC.2017.2703927).
+
+ ```
+ @article{FWGP2017TAC,
+   author = {Fantuzzi, Giovanni and Wynn, Andrew and Goulart, Paul J. and Papachristodoulou, Antonis},
+   doi = {10.1109/TAC.2017.2703927},
+   journal = {IEEE Transactions on Automatic Control},
+   number = {12},
+   pages = {6221--6236},
+   title = {{Optimization with affine homogeneous quadratic integral inequality constraints}},
+   url = {https://doi.org/10.1109/TAC.2017.2703927},
+   volume = {62},
+   year = {2017}
+   }
+ ```
+
+* G. Fantuzzi, A. Wynn (2016). _Semidefinite relaxation of a class of quadratic
+ integral inequalities_, [55th IEEE Conference on Decision and Control].
+ DOI: [10.1109/CDC.2016.7799221](https://doi.org/10.1109/CDC.2016.7799221).
 
  ```
 @inproceedings{FW2016CDC,
@@ -109,20 +127,6 @@ it by citing the following papers:
 	}
  ```
 
-* G. Fantuzzi, A. Wynn, P. Goulart, A. Papachristodoulou, _Optimization
-with affine homogeneous quadratic integral inequality constraints_, Trans. Autom. Control, 2017 (in press). (See the arXiv version [here](https://arxiv.org/abs/1607.04210#)).
-
- ```
- @article{FWGP2016,
-	archivePrefix = {arXiv},
-	eprint = {1607.04210},
-	primaryClass = "math-OC",
-	author = {Fantuzzi, Giovanni and Wynn, Andrew and Goulart, Paul and Papachristodoulou, Antonis},
-	title = {{Optimization with affine homogeneous quadratic integral inequality constraints}}
-	}
- ```
-
-A selection of BibTex styles that support arXiv preprints can be found [here](http://arxiv.org/hypertex/bibstyles/).
 Should you wish to cite the code directly, please use the following BibTeX entry, replacing ``X.X.X`` with the appropriate version of QUINOPT:
 
 ```
@@ -135,7 +139,7 @@ Should you wish to cite the code directly, please use the following BibTeX entry
 ```
 
 ## Copyright<a name="Copyright"></a>
-- Giovanni Fantuzzi (Department of Aeronautics, Imperial College London, UK. Email: gf910[at]ic.ac.uk)  
+- Giovanni Fantuzzi (Department of Aeronautics, Imperial College London, UK. Email: giovanni.fantuzzi10[at]ic.ac.uk)  
 - Andrew Wynn (Department of Aeronautics, Imperial College London, UK. Email: a.wynn[at]imperial.ac.uk)
 - Paul Goulart (Department of Engineering Science, University of Oxford, UK. Email: paul.goulart[at]eng.ox.ac.uk)
 - Antonis Papachristodoulou (Department of Engineering Science, University of Oxford, UK. Email: antonis[at]eng.ox.ac.uk)

@@ -176,17 +176,14 @@ at MATLAB's command prompt.
 If you find QUINOPT useful, or have used it in your own work, please reference
 it by citing the following papers:
 
-* G. Fantuzzi, A. Wynn, "Semidefinite relaxation of a class of quadratic
- integral inequalities", 55th IEEE Conference on Decision and Control, 2016.
+* G. Fantuzzi, A. Wynn (2016). Semidefinite relaxation of a class of quadratic
+ integral inequalities. In: Proceedings of the 55th IEEE Conference on Decision
+ and Control. DOI: 10.1109/CDC.2016.7799221.
 
-* G. Fantuzzi, A. Wynn, P. Goulart, A. Papachristodoulou, "Optimization
- with affine homogeneous quadratic integral inequality constraints",
- [arXiv:1607.04210 [math.OC]](https://arxiv.org/abs/1607.04210#).
-
-
-A selection of BibTex styles that support arXiv preprints can be found at
-
-http://arxiv.org/hypertex/bibstyles/
+* G. Fantuzzi, A. Wynn, P. Goulart, A. Papachristodoulou (2017). Optimization
+ with affine homogeneous quadratic integral inequality constraints, IEEE
+ Transactions on Automatic Control 62(12), 6221-6236.
+ DOI: 10.1109/TAC.2017.2703927.
 
 Should you wish to cite the code directly, please use the following BibTeX
 entry, replacing X.X.X with the appropriate version of QUINOPT:
@@ -224,7 +221,7 @@ The software is provided "as is", and although we have tested it, we cannot
 guarantee its functionality. If you need specific help with QUINOPT or find
 a bug, please contact:
 
-gf910[at]ic.ac.uk
+giovanni.fantuzzi10[at]ic.ac.uk
 
 
 
