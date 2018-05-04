@@ -1,13 +1,12 @@
 # QUINOPT (QUadratic INtegral OPTimisation)
 An open-source add-on for YALMIP to solve optimisation problems with polynomial quadratic integral inequality constraints. Below is a quick guide to QUINOPT, but details, examples, and much more can be found in the [full online documentation](http://quinopt.readthedocs.io/).
 
-* **Latest release:** 2.1
-* **Release date:** 04 August 2017  
+* **Latest release:** 2.2
+* **Release date:** 04 May 2018
 * **Release notes:**
-	- Fixed major bug due to new behaviour of "find" for sdpvar objects in the most recent versions of YALMIP.
-	- improved plotting for polynomials in the Legendre basis (class @legpoly)
-* **Known bugs in version 2.1:**
-	- Problems with inhomogeneous inequalities will return an error message. This has been fixed in the developer version.
+	- Fixed bug preventing the solution of problems with inhomogeneous inequalities
+	- minor improvements to problem formulation
+* **Known bugs in version 2.2:** None (yet)
 
 ## Contents
 - [System requirements](#Requirements)
