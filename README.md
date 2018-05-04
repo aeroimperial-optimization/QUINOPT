@@ -5,7 +5,7 @@ An open-source add-on for YALMIP to solve optimisation problems with polynomial 
 * **Release date:** 04 May 2018
 * **Release notes:**
 	- Fixed bug preventing the solution of problems with inhomogeneous inequalities
-	- minor improvements to problem formulation
+	- Minor improvements to problem formulation
 * **Known bugs in version 2.2:** None (yet)
 
 ## Contents
