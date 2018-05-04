@@ -24,7 +24,7 @@ import sphinx.ext.extlinks
 # sys.path.insert(0, os.path.abspath('.'))
 
 # Set version for bumpversion
-__version__ = "2.1.0"
+__version__ = "2.2"
 
 # -- General configuration ------------------------------------------------
 
