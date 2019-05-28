@@ -4,7 +4,7 @@ function [G,H] = expandBoundaryVals2(Nleg,Mleg,INEQ)
 %
 % G = EXPANDBOUNDARYVALS2(Nleg,Mleg,DERORD)
 %
-% Construct matrix to write vector of boundary terms up to derivative Li+1 
+% Construct matrix to write vector of boundary terms up to derivative Li+1
 % in terms of the Legendre coefficients of the functions and boundary
 % values at x=-1 of first Li derivatives. This function is used to compute OUTER
 % APPROXIMATIONS ONLY.
@@ -22,14 +22,20 @@ function [G,H] = expandBoundaryVals2(Nleg,Mleg,INEQ)
 % H - expand boundary values of derivatives Ki to Li
 
 % initialise empty matrices
-G = [];                    
+G = [];
 H = [];
 for i = 1:INEQ.ndvars
     K = INEQ.DERORD(i);
     L = INEQ.MAXDER(i);
     
     % Find Gblk
-    Gblk = findGblk(Nleg,Mleg,0,K-1,L+1,0,INEQ.DVAR_SYMM(i)); % matrix G as in Lemma 2 (boundary conditions)
+    if K > 0
+        % matrix G as in Lemma 2 (boundary conditions)
+        Gblk = findGblk(Nleg,Mleg,0,K-1,L+1,0,INEQ.DVAR_SYMM(i)); 
+    else
+        % Nothing to do, add columns but no rows
+        Gblk = sparse(0,Nleg+Mleg+2*(L+1)+1);
+    end
     G = spblkdiag(G,Gblk);
     
     % Find Hblk
