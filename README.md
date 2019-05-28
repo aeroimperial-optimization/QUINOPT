@@ -6,7 +6,9 @@ An open-source add-on for YALMIP to solve optimisation problems with polynomial 
 * **Release notes:**
 	- Fixed bug preventing the solution of problems with inhomogeneous inequalities
 	- Minor improvements to problem formulation
-* **Known bugs in version 2.2:** None (yet)
+* **Known bugs in version 2.2:**
+    - Outer approximation for integral inequalities with derivatives appearing only in the boundary conditions fail to compile. This issue affects [example09.m](https://github.com/aeroimperial-optimization/QUINOPT/blob/master/examples/example09.m), see the note at the bottom of [this doc page](https://quinopt.readthedocs.io/04_examples/planeCouetteBF.html).
+      Fixed on 28 May 2019, please update to v 2.2.1 or download the latest version of the file [expandBoundaryVals2.m](https://github.com/aeroimperial-optimization/QUINOPT/blob/master/utils/LegendreExpansion/private/expandBoundaryVals2.m).
 
 ## Contents
 - [System requirements](#Requirements)
