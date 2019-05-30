@@ -61,7 +61,7 @@ Here, we choose
 
     \mathcal{V}(t) = \frac{1}{\Lambda_x\Lambda_y} \int_\Omega
     \left[ \frac{a\,{\it Re}}{2} \vert \boldsymbol{v}\vert^2
-    - \varphi(z)\,\boldsymbol{\hat{k}}\cdot \boldsymbol{v}
+    - {\it Re}\,\varphi(z)\,\boldsymbol{\hat{i}}\cdot \boldsymbol{v}
     \right]d\Omega.
 
 with :math:`a\in\mathbb{R}` and the function :math:`\varphi(z)` to be determined such that the bounding inequality is satisfied. We also assume that :math:`\varphi(0)=\varphi(1)=0`. The bounds obtained with the auxiliary functional method are then the same as those obtained with the *background method* (see e.g. `Plasting & Kerswell, J. Fluid Mech. 477, 363–379 (2003) <https://dx.doi.org/10.1017/S0022112002003361>`_).
@@ -72,7 +72,7 @@ With these choices, the bounding inequality can be rearranged into
     \frac{1}{\Lambda_x\Lambda_y} \int_\Omega
     \left[ U -
     a\,{\it Re}\,\boldsymbol{v}\cdot \frac{\partial \boldsymbol{v}}{\partial t}
-    + \varphi(z)\,\boldsymbol{\hat{k}}\cdot
+    + {\it Re}\,\varphi(z)\,\boldsymbol{\hat{i}}\cdot
         \frac{\partial\boldsymbol{v}}{\partial t}
     - 1 - \vert \nabla \boldsymbol{v} \vert^2
     \right]d\Omega \geq 0.
@@ -89,7 +89,7 @@ it can be shown that the last inequality above is equivalent to the infinite set
 
     \begin{aligned}
     &\int_0^1 \left[
-    (a-1) \vert\hat{w}_0'(z)\vert^2 +\varphi''(z)\,\hat{u}_0(z) + U - 1
+    (a-1) \vert\hat{u}_0'(z)\vert^2 +\varphi''(z)\,\hat{u}_0(z) + U - 1
     \right] dz \geq 0,
     \\
     &\int_0^1 \left\{ (a-1)
