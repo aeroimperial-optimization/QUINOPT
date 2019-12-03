@@ -142,7 +142,7 @@ if nargin>=2; BC = varargin{2}; end
 if nargin>=3; OBJ = varargin{3}; end
 
 % Fourth input: a constraint (deprecated), or options structure
-if nargin>=4
+if nargin>=4 && ~isempty(varargin{4})
     if isa(varargin{4},'struct')
         OPTIONS = varargin{4};
         try
@@ -163,7 +163,7 @@ if nargin>=4
 end
 
 % Fifth input: an sdpvar (deprecated), or a constraint
-if nargin>=5
+if nargin>=5 && ~isempty(varargin{5})
     if isa(varargin{5},'constraint') || isa(varargin{5},'lmi')
         CNSTR = varargin{5};
         
@@ -179,7 +179,7 @@ if nargin>=5
 end
 
 % Sixth input: a scalar (deprecated), or an sdpvar
-if nargin>=6
+if nargin>=6 && ~isempty(varargin{6})
     
     if isa(varargin{6},'sdpvar')
         PARAMETERS = varargin{6};
