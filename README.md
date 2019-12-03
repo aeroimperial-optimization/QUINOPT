@@ -22,7 +22,7 @@ An open-source add-on for YALMIP to solve optimisation problems with polynomial 
 
 In order to use QUINOPT, you will need:
 
-1. A working version of [YALMIP](https://yalmip.github.io/), the MATLAB optimization modelling software by J. L&ouml;fberg
+1. A working version of [YALMIP](https://yalmip.github.io/), the MATLAB optimization modelling software by J. L&ouml;fberg. It is recommended that you use our own in-house fork, [aeroimperial-yalmip](https://github.com/aeroimperial-optimization/aeroimperial-yalmip)
 2. A suitable SDP solver. Choices include [SeDuMi](https://github.com/sqlp/sedumi), [SDPT3](http://www.math.nus.edu.sg/~mattohkc/sdpt3.html), [SDPA](http://sdpa.sourceforge.net/), [Mosek](https://www.mosek.com/) (free for
     users in academia).
 
@@ -44,7 +44,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 To install QUINOPT:
 
-1. [Download](https://yalmip.github.io/download/) and [install](https://yalmip.github.io/tutorial/installation/) YALMIP
+1. Install [aeroimperial-yalmip](https://github.com/aeroimperial-optimization/aeroimperial-yalmip)
 2. Install a semidefinite programming (SDP) solver compatible with YALMIP. [Click here for a complete list of YALMIP-compatible SDP solvers](https://yalmip.github.io/allsolvers/).  
 3. Install QUINOPT by running the MATLAB installer:
 
